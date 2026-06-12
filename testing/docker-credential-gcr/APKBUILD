@@ -1,0 +1,35 @@
+# Contributor: Marco Peterseil <marco.peterseil@gmail.com>
+# Maintainer: Marco Peterseil <marco.peterseil@gmail.com>
+pkgname=docker-credential-gcr
+pkgver=2.2.1
+pkgrel=0
+pkgdesc="Docker credential helper for GCR users"
+url="https://github.com/GoogleCloudPlatform/docker-credential-gcr"
+arch="all"
+license="Apache-2.0"
+makedepends="go"
+source="docker-credential-gcr-$pkgver.tar.gz::https://github.com/GoogleCloudPlatform/docker-credential-gcr/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir/$pkgname-$pkgver/"
+options="net" # go modules
+
+
+build() {
+	go build -v -o bin/$pkgname \
+		-ldflags "-s -w -X github.com/GoogleCloudPlatform/docker-credential-gcr/v2/config.Version=$pkgver-$pkgrel-$pkgrel"
+}
+
+check() {
+	export PATH="$builddir/bin:$PATH"
+	ln -s bin/$pkgname .
+	go test -v ./...
+}
+
+package() {
+	install -Dm755 bin/$pkgname \
+		-t "$pkgdir"/usr/bin
+
+}
+
+sha512sums="
+1554e21c6befe4579181a73a3fdb781f77e40126d1e6483d79b1c37002829d195d90257d832deb37d1df351eb9043771291032658506eff6bd501c3d91cb3905  docker-credential-gcr-2.2.1.tar.gz
+"
