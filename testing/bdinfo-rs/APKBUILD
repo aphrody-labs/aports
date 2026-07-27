@@ -1,0 +1,31 @@
+maintainer="Fabricio Silva <hi@fabricio.dev>"
+pkgname=bdinfo-rs
+pkgver=2.0.0
+pkgrel=0
+pkgdesc="A Blu-ray disc analyzer - a drop-in BDInfo report tool for BDMV folders and .iso"
+url="https://github.com/agentjp/bdinfo-rs"
+arch="all"
+license="LGPL-2.1-or-later"
+options="!check net" # no tests / net for cargo
+makedepends="
+	cargo
+	cargo-auditable
+	"
+source="$pkgname-$pkgver.tar.gz::https://github.com/agentjp/bdinfo-rs/archive/refs/tags/v$pkgver.tar.gz"
+
+prepare() {
+	default_prepare
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	cargo auditable build --frozen --release
+}
+
+package() {
+	install -Dm755 target/release/bdinfo-rs -t "$pkgdir"/usr/bin
+}
+
+sha512sums="
+e5f0b5d150340a5a0800234993f6083b57cc54039ceee0f3e810162777c2220f25af51c759dffb51978c94d8209fd47f3790ed6c2d669560738b334d3711b440  bdinfo-rs-2.0.0.tar.gz
+"
