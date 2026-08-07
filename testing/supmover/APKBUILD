@@ -1,0 +1,23 @@
+maintainer="Hannes Braun <hannes@hannesbraun.net>"
+pkgname=supmover
+pkgver=2.5.2
+pkgrel=0
+pkgdesc="Shift timings and screen areas of PGS/SUP subtitles"
+url="https://github.com/MonoS/SupMover"
+arch="all"
+license="AGPL-3.0-only"
+source="https://github.com/MonoS/SupMover/archive/v$pkgver/supmover-$pkgver.tar.gz"
+builddir="$srcdir/SupMover-$pkgver"
+options="!check" # no tests
+
+build() {
+	g++ $CXXFLAGS -std=c++17 -o supmover main.cpp
+}
+
+package() {
+	install -Dm755 supmover -t "$pkgdir"/usr/bin
+}
+
+sha512sums="
+8630bc61e3ae494a9ad1cfd5265c902a85f07e72f65ab7e7dbc917d56d5ab835b4605d8c54e8dded7b77d9cff6755f4600bc43f1afaff255ff2c0038e15b46ef  supmover-2.5.2.tar.gz
+"
