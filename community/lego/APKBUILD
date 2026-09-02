@@ -1,8 +1,8 @@
 # Contributor: Carlo Landmeter <clandmeter@alpinelinux.org>
 # Maintainer: Carlo Landmeter <clandmeter@alpinelinux.org>
 pkgname=lego
-pkgver=4.35.2
-pkgrel=2
+pkgver=5.5.2
+pkgrel=0
 pkgdesc="Let's Encrypt client and ACME library written in Go"
 url="https://github.com/go-acme/lego"
 license="MIT"
@@ -15,7 +15,7 @@ subpackages="$pkgname-doc"
 source="https://github.com/go-acme/lego/archive/v$pkgver/lego-$pkgver.tar.gz"
 
 build() {
-	go build -v -trimpath -ldflags "-X main.version=$pkgver" -o ./bin/lego ./cmd/lego
+	go build -v -trimpath -ldflags "-X main.version=$pkgver" -o ./bin/lego .
 }
 
 check() {
@@ -31,5 +31,5 @@ package() {
 }
 
 sha512sums="
-17b6cc848af92ec3cb9e9bfa736c746e448c3297d041bb42db0ef95cfdba0e3eb384b192ef4f0bb4ef0ce463977df406e0ede7b26a4e90d67e0585a5e46418cd  lego-4.35.2.tar.gz
+17256a04ef9cdf33c7887e6d54a32d1b375afda5b03a5248daac7787f3247564384f5a73c9c9cf737b8143ab9fc5d78c48afa9426cf1e72023be4b80065e383b  lego-5.5.2.tar.gz
 "
