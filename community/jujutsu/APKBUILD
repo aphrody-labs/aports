@@ -1,7 +1,7 @@
 # Maintainer: Jingyun Hua <huajingyun@loongson.cn>
 maintainer="Jingyun Hua <huajingyun@loongson.cn>"
 pkgname=jujutsu
-pkgver=0.44.0
+pkgver=0.46.0
 pkgrel=0
 pkgdesc="Git-compatible distributed version control system"
 url="https://www.jj-vcs.dev/"
@@ -110,5 +110,5 @@ package() {
 }
 
 sha512sums="
-24f0188a834eda568e3e620c9095dcea3d67a42ca4c80ebc31cef036e137828e99cdc5d6943bb0de3622b3c39e250367ce82f1af39fcdc99cc24fa22bf299af1  jujutsu-0.44.0.tar.gz
+f4c4da14f83700925efde5ab86ad2157a9e0dfe406d0035d6906b2743997b940bbf31bfd7ef5ca89307d074b929ede1cbb40211072b19eae4e260abb53c68bd1  jujutsu-0.46.0.tar.gz
 "
