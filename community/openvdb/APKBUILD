@@ -2,7 +2,7 @@
 # Maintainer: Leon Marz <main@lmarz.org>
 pkgname=openvdb
 pkgver=13.1.0
-pkgrel=0
+pkgrel=1
 pkgdesc="Sparse volume data structure and tools"
 url="https://www.openvdb.org/"
 # riscv64: 13 hours is too long
