@@ -2,8 +2,8 @@
 # Maintainer: Stuart Cardall <developer@it-offshore.co.uk>
 pkgname=py3-opencl
 _pkgreal=pyopencl
-pkgver=2025.2.6
-pkgrel=1
+pkgver=2026.1.4
+pkgrel=0
 pkgdesc="Python3 wrapper for OpenCL"
 url="https://pypi.org/project/pyopencl"
 arch="all"
@@ -49,5 +49,5 @@ package() {
 }
 
 sha512sums="
-5f411ce87999de01b913d49b571442e24cf118e84c20a17b949a4b2f3ea33fba26f8f1286068f46fa433f881eba663120a5fa8f6abfaff8d64e748748f7d2493  pyopencl-2025.2.6.tar.gz
+5428bd03fdfac2d85c6bf708e929e1f29cba8afad5dbeefee882e140738f6fd623a34f72c163b5ea1907e0d9b42cdc9e61257198e6e98e8a29d53b2f69d509d5  pyopencl-2026.1.4.tar.gz
 "
