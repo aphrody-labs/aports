@@ -1,6 +1,6 @@
 # Maintainer: Sertonix <sertonix@posteo.net>
 pkgname=py3-nanobind
-pkgver=2.15.0
+pkgver=3.1.0
 pkgrel=0
 pkgdesc="tiny and efficient C++/Python bindings"
 url="https://pypi.org/project/nanobind/"
@@ -21,9 +21,7 @@ checkdepends="
 	python3-tests
 	"
 subpackages="$pkgname-pyc"
-source="https://github.com/wjakob/nanobind/archive/refs/tags/v$pkgver/nanobind-$pkgver.tar.gz
-	32-bit-cast.patch
-	"
+source="https://github.com/wjakob/nanobind/archive/refs/tags/v$pkgver/nanobind-$pkgver.tar.gz"
 builddir="$srcdir/nanobind-$pkgver"
 
 build() {
@@ -53,6 +51,5 @@ package() {
 }
 
 sha512sums="
-376c4e86cec0e97fe9d6d844fe4e79c1cbfdd2d6355d68ee5b8acff4329983044ea0f22d0948f731ee82009afa7bba837f4f849967c831bad9ea322ffb52fc00  nanobind-2.15.0.tar.gz
-95dcbbf8c19dc925720843b1f687e350731b65fd0d32bfb652421c49311f619a262dcfdb4bcceb198cc0aaa5e511951ece60802c8891261d83fd8a4ea877c10c  32-bit-cast.patch
+3cbf96c73323dc71bc6fc463e087857493c7711ffcb2a8f4fe2a479bd3f0268d0b3c4bab7138d87e98475ec34a5f51be273d5522cb1ec63d90a1a83badd90a75  nanobind-3.1.0.tar.gz
 "
