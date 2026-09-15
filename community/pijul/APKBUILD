@@ -2,13 +2,14 @@
 # Maintainer: Jingyun Hua <huajingyun@loongson.cn>
 maintainer="Jingyun Hua <huajingyun@loongson.cn>"
 pkgname=pijul
-pkgver=1.0.0_beta22
+pkgver=1.0.0_beta24
 _pkgver="1.0.0-beta.${pkgver##*_beta}"
 pkgrel=0
 pkgdesc="Patch-based distributed version control system"
 url="https://pijul.org/"
 # s390x: fails to build due to nix crate
-arch="all !s390x"
+# ppc64le: fails to build due to rustix crate
+arch="all !s390x !ppc64le"
 license="GPL-2.0-or-later"
 makedepends="
 	cargo
@@ -78,5 +79,5 @@ package() {
 }
 
 sha512sums="
-9dd30b0f6e752ba30411e00e87e826ffb857a4e88d32610c161ccb8421dca5062c34a851485d4cd1fd807e55978152af26458897a23ad68a43b2ea3ee5b43104 pijul-1.0.0_beta22.tar.gz
+ecd9e847b86f6a291d0fb3fb173f5469d9afb0ae2ce85ff692bf5ec44632cf501156907676a90b71a90cf0691e9488bc4b5510eff28e718015456f13a0470559 pijul-1.0.0_beta24.tar.gz
 "
