@@ -1,13 +1,14 @@
 # Contributor: Noel Kuntze <noel.kuntze@thermi.consulting>
 # Maintainer: Noel Kuntze <noel.kuntze@thermi.consulting>
 pkgname=py3-sqlmodel
-pkgver=0.0.39
+pkgver=0.0.46
 pkgrel=0
 pkgdesc="SQL databases in Python, designed for simplicity, compatibility, and robustness"
 url="https://sqlmodel.tiangolo.com"
 arch="noarch"
 license="MIT"
 depends="
+	py3-alembic
 	py3-pydantic
 	py3-sqlalchemy
 	py3-typing-extensions
@@ -55,5 +56,5 @@ package() {
 }
 
 sha512sums="
-24b20b7848539a115ca97551b6c2bab712ead44d2573857d0b269833b625ee1a80e1ed7532c6be64ed220b85bd466ba0ec5ca1751de5e32d0d91c4b27b8d6b1b  py3-sqlmodel-0.0.39.tar.gz
+022e1fff5bf6e4f38f6d4a5b40965089125ddcb8dd42fb2915311d832180a5b4aacd4c3c78d01423c694677646756bd340e24dac024a40af99a5d42a33cf30af  py3-sqlmodel-0.0.46.tar.gz
 "
