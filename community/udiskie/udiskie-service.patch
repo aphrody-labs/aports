@@ -1,0 +1,26 @@
+--- a/example/udiskie.service
++++ b/example/udiskie.service
+@@ -1,8 +1,23 @@
++# unit file for systemd to activate udiskie as a systemd service for a 
++# user system wide (/lib/systemd/user, /etc/systemd/user) or individually 
++# (~/.config/systemd/user)
++
+ [Unit]
+ Description=Automounter for removable media
+ 
++# Condition to only start for non-system users. If removable media is
++# mounted for system users created for services that are started automatically
++# the media will already be mounted once a real user logs in and won't be
++# mounted for the interactive session
++ConditionUser=!@system
++
+ [Service]
+ ExecStart=/usr/bin/udiskie
++
++# on logout after systemd stopped udiskie un-mount automounted media so that 
++# it will be available for the next user logging in
++ExecStopPost=/usr/bin/udiskie-umount -a
++
+ Type=simple
+ 
+ [Install]
