@@ -1,6 +1,6 @@
 # Maintainer: Noel Kuntze <noel.kuntze@contauro.com>
 pkgname=grommunio-dav
-pkgver=1.7
+pkgver=1.8
 pkgrel=0
 pkgdesc="CalDAV and CardDAV interface for grommunio"
 # s390x: blocked by grommunio-gromox
@@ -85,5 +85,5 @@ package() {
 }
 
 sha512sums="
-46996d86f2d48ea71bf16c432437cec47345d4c1cf67a67f0813ce721563ebbf59ff5256ed456f0e1e39ea68867d12546e5f9ef2c0f20f1a33eb32e9ed623961  grommunio-dav-1.7.tar.gz
+eb49c9672fe4e96a3f360f5b2db54dc31c6aaf7723dc0a84d13823844ca998853be4385577fbf8f05d52571e0df112f47a16ccc04436d4b07bbf7b33d0d8b0b9  grommunio-dav-1.8.tar.gz
 "
