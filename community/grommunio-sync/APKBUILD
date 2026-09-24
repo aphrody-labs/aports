@@ -1,6 +1,6 @@
 # Maintainer: Noel Kuntze <noel.kuntze@contauro.com>
 pkgname=grommunio-sync
-pkgver=2.5
+pkgver=2.6
 pkgrel=0
 pkgdesc="Exchange ActiveSync interface for grommunio"
 # s390x: blocked by grommunio-gromox
@@ -70,5 +70,5 @@ package() {
 }
 
 sha512sums="
-a9968874feb270d8d208324812c4f2f37bc1767737f74012428efef38c76a0f3068fb6dc0fb3e7feaf223735eeb09dcb74f69bda55ae2bedf760589e25b43ee8  grommunio-sync-2.5.tar.gz
+8b22e61b360cbd2fcf2d8de0a4c831f7e14e02dee94ca1e038462fc41f91f913edde2827cd87a863d1580b7cd2edaf56acae46cbf71014358b62ee4dff11f3d7  grommunio-sync-2.6.tar.gz
 "
