@@ -1,6 +1,6 @@
 # Maintainer: Noel Kuntze <noel.kuntze@contauro.com>
 pkgname=grommunio-mapi-header-php
-pkgver=2.2
+pkgver=2.3
 pkgrel=0
 pkgdesc="Common PHP MAPI header files for grommunio"
 arch="noarch"
@@ -17,5 +17,5 @@ package() {
 }
 
 sha512sums="
-dec69319ade58c927b4ea1090114dfb4ab6f27c2f070bd10ce335315cf99f577ab5f1a067d70fe231fb5043ef0f88f7cd924e82ce4c5c2e337397889d327e282  grommunio-mapi-header-php-2.2.tar.gz
+096bcdf0ab945d0d99bd0acfbf6b16108bbd40ad0572fba28f86d378f77e320ebc8515d2a8160b4a472ff9d2f4e084ed7c63db6d306a0e1219d47679aab495cd  grommunio-mapi-header-php-2.3.tar.gz
 "
