@@ -2,7 +2,7 @@
 # Maintainer: Will Sinatra <wpsinatra@gmail.com>
 pkgname=py3-django-debug-toolbar
 _pkgname=django-debug-toolbar
-pkgver=7.0.0
+pkgver=8.0.0
 pkgrel=0
 pkgdesc="Configurable set of panels that display various debug information about the current request/response"
 options="!check" # Requires unpackaged Selenium python3 module
@@ -33,5 +33,5 @@ package() {
 }
 
 sha512sums="
-d9209655933e8c991c7980cb37847494be49495337167d0465198122e4bd0d92ed0355ead3c63f80c5a24545d2ee3e63f250e04cdf19efdba2326807845ba49d  py3-django-debug-toolbar-7.0.0.tar.gz
+5082c595fa06a02ee7d14953f0fc1d32efcb6fb43a732a96d40fb8ce85721e58859f605f49d69b59ea92b19f49afba350dd13ef8941d8211ac92806272a86670  py3-django-debug-toolbar-8.0.0.tar.gz
 "
