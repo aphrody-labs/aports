@@ -1,6 +1,6 @@
 maintainer="qaqland <qaq@qaq.land>"
 pkgname=neocmakelsp
-pkgver=0.11.1
+pkgver=0.11.2
 pkgrel=0
 pkgdesc="CMake LSP implementation based on Tower and Tree-sitter"
 url="https://neocmakelsp.github.io"
@@ -45,5 +45,5 @@ package() {
 }
 
 sha512sums="
-e53bee3533e0ad52cec66b097c3602113e6cce8006c6f7db06ee43a5c1aff6109f88cc35a1bc766025f9e4c36043880501ccbf315f81d5380f2aac85a7ff8cae  neocmakelsp-0.11.1.tar.gz
+394a37916557becbf29658034d8421cf0e4e5dfce0c392c1774e328f17717f9c96ca04eff006044bd7a7d30e9690b9ed69d16c6901089a402515d957334443c6  neocmakelsp-0.11.2.tar.gz
 "
