@@ -7,9 +7,7 @@ _pkgver="1.0.0-beta.${pkgver##*_beta}"
 pkgrel=0
 pkgdesc="Patch-based distributed version control system"
 url="https://pijul.org/"
-# s390x: fails to build due to nix crate
-# ppc64le: fails to build due to rustix crate
-arch="all !s390x !ppc64le"
+arch="all"
 license="GPL-2.0-or-later"
 makedepends="
 	cargo
@@ -23,7 +21,9 @@ subpackages="
 	$pkgname-fish-completion
 	$pkgname-zsh-completion
 	"
-source="$pkgname-$pkgver.tar.gz::https://crates.io/api/v1/crates/pijul/$_pkgver/download"
+source="$pkgname-$pkgver.tar.gz::https://crates.io/api/v1/crates/pijul/$_pkgver/download
+	rustix-1.1.5.patch
+	"
 builddir="$srcdir/$pkgname-$_pkgver"
 options="net"
 
@@ -79,5 +79,6 @@ package() {
 }
 
 sha512sums="
-ecd9e847b86f6a291d0fb3fb173f5469d9afb0ae2ce85ff692bf5ec44632cf501156907676a90b71a90cf0691e9488bc4b5510eff28e718015456f13a0470559 pijul-1.0.0_beta24.tar.gz
+ecd9e847b86f6a291d0fb3fb173f5469d9afb0ae2ce85ff692bf5ec44632cf501156907676a90b71a90cf0691e9488bc4b5510eff28e718015456f13a0470559  pijul-1.0.0_beta24.tar.gz
+e801756c00976bf1c1c364d89344e6c6cca5fe72aca241fce5fe2a54889dee2703bf3b0f92ddb220c84e9682c36c88e972347d0cffbadc9b1282c760a8679049  rustix-1.1.5.patch
 "
