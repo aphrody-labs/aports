@@ -3,7 +3,7 @@
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=akonadi-calendar
 pkgver=26.08.1
-pkgrel=0
+pkgrel=1
 pkgdesc="Akonadi calendar integration"
 # armhf, x86, armv7, s390x and riscv64 blocked by kmailtransport -> qt6-qtwebengine
 arch="all !armhf !x86 !armv7 !s390x !riscv64"
@@ -28,10 +28,15 @@ depends_dev="
 	"
 makedepends="$depends_dev
 	extra-cmake-modules
+	py3-akonadi
 	samurai
 	"
 checkdepends="xwayland-run"
-subpackages="$pkgname-dev $pkgname-lang"
+subpackages="
+	$pkgname-dev
+	$pkgname-lang
+	py3-$pkgname:_py3
+	"
 _repo_url="https://invent.kde.org/pim/akonadi-calendar.git"
 source="https://download.kde.org/stable/release-service/$pkgver/src/akonadi-calendar-$pkgver.tar.xz"
 options="!check" # no tests
@@ -53,6 +58,14 @@ check() {
 package() {
 	DESTDIR="$pkgdir" cmake --install build
 }
+
+_py3() {
+	depends="py3-akonadi"
+
+	amove usr/lib/python*
+	amove usr/share/PySide6
+}
+
 sha512sums="
 73e5e557b639430e768bf9adec48bf9eb56128674b18ced4b4644184fb339295f8c5fb52a3aa284b6ef9a99a4ecb29494df16c6ffae4f58779393dc736047d59  akonadi-calendar-26.08.1.tar.xz
 "
