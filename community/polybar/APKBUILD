@@ -2,7 +2,7 @@
 # Maintainer: Daniel Hejduk <danielhejduk@disroot.org>
 pkgname=polybar
 pkgver=3.7.2
-pkgrel=3
+pkgrel=4
 pkgdesc="fast and easy-to-use tool for creating status bars"
 url="https://polybar.github.io/"
 arch="all"

@@ -2,7 +2,7 @@
 # Maintainer: Alex Denes <caskd@redxen.eu>
 pkgname=powder-toy
 pkgver=97.0.352
-pkgrel=1
+pkgrel=2
 pkgdesc="Desktop version of the classic falling sand physics sandbox, simulates air pressure, velocity & heat!"
 url="http://powdertoy.co.uk/"
 # riscv64: textrels

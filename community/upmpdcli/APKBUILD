@@ -2,7 +2,7 @@
 # Maintainer:
 pkgname=upmpdcli
 pkgver=1.9.17
-pkgrel=1
+pkgrel=2
 pkgdesc="upmpdcli is a UPnP Media Renderer front-end for MPD, the Music Player Daemon"
 pkgusers="upmpdcli"
 pkggroups="upmpdcli"
