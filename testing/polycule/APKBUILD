@@ -24,11 +24,12 @@ depends="
 	libnotify
 	dbus
 	"
-_llvmver=21
+_llvmver=23
 makedepends="
 	ca-certificates
 	cargo
 	cargo-auditable
+	clang$_llvmver
 	flutter-desktop
 	libsecret-dev
 	llvm$_llvmver
