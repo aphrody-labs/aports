@@ -1,10 +1,8 @@
-diff --git a/GNUmakefile.in b/GNUmakefile.in
-index 2593901..c3a681a 100644
---- a/GNUmakefile.in
+--- a/GNUmakefile.in.orig
 +++ b/GNUmakefile.in
-@@ -62,8 +62,8 @@
- MAN_DEST     = $(MAN_DIR)/man8
- MAN_PAGE     = privoxy.8
+@@ -64,8 +64,8 @@
+ PRIVOXY_TOOL_MAN_DEST = $(MAN_DIR)/man1
+ PRIVOXY_MAN_PAGE = privoxy.8
  SHARE_DEST   = @datadir@
 -DOC_DEST     = $(SHARE_DEST)/doc/privoxy
 -VAR_DEST     = @localstatedir@
@@ -13,7 +11,7 @@ index 2593901..c3a681a 100644
  LOGS_DEST    = $(VAR_DEST)/log/privoxy
  PIDS_DEST    = $(VAR_DEST)/run
  
-@@ -964,34 +964,8 @@
+@@ -986,34 +986,8 @@
  	fi ;\
  	$(ECHO) Installing configuration files to $(DESTDIR)$(CONF_DEST);\
  	for i in $(CONFIGS); do \
@@ -48,63 +46,59 @@ index 2593901..c3a681a 100644
  	if [ "$(prefix)" = "/usr/local" ] || [ "$(prefix)" = "/usr" ]; then \
  		if [ -f /etc/slackware-version ] && [ -d /etc/rc.d/ ] && [ -w /etc/rc.d/ ] ; then \
                 $(SED) 's+%PROGRAM%+$(PROGRAM)+' slackware/rc.privoxy.in | \
-diff --git a/config b/config
-index 8b20f92..25596d6 100644
---- a/config
+--- a/config.orig
 +++ b/config
-@@ -265,7 +265,7 @@
+@@ -259,7 +259,7 @@
  #
  #      No trailing "/", please.
  #
 -confdir .
 +confdir /etc/privoxy
  #
- #
  #  2.2. templdir
-@@ -322,7 +322,7 @@ confdir .
+ #  ==============
+@@ -344,7 +344,7 @@
  #
  #      No trailing "/", please.
  #
 -logdir .
 +logdir /var/log/privoxy
  #
- #
- #  2.4. actionsfile
-@@ -462,7 +462,7 @@ filterfile user.filter      # User customizations
- #      Any log files must be writable by whatever user Privoxy is
- #      being run as (on Unix, default user id is "privoxy").
+ #  2.5. actionsfile
+ #  =================
+@@ -478,7 +478,7 @@
+ #      require additional software to do it. For details, please
+ #      refer to the documentation for your operating system.
  #
 -logfile logfile
 +logfile privoxy.log
  #
- #
- #  2.7. trustfile
-diff --git a/default.action.master b/default.action.master
-index a26a0ec..5c67e8e 100644
---- a/default.action.master
+ #  2.8. trustfile
+ #  ===============
+--- a/default.action.master.orig
 +++ b/default.action.master
-@@ -566,7 +566,7 @@ allow-ads   = -block -filter{banners-by-size} -filter{banners-by-link}
- +client-header-tagger{css-requests} \
- +client-header-tagger{image-requests} \
+@@ -557,7 +557,7 @@
+ +client-header-tagger{range-requests} \
  +hide-from-header{block} \
+ +server-header-tagger{content-type} \
 -+set-image-blocker{pattern} \
 ++set-image-blocker{blank} \
  }
  standard.Cautious
  
-@@ -588,7 +588,7 @@ standard.Cautious
- +hide-from-header{block} \
+@@ -580,7 +580,7 @@
  +hide-referrer{conditional-block} \
+ +server-header-tagger{content-type} \
  +session-cookies-only \
 -+set-image-blocker{pattern} \
 ++set-image-blocker{blank} \
  }
  standard.Medium
  
-@@ -627,7 +627,7 @@ standard.Medium
- +hide-referrer{conditional-block} \
+@@ -621,7 +621,7 @@
  +limit-connect{,} \
  +overwrite-last-modified{randomize} \
+ +server-header-tagger{content-type} \
 -+set-image-blocker{pattern} \
 ++set-image-blocker{blank} \
  }
