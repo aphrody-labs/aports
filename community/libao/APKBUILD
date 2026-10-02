@@ -1,14 +1,14 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=libao
 pkgver=1.2.2
-pkgrel=3
+pkgrel=4
 pkgdesc="Cross-platform audio output library and plugins"
 url="https://www.xiph.org/ao"
 arch="all"
 options="!check"  # No test suite.
 license="GPL-2.0-or-later"
-subpackages="$pkgname-doc $pkgname-dev $pkgname-pulse"
-makedepends="alsa-lib-dev automake autoconf libtool pulseaudio-dev"
+subpackages="$pkgname-doc $pkgname-dev $pkgname-pulse $pkgname-sndio"
+makedepends="alsa-lib-dev automake autoconf libtool pulseaudio-dev sndio-dev"
 source="$pkgname-$pkgver.tar.gz::https://github.com/xiph/libao/archive/$pkgver.tar.gz
 	CVE-2017-11548.patch
 	gcc-14.patch
@@ -31,7 +31,8 @@ build() {
 		--disable-esd \
 		--disable-arts \
 		--enable-alsa-mmap \
-		--enable-pulse
+		--enable-pulse \
+		--enable-sndio
 	make
 }
 
@@ -47,6 +48,13 @@ pulse() {
 	install_if="$pkgname=$pkgver-r$pkgrel pulseaudio"
 
 	amove usr/lib/ao/plugins-4/libpulse.so
+}
+
+sndio() {
+	pkgdesc="libao plugin for sndio"
+	install_if="$pkgname=$pkgver-r$pkgrel sndio"
+
+	amove usr/lib/ao/plugins-4/libsndio.so
 }
 
 sha512sums="
