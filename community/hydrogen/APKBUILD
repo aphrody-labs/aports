@@ -1,6 +1,6 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=hydrogen
-pkgver=1.2.6
+pkgver=1.2.7
 pkgrel=0
 pkgdesc="Advanced drum machine for GNU/Linux"
 url="http://www.hydrogen-music.org/"
@@ -56,6 +56,6 @@ package() {
 }
 
 sha512sums="
-ddf0c7183ce6721cb29d8e9ab83f0ecd9e2f598316fc7a903c54e78a1f9e6e842d120b65554b74f8ede75cc8fe8042f0865ba62c66624ffce330b3e61c34ca57  hydrogen-1.2.6.tar.gz
+158cd7e1d32d283347d45e9d7f3d55876badb4ea857094922ec6fd15290239d319830b93925d16e2a6f65758314ad63bbf73ab6b936d05b8858307a464c8d714  hydrogen-1.2.7.tar.gz
 e8e6b10847771fb70434fa31bd8c213e422f6cea61871470bcb8d10cd1df7d262eacddc8af4306bf7c3a68f68f7ee5d341b4dbda9f66da34376d75cc32226c57  nodevel.patch
 "
