@@ -2,8 +2,8 @@
 # Maintainer: Francesco Colista <fcolista@alpinelinux.org>
 _luaver=5.4
 pkgname=prosody
-pkgver=13.0.6
-pkgrel=1
+pkgver=13.0.7
+pkgrel=0
 pkgdesc="Lua based Jabber/XMPP server"
 url="https://prosody.im/"
 arch="all"
@@ -90,7 +90,7 @@ package() {
 }
 
 sha512sums="
-4eb1a08fbe4a309a95b31cd9bf01158aabb14d54737062041112495534c61f1a556d93943525836d028cdd4b3a633f7630e47a77a3dbaefd5410fcbc462c1a5c  prosody-13.0.6.tar.gz
+53056342911f26451ef21f39b8ba53a3f27752a65f190516d21892c4740f8ce163f8a9b943feab438fd32e10643466037a42519c7673c0e0dc85e4dc107a7321  prosody-13.0.7.tar.gz
 20bc16c981072be39f967d27ed983aaae16383d922172a4f0751858d4bd12a521496d5f621ef178e9a0da61102d4c01ba709f63ad9ddf5b8e55fbb5f6793e7cb  prosody.logrotate
 878a56ec776640e7c92639acd3cc6a2c3ad60f3bd15727c77fcffb9a0882e80ba034f3148222384ec496c225410ffae010fad7b365ea17c94905edad99d038b8  prosody.initd
 2f7d04a4690fc8478a8fdbe41d36708792dab4b89085393818f01c6c2232d3525bba71a7daff33bbaf0fac6939c871ab1e7928f699c7c9cf5e02e1f0d26ef25c  prosody.cfg.lua.patch
