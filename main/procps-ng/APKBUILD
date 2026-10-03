@@ -1,7 +1,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=procps-ng
 pkgver=4.0.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Utilities for monitoring your system and processes on your system"
 url="https://gitlab.com/procps-ng/procps"
 arch="all"
@@ -10,7 +10,6 @@ makedepends="
 	autoconf
 	automake
 	gettext-dev
-	libselinux-dev
 	libtool
 	ncurses-dev
 	utmps-dev
@@ -61,8 +60,7 @@ build() {
 		--disable-kill \
 		--disable-rpath \
 		--with-ncurses \
-		--disable-modern-top \
-		--enable-libselinux
+		--disable-modern-top
 	make
 }
 
