@@ -2,8 +2,8 @@
 # Maintainer: Simon Zeni <simon@bl4ckb0ne.ca>
 pkgname=sdl12-compat
 # Have the same version as the last upstream release
-pkgver=1.2.76
-pkgrel=1
+pkgver=1.2.78
+pkgrel=0
 pkgdesc="SDL-1.2 compat layer that uses SDL-2.0"
 url="https://github.com/libsdl-org/sdl12-compat"
 arch="all"
@@ -47,5 +47,5 @@ dev() {
 }
 
 sha512sums="
-34d9d67b1d708d8edf4ad3ead43d8e25f861eb58ffd444d9cfe4482e249a763962203bf48fa75a644d57fcc5956fb2cd30ca592403977e83fc9a1ea17ad0cf8e  sdl12-compat-1.2.76.tar.gz
+4be27cc88f672e016d8e7e8a99763122ff39866c21e8881247f3d5b57b19be2ecd160656bcfcaed1722a2b6abe01585740f549ad8beffee61a0979699278399d  sdl12-compat-1.2.78.tar.gz
 "
