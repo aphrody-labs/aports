@@ -2,7 +2,7 @@
 # Maintainer: andar1an <stephen@theandar1an.com>
 pkgname=resvg
 pkgver=0.48.1
-pkgrel=0
+pkgrel=1
 pkgdesc="SVG rendering library"
 url="https://github.com/linebender/resvg"
 arch="all"
@@ -17,6 +17,9 @@ source="
 	$pkgname-$pkgver.tar.gz::https://github.com/linebender/resvg/archive/refs/tags/v$pkgver.tar.gz
 "
 options="net" # cargo fetch
+
+# opt-level 3 is 2.19x faster than the default opt-level s
+export CARGO_PROFILE_RELEASE_OPT_LEVEL=3
 
 prepare() {
 	default_prepare
