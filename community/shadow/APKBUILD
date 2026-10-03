@@ -2,20 +2,13 @@
 maintainer="Aelin <aelin@postmarketos.org>"
 pkgname=shadow
 pkgver=4.20.3
-pkgrel=1
+pkgrel=2
 pkgdesc="PAM-using login and passwd utilities (usermod, useradd, ...)"
 url="https://github.com/shadow-maint/shadow"
 arch="all"
 license="BSD-3-Clause"
 options="suid setcap"
-makedepends="
-	cmd:setcap
-	libbsd-dev
-	libcap-dev
-	libselinux-dev
-	libsemanage-dev
-	linux-pam-dev
-	"
+makedepends="linux-pam-dev libbsd-dev libcap-dev cmd:setcap"
 install="$pkgname.post-upgrade"
 subpackages="
 	$pkgname-dbg
@@ -62,7 +55,7 @@ build() {
 		--enable-lastlog \
 		--without-audit \
 		--with-libpam \
-		--with-selinux \
+		--without-selinux \
 		--without-acl \
 		--without-tcb \
 		--with-yescrypt \
