@@ -2,7 +2,7 @@
  * OpenBao configuration. See: https://openbao.org/docs/configuration
  */
 
-storage "file" {
+storage "pebbledb" {
 	path = "/var/lib/openbao"
 }
 
