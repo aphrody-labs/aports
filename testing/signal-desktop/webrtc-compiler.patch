@@ -20,3 +20,18 @@
  
        if (is_apple) {
          ldflags += [ "-Wcrl,object_path_lto" ]
+diff --git a/webrtc/ringrtc/rffi/BUILD.gn.orig b/webrtc/ringrtc/rffi/BUILD.gn
+index 0419237..95ce4e6 100644
+--- a/webrtc/ringrtc/rffi/BUILD.gn.orig
++++ b/webrtc/ringrtc/rffi/BUILD.gn
+@@ -26,9 +26,7 @@ config("ringrtc_rffi_config") {
+   include_dirs = [ ".." ]
+   defines = [ "ENABLE_RINGRTC" ]
+   cflags = [
+-    "-Wmissing-prototypes",
+-    "--warning-suppression-mappings=" +
+-      rebase_path("suppression_mappings.txt", root_build_dir)
++    "-Wmissing-prototypes"
+   ]
+ }
+ 

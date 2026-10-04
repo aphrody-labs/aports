@@ -1,0 +1,25 @@
+8.27.0 introduced this migration with an SQL operation that need sqlite version
+3.53. System sqlcipher uses sqlite 3.46, which does not support ALTER COLUMN
+operation, making this migration step fail. We workaround by removing this step
+
+Setting column as NOT NULL is a defensive operation, thus not necessary for
+Signal to function. Thus 
+
+sqlcipher is currently pinned at 4.6.1 due to 4.7.0 introducing breaking
+changes. This patch can be removed once sqlcipher 4.19.0 is merged.
+diff --git a/Signal-Desktop/ts/sql/migrations/1800-deleted-fields-for-defunct-call-links.std.ts.orig b/Signal-Desktop/ts/sql/migrations/1800-deleted-fields-for-defunct-call-links.std.ts
+index f4d6c20..717dfb8 100644
+--- a/Signal-Desktop/ts/sql/migrations/1800-deleted-fields-for-defunct-call-links.std.ts.orig
++++ b/Signal-Desktop/ts/sql/migrations/1800-deleted-fields-for-defunct-call-links.std.ts
+@@ -34,11 +34,6 @@ export default function updateToSchemaVersion1800(
+     `updateToSchemaVersion1800: Updated ${updateResult.changes} defunct call links`
+   );
+ 
+-  db.exec(`
+-    ALTER TABLE defunctCallLinks
+-    ALTER COLUMN addedAt SET NOT NULL;
+-  `);
+-
+   db.exec(`
+     CREATE INDEX defunctCallLinks_expiring ON defunctCallLinks(addedAt);
+   `);
