@@ -5,7 +5,7 @@
 # Maintainer: omni <omni+alpine@hack.org>
 maintainer="omni <omni+alpine@hack.org>"
 pkgname=zathura
-pkgver=2026.07.18
+pkgver=2026.10.4
 pkgrel=0
 pkgdesc="Highly customizable and functional document viewer"
 url="https://pwmt.org/projects/zathura/"
@@ -60,6 +60,7 @@ build() {
 		-Dlandlock=enabled \
 		-Dmanpages=enabled \
 		-Dconvert-icon=disabled \
+		-Dshell-completions=enabled \
 		build .
 	ninja -C build
 }
@@ -73,5 +74,5 @@ package() {
 }
 
 sha512sums="
-021e578beb20e74218f84097fd606302eae5232ed1a792c0003bef19c874c4f069339b52a061006e4d3c240e7f7231d2bc34e8c462bcc375e8953f1f83bc2b65  zathura-2026.07.18.tar.xz
+53543c7f603ed94f9163870cd035198d583cb03f60d0743c7ad41d777f27fbc6d0e73fda8a426ae2fab9e46cf5b147736628d610cb8a377dc721896eea3f2cc3  zathura-2026.10.4.tar.xz
 "
