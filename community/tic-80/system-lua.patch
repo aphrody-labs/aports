@@ -1,0 +1,16 @@
+diff -rupN a/cmake/lua.cmake b/cmake/lua.cmake
+--- a/cmake/lua.cmake	2026-09-09 18:21:19.000000000 +0000
++++ b/cmake/lua.cmake	2026-09-11 01:18:47.705455690 +0000
+@@ -6,8 +6,10 @@ option(BUILD_WITH_LUA "Lua Enabled" ON)
+ message("BUILD_WITH_LUA: ${BUILD_WITH_LUA}")
+ 
+ if(BUILD_WITH_LUA AND PREFER_SYSTEM_LIBRARIES)
+-    find_path(lua_INCLUDE_DIR NAMES lua.h)
+-    find_library(lua_LIBRARY NAMES lua)
++    set(lua_INCLUDE_DIR "/usr/include/lua5.3")
++    set(lua_LIBRARY "/usr/lib/lua5.3/liblua.so")
++    include_directories(${lua_INCLUDE_DIR})
++    link_directories(${lua_LIBRARY})
+     if(lua_INCLUDE_DIR AND lua_LIBRARY)
+         add_library(luaapi STATIC
+             ${CMAKE_SOURCE_DIR}/src/api/luaapi.c

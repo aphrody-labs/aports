@@ -1,0 +1,12 @@
+diff -rupN a/vendor/wasm3/source/m3_config_platforms.h b/vendor/wasm3/source/m3_config_platforms.h
+--- a/vendor/wasm3/source/m3_config_platforms.h	2024-01-30 21:17:28.000000000 +0000
++++ b/vendor/wasm3/source/m3_config_platforms.h	2026-10-05 01:40:10.714301002 +0000
+@@ -83,7 +83,7 @@
+ # endif
+ 
+ # if !defined(M3_HAS_TAIL_CALL)
+-#  if defined(__EMSCRIPTEN__)
++#  if defined(__EMSCRIPTEN__) || defined(__powerpc__)
+ #   define M3_HAS_TAIL_CALL 0
+ #  else
+ #   define M3_HAS_TAIL_CALL 1
