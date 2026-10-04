@@ -1,6 +1,6 @@
 # Maintainer: Saijin-Naib <Saijin-Naib_package-maintenance@outlook.com>
 pkgname=mint-x-icons
-pkgver=1.7.8
+pkgver=1.7.9
 pkgrel=0
 pkgdesc="Mint-X icon theme"
 options="!check" # It is an icon theme
@@ -21,5 +21,5 @@ package() {
 }
 
 sha512sums="
-9bdac163b1bf34d34db248f962f7407152fb9b19c3212ac7df655720fb55cd7069783c2d5f26d3fe43b6b66ea7b65012035b1ad1ff5d5e962b30542a4488d207  mint-x-icons-1.7.8-2.tar.gz
+42ba226ef0e76ba2770b0e4c986256e5a8af420df1d8f85528e94c6a4fdcf664fabed82fa8ea45b7aa743923cc0a929a071878b35ba6e23a3301725d8d21423c  mint-x-icons-1.7.9-2.tar.gz
 "
