@@ -28,7 +28,6 @@ makedepends="$_depends_dev
 	"
 provides="linux-edge=$pkgver-r$pkgrel"
 options="!strip !check"
-_config=${config:-config-stable.${CARCH}}
 source="https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/linux-$_kernver.tar.xz
 	0001-powerpc-boot-wrapper-Add-z-notext-flag-for-ppc64le.patch
 	0002-x86-Compress-vmlinux-with-zstd-19-instead-of-22.patch
