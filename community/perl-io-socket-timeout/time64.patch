@@ -1,0 +1,15 @@
+diff --git a/lib/IO/Socket/Timeout.pm b/lib/IO/Socket/Timeout.pm
+index 7885ce0..25efb29 100644
+--- a/lib/IO/Socket/Timeout.pm
++++ b/lib/IO/Socket/Timeout.pm
+@@ -304,8 +304,8 @@ sub _set_sock_opt {
+         $read_seconds  = 0; $read_useconds  = 0;
+         $write_seconds = 0; $write_useconds = 0;
+     }
+-    my $read_struct  = pack( 'l!l!', $read_seconds, $read_useconds );
+-    my $write_struct = pack( 'l!l!', $write_seconds, $write_useconds );
++    my $read_struct  = pack( 'qq', $read_seconds, $read_useconds );
++    my $write_struct = pack( 'qq', $write_seconds, $write_useconds );
+ 
+     $self->setsockopt( SOL_SOCKET, SO_RCVTIMEO, $read_struct )
+       or croak "setsockopt(SO_RCVTIMEO): $!";
