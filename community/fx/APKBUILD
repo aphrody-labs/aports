@@ -2,19 +2,27 @@
 # Maintainer: omni <omni+alpine@hack.org>
 maintainer="omni <omni+alpine@hack.org>"
 pkgname=fx
-pkgver=39.2.0
-pkgrel=7
+pkgver=40.0.0
+pkgrel=0
 pkgdesc="Command-line tool and terminal JSON viewer"
 url="https://github.com/antonmedv/fx"
 arch="all"
 license="MIT"
 makedepends="go"
-subpackages="$pkgname-doc"
+subpackages="$pkgname-doc
+	$pkgname-bash-completion
+	$pkgname-fish-completion
+	$pkgname-zsh-completion
+	"
 options="net" # go
 source="$pkgname-$pkgver.tar.gz::https://github.com/antonmedv/fx/archive/refs/tags/$pkgver.tar.gz"
 
 build() {
-	go build .
+	go build -v .
+
+	for shellcomp in bash fish zsh; do
+		./"$pkgname" --comp  "$shellcomp" > "$pkgname"."$shellcomp"
+	done
 }
 
 check() {
@@ -23,9 +31,17 @@ check() {
 
 package() {
 	install -Dvm0755 fx -t "$pkgdir"/usr/bin/
+
 	install -Dvm0644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname/
+
+	install -Dm0644 "$pkgname".bash \
+		"$pkgdir"/usr/share/bash-completion/completions/"$pkgname"
+	install -Dm0644 "$pkgname".fish \
+		"$pkgdir"/usr/share/fish/vendor_completions.d/"$pkgname".fish
+	install -Dm0644 "$pkgname".zsh \
+		"$pkgdir"/usr/share/zsh/site-functions/_"$pkgname"
 }
 
 sha512sums="
-51236327fd35bd0e98a088edb932cb97222ba48b00d978629d152a0a235a6946e7e2a7ac7a96cd6cfcafdb5ac5281b5fa8de316af40bfc75c8b2af5aeebd415d  fx-39.2.0.tar.gz
+831ea5bfe2c6333c154fa549354769d1e10e637025cb9afa24c499c44298f560ccc8d5cec8f00c1419439207a09e2f4cbbef3ab2e9682b9ae568e58b9842440c  fx-40.0.0.tar.gz
 "
