@@ -1,9 +1,9 @@
-Enable system installation of OpenAL and Jemalloc by default since the
-bundled versions don't play nicely with musl libc.
+Enable system installation of OpenAL, Allocator and Jemalloc by default
+since the bundled versions don't play nicely with musl libc.
 
 --- a/launcher/Application.cpp
 +++ b/launcher/Application.cpp
-@@ -757,12 +757,12 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
+@@ -757,13 +757,13 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
          m_settings->registerSetting("OnlineFixes", false);
  
          // Native library workarounds
@@ -15,8 +15,10 @@ bundled versions don't play nicely with musl libc.
          m_settings->registerSetting("CustomGLFWPath", "");
 -        m_settings->registerSetting("UseNativeJemalloc", false);
 -        m_settings->registerSetting("CustomJemallocPath", "");
+-        m_settings->registerSetting("UseSystemAllocator", false);
 +        m_settings->registerSetting("UseNativeJemalloc", true);
 +        m_settings->registerSetting("CustomJemallocPath", "/usr/lib/libjemalloc.so.2");
++        m_settings->registerSetting("UseSystemAllocator", true);
  
          // Performance related options
          m_settings->registerSetting("EnableFeralGamemode", false);

@@ -5,14 +5,14 @@ points to a glfw version with IME support.
 
 ## Minecraft 1.13 and above (LWJGL 3)
 
-Install gcompat, jemalloc and openal-soft-libs:
-	apk add gcompat jemalloc openal-soft-libs
+Install gcompat and openal-soft-libs:
+	apk add gcompat openal-soft-libs
 
-Make sure 'Use system installation of OpenAL' and 'Use system
-installation of Jemalloc' are enabled in Settings -> Minecraft -> Tweaks
--> Native library workarounds. And both library paths are set (
-/usr/lib/libopenal.so.1 and /usr/lib/libjemalloc.so.2). Newly created
-instances should just work when this is done.
+Make sure 'Use system installation of OpenAL' and 'Use system Allocator'
+are enabled in Settings -> Minecraft -> Tweaks -> Native library
+workarounds. And the OpenAL library path is set to
+/usr/lib/libopenal.so.1. Newly created instances should just work when
+this is done.
 
 For already existing instances the LWJGL version needs to be set to 3.3.2
 or newer (<instance> -> Edit -> Version -> LWJGL 3 -> Change Version).

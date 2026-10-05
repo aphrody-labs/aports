@@ -1,0 +1,123 @@
+As of writing native jemalloc does not work for LWJGL >= 3.4.2
+
+--- a/launcher/Application.cpp
++++ b/launcher/Application.cpp
+@@ -763,6 +763,7 @@ Application::Application(int& argc, char** argv) : QApplication(argc, argv)
+         m_settings->registerSetting("CustomGLFWPath", "");
+         m_settings->registerSetting("UseNativeJemalloc", false);
+         m_settings->registerSetting("CustomJemallocPath", "");
++        m_settings->registerSetting("UseSystemAllocator", false);
+ 
+         // Performance related options
+         m_settings->registerSetting("EnableFeralGamemode", false);
+--- a/launcher/minecraft/MinecraftInstance.cpp
++++ b/launcher/minecraft/MinecraftInstance.cpp
+@@ -220,6 +220,7 @@ void MinecraftInstance::loadSpecificSettings()
+         m_settings->registerOverride(global_settings->getSetting("CustomGLFWPath"), nativeLibraryWorkaroundsOverride);
+         m_settings->registerOverride(global_settings->getSetting("UseNativeJemalloc"), nativeLibraryWorkaroundsOverride);
+         m_settings->registerOverride(global_settings->getSetting("CustomJemallocPath"), nativeLibraryWorkaroundsOverride);
++        m_settings->registerOverride(global_settings->getSetting("UseSystemAllocator"), nativeLibraryWorkaroundsOverride);
+ 
+         // Performance related options
+         auto performanceOverride = m_settings->registerSetting("OverridePerformance", false);
+@@ -565,6 +566,9 @@ QStringList MinecraftInstance::extraArguments()
+             if (!customPath.isEmpty())
+                 jemallocPath = customPath;
+         }
++        if (settings()->get("UseSystemAllocator").toBool()) {
++            list.append("-Dorg.lwjgl.system.allocator=system");
++        }
+ 
+         QFileInfo openALInfo(openALPath);
+         QFileInfo glfwInfo(glfwPath);
+@@ -980,13 +984,16 @@ QStringList MinecraftInstance::verboseDescription(AuthSessionPtr session, Minecr
+     bool nativeOpenAL = settings->get("UseNativeOpenAL").toBool();
+     bool nativeGLFW = settings->get("UseNativeGLFW").toBool();
+     bool nativeJemalloc = settings->get("UseNativeJemalloc").toBool();
+-    if (nativeOpenAL || nativeGLFW || nativeJemalloc) {
++    bool systemAllocator = settings->get("UseSystemAllocator").toBool();
++    if (nativeOpenAL || nativeGLFW || nativeJemalloc || systemAllocator) {
+         if (nativeOpenAL)
+             out << "Using system OpenAL.";
+         if (nativeGLFW)
+             out << "Using system GLFW.";
+         if (nativeJemalloc)
+             out << "Using system Jemalloc.";
++        if (systemAllocator)
++            out << "Using system allocator.";
+         out << emptyLine;
+     }
+ 
+--- a/launcher/ui/widgets/MinecraftSettingsWidget.cpp
++++ b/launcher/ui/widgets/MinecraftSettingsWidget.cpp
+@@ -223,6 +223,7 @@ void MinecraftSettingsWidget::loadSettings()
+ #else
+     m_ui->lineEditJemallocPath->setPlaceholderText(tr("Path to %1 library file").arg(BuildConfig.JEMALLOC_LIBRARY_NAME));
+ #endif
++    m_ui->useSystemAllocatorCheck->setChecked(settings->get("UseSystemAllocator").toBool());
+ 
+     // Performance
+     m_ui->perfomanceGroupBox->setChecked(m_instance == nullptr || settings->get("OverridePerformance").toBool());
+@@ -401,6 +402,7 @@ void MinecraftSettingsWidget::saveSettings()
+         settings->set("CustomOpenALPath", m_ui->lineEditOpenALPath->text());
+         settings->set("UseNativeJemalloc", m_ui->useNativeJemallocCheck->isChecked());
+         settings->set("CustomJemallocPath", m_ui->lineEditJemallocPath->text());
++        settings->set("UseSystemAllocator", m_ui->useSystemAllocatorCheck->isChecked());
+     } else {
+         settings->reset("UseNativeGLFW");
+         settings->reset("CustomGLFWPath");
+@@ -408,6 +410,7 @@ void MinecraftSettingsWidget::saveSettings()
+         settings->reset("CustomOpenALPath");
+         settings->reset("UseNativeJemalloc");
+         settings->reset("CustomJemallocPath");
++        settings->reset("UseSystemAllocator");
+     }
+ 
+     // Performance
+--- a/launcher/ui/widgets/MinecraftSettingsWidget.ui
++++ b/launcher/ui/widgets/MinecraftSettingsWidget.ui
+@@ -722,6 +722,22 @@ It is most likely you will need to change the path - please refer to the mod's w
+                 </property>
+                </widget>
+               </item>
++              <item row="12" column="0">
++               <spacer name="verticalSpacer_7">
++                <property name="orientation">
++                 <enum>Qt::Vertical</enum>
++                </property>
++                <property name="sizeType">
++                 <enum>QSizePolicy::Fixed</enum>
++                </property>
++                <property name="sizeHint" stdset="0">
++                 <size>
++                  <width>0</width>
++                  <height>6</height>
++                 </size>
++                </property>
++               </spacer>
++              </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="lineEditGLFWPath">
+                 <property name="enabled">
+@@ -764,6 +780,13 @@ It is most likely you will need to change the path - please refer to the mod's w
+                 </property>
+                </widget>
+               </item>
++              <item row="11" column="0" colspan="2">
++               <widget class="QCheckBox" name="useSystemAllocatorCheck">
++                <property name="text">
++                 <string>Use system Allocator</string>
++                </property>
++               </widget>
++              </item>
+              </layout>
+             </widget>
+            </item>
+@@ -964,6 +987,7 @@ It is most likely you will need to change the path - please refer to the mod's w
+   <tabstop>lineEditOpenALPath</tabstop>
+   <tabstop>useNativeJemallocCheck</tabstop>
+   <tabstop>lineEditJemallocPath</tabstop>
++  <tabstop>useSystemAllocatorCheck</tabstop>
+   
+   <tabstop>enableFeralGamemodeCheck</tabstop>
+   <tabstop>enableMangoHud</tabstop>

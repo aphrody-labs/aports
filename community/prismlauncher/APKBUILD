@@ -3,7 +3,7 @@
 # Maintainer: Sertonix <sertonix@posteo.net>
 pkgname=prismlauncher
 pkgver=11.1.1
-pkgrel=0
+pkgrel=1
 _libnbtplusplus_commit=687e43031df0dc641984b4256bcca50d5b3f7de3
 pkgdesc="A custom launcher for Minecraft that allows you to easily manage multiple installations of Minecraft at once"
 url="https://prismlauncher.org/"
@@ -38,8 +38,9 @@ source="$pkgname-$pkgver.tar.gz::https://github.com/PrismLauncher/PrismLauncher/
 	libnbtplusplus-$_libnbtplusplus_commit.tar.gz::https://github.com/PrismLauncher/libnbtplusplus/archive/$_libnbtplusplus_commit.tar.gz
 	0001-system-jemalloc.patch
 	0002-native-openal-lwjgl-2.patch
-	0003-use-system.patch
-	0004-no-Werror.patch
+	0003-system-allocator.patch
+	0004-use-system.patch
+	0005-no-Werror.patch
 
 	README.alpine
 	"
@@ -84,9 +85,10 @@ package() {
 sha512sums="
 21d79c47473764e96e58f158851b5ee64fe1480d7c0371ad0f2d5075fc05255c1249e951289b87e0343b7cc17fdb3bfd23c75a56788b01c20137c547d0aede74  prismlauncher-11.1.1.tar.gz
 2ead07c3b8ca55ad59a561358e7773549703f291bdceb40e64c0b1a6ff5298ebd68ec54216954b4bb1f66a566e9da93b00008af859fcfe76cfdd9b72e9923064  libnbtplusplus-687e43031df0dc641984b4256bcca50d5b3f7de3.tar.gz
-9c20903699b50ef5561b849817852afc8c6148860a9073c9b23c4885a120bfd13965131bc54a23c5346b225ff2a1ba1afbc999ecb67ac7b16321c102f71ceca5  0001-system-jemalloc.patch
+b01dd4388bfb6ea79f0e16a52fe730a376e28edf741d718e2287a003d051275ecec5eafe3bbed7ac421ab9750a9bc9ca6022132b3d712efd052db8e5a58b4ba9  0001-system-jemalloc.patch
 1d2174b1d8673c4ae07a15e3d649cfa79c6e55e3eb28c86ae2f84bfc354734284f7e4b7fb3b3934cae4e4a139572b74721d04bdc6cb944c731960cc30f105cec  0002-native-openal-lwjgl-2.patch
-c2a13759537637ca3c65a88f3be009370ecbdaa2cab0f61c6669c6b41f845ac8c92b2a620398152879b996caaa1d3c95cdc4c8ba6aa6464c6b7a455b0b914add  0003-use-system.patch
-3c1f48f49ba6108a0aa1a8c4e05ac1c398ac495474f5b5bb72f0283c5bec97486b68821942774b03842ca9f79df889e118056b062043bd4a1175e2fed845a24b  0004-no-Werror.patch
-144061cf956cf07e12668dc9534517b7a6543eca05039f69779dd8c18f17055473bfd066a06fad88dac229ee217a05c485b821b10945eb9bc2da0080db4242c6  README.alpine
+749515fa97d59bf5ca329c7f48cf205ceb9d46b93b154419791dccd910e3f1c7e3dd84fd53f82143bd0c5cb73037fc25a8bca2119a8081ec719b1cfa98f92514  0003-system-allocator.patch
+205d3715cc7bb857706ca6a29cc7ceff01597547e47b317b88e5b843e964c95586604c0e3a27aede69c2496c2d3f08d962bafe6f4dcc01c220081214630d5f6c  0004-use-system.patch
+3c1f48f49ba6108a0aa1a8c4e05ac1c398ac495474f5b5bb72f0283c5bec97486b68821942774b03842ca9f79df889e118056b062043bd4a1175e2fed845a24b  0005-no-Werror.patch
+83850cc3260dfa2d2964c9526e5546112be305d3a44e6378f7176a73ee8022f637f95349568deb93bc5c0c2bc625df3bda940ec571dae06a89f3189f9216389f  README.alpine
 "
