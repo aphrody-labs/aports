@@ -1,8 +1,8 @@
-# Contributor: Robin Candau <robincandau@protonmail.com>
-# Maintainer: Robin Candau <robincandau@protonmail.com>
+# Contributor: Robin Candau <robincandau@mailbox.org>
+# Maintainer: Robin Candau <robincandau@mailbox.org>
 pkgname=syd-tui
 pkgver=0.2.2
-pkgrel=0
+pkgrel=1
 pkgdesc="A terminal user interface for sydbox"
 url="https://gitlab.exherbo.org/sydbox/sydbox/-/tree/main/tui"
 # s390x: limited by sydbox

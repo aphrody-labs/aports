@@ -1,8 +1,8 @@
-# Contributor: Robin Candau <robincandau@protonmail.com>
-# Maintainer: Robin Candau <robincandau@protonmail.com>
+# Contributor: Robin Candau <robincandau@mailbox.org>
+# Maintainer: Robin Candau <robincandau@mailbox.org>
 pkgname=py3-pylxd
 pkgver=2.4.2
-pkgrel=0
+pkgrel=1
 pkgdesc="Library for interacting with the LXD REST API"
 url="https://pylxd.readthedocs.io/en/latest"
 arch="noarch"

@@ -1,8 +1,8 @@
-# Contributor: Robin Candau <robincandau@protonmail.com>
-# Maintainer: Robin Candau <robincandau@protonmail.com>
+# Contributor: Robin Candau <robincandau@mailbox.org>
+# Maintainer: Robin Candau <robincandau@mailbox.org>
 pkgname=oniri
 pkgver=1.3.6
-pkgrel=0
+pkgrel=1
 pkgdesc="A tool that automatically maximizes the only window of a niri workspace"
 url="https://github.com/Antiz96/oniri"
 # s390x and 32-bit architectures excluded due to niri

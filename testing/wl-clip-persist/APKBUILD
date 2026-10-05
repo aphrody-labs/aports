@@ -1,8 +1,8 @@
-# Contributor: Robin Candau <robincandau@protonmail.com>
-# Maintainer: Robin Candau <robincandau@protonmail.com>
+# Contributor: Robin Candau <robincandau@mailbox.org>
+# Maintainer: Robin Candau <robincandau@mailbox.org>
 pkgname=wl-clip-persist
 pkgver=0.5.0
-pkgrel=0
+pkgrel=1
 pkgdesc="Keep Wayland clipboard even after programs close"
 url="https://github.com/Linus789/wl-clip-persist"
 arch="all"

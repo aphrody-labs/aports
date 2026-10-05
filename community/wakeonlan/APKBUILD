@@ -1,8 +1,8 @@
-# Contributor: Robin Candau <robincandau@protonmail.com>
-# Maintainer: Robin Candau <robincandau@protonmail.com>
+# Contributor: Robin Candau <robincandau@mailbox.org>
+# Maintainer: Robin Candau <robincandau@mailbox.org>
 pkgname=wakeonlan
 pkgver=0.50
-pkgrel=0
+pkgrel=1
 pkgdesc="Perl script for waking up computers via Wake-On-LAN magic packets"
 url="https://github.com/jpoliv/wakeonlan"
 arch="noarch"

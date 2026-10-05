@@ -1,8 +1,8 @@
-# Contributor: Robin Candau <robincandau@protonmail.com>
-# Maintainer: Robin Candau <robincandau@protonmail.com>
+# Contributor: Robin Candau <robincandau@mailbox.org>
+# Maintainer: Robin Candau <robincandau@mailbox.org>
 pkgname=sshs
 pkgver=4.8.0
-pkgrel=0
+pkgrel=1
 pkgdesc="Terminal user interface for SSH"
 url="https://github.com/quantumsheep/sshs"
 arch="all"
