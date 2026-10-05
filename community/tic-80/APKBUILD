@@ -1,10 +1,10 @@
 # Maintainer: mio <miyopan@e.email>
 maintainer="mio <miyopan@e.email>"
 pkgname=tic-80
-pkgver=1.3.0
+pkgver=1.3.1
 pkgrel=0
 # Commit is used to insert the correct version hash during build
-_commit="4609f5f724b5f5398a591532c1a6e71bb747ca4f"
+_commit="62c24e5c9271f1445f61120b7d204805ff9db912"
 pkgdesc="Fantasy computer for making, playing and sharing tiny games"
 url="https://tic80.com/"
 license="MIT"
@@ -163,7 +163,7 @@ tools() {
 }
 
 sha512sums="
-f67adcd81bdbdd9a0804f19eb44eda5b5f600340133ffc68eb0b6dbc472be98aa12f3d0a7563e026a661a240b803635d5e27f07685fda892c92ccf63f076a55a  tic-80-1.3.0.tar.gz
+6d28909726387813f583d414df6559106c20ccebf694062f491a4c8e61a22f8fb870be974c42a0e87bba0fa07de48e81c5348c163ab0ce065e8518fd354565b0  tic-80-1.3.1.tar.gz
 3143ce05f999e75b56b6b12d175336d613996aa7ae277c3191958863fbcfb79d4e8a60ce6b2570f57487a6fe80f94e45b0566c664f36e26ee4279484154a73d5  system-lua.patch
 5ebf51502b69453f2867e42dd713149d2cc1faa559086dee928ac42ae9f0d7b010fd79b335b4b62877634705ff88351e9585f5c5a4b4bec3dc39e6c88c600575  wasm3-no-musttail-ppc64le.patch.noauto
 2dba667249c19ec470421327f6cc20f11a168847a99f60db395980c28339a269041a778645355d8ecbac76e1eac0b77c12f3f2fb3573e0e372ccfffdc947ca1c  argparse-0d5f5d0745df14a3f373f7eed85bf524714f4524.tar.gz
