@@ -1,7 +1,7 @@
 # Contributor: Chad Dougherty <crd477@icloud.com>
 # Maintainer: Chad Dougherty <crd477@icloud.com>
 pkgname=nwipe
-pkgver=0.42
+pkgver=0.43
 pkgrel=0
 pkgdesc="nwipe is a program that will securely erase the entire contents of hard disks"
 url="https://github.com/martijnvanbrummelen/nwipe"
@@ -16,6 +16,7 @@ makedepends="
 	ncurses-dev
 	parted-dev
 	linux-headers
+	libnvme-dev
 	"
 subpackages="$pkgname-doc"
 source="https://github.com/martijnvanbrummelen/nwipe/archive/v$pkgver/nwipe-v$pkgver.tar.gz"
@@ -36,5 +37,5 @@ package() {
 
 
 sha512sums="
-91a03c8decd120960df4ce6b6e958efe62045d4bb54962be52b5e630092004937ca39e3a09a811898ecc9adc287a7f831c616a4df614afad4b4b260c6948678b  nwipe-v0.42.tar.gz
+9447c04d614753a53518f26e5b6b54a8f0b116496203ada7f226916d202f0e80e0796a5adc5552069b666f680c449091083a67492da4a771f3841c025a43ba91  nwipe-v0.43.tar.gz
 "
