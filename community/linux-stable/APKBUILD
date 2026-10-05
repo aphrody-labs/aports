@@ -68,6 +68,9 @@ fi
 arch="all !armhf"
 license="GPL-2.0-only"
 
+# secfixes are not tracked
+# https://gitlab.alpinelinux.org/alpine/aports/-/work_items/18194
+
 prepare() {
 	default_prepare
 
