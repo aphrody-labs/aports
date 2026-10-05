@@ -9,7 +9,7 @@ arch="noarch"
 license="BSD-3-Clause"
 depends="python3"
 makedepends="py3-gpep517 py3-hatchling"
-options="!check" # No test suite present
+checkdepends="bash py3-argcomplete py3-mypy py3-pytest py3-pytest-mock"
 subpackages="$pkgname-pyc"
 source="traitlets-$pkgver.tar.gz::https://github.com/ipython/traitlets/archive/v$pkgver.tar.gz"
 builddir="$srcdir/${pkgname#py3-}-$pkgver"
@@ -21,6 +21,14 @@ build() {
 	gpep517 build-wheel \
 		--wheel-dir .dist \
 		--output-fd 3 3>&1 >&2
+}
+
+check() {
+	# test_typing.py: requires mypy >=1.20
+	# https://github.com/ipython/traitlets/pull/949
+	python3 -m venv --clear --without-pip --system-site-packages .testenv
+	.testenv/bin/python3 -m installer .dist/*.whl
+	.testenv/bin/python3 -m pytest --ignore tests/test_typing.py
 }
 
 package() {
