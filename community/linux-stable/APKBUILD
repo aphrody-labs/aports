@@ -3,7 +3,7 @@ _flavor=stable
 pkgname=linux-$_flavor
 pkgver=7.1.5
 _kernver=${pkgver%.*}
-pkgrel=10
+pkgrel=11
 pkgdesc="Linux stable kernel"
 url="https://www.kernel.org"
 depends="initramfs-generator"
@@ -355,5 +355,5 @@ f6326f7f90db26360abbe9aa73db219ce8e70c98875c411139e7b9ce671ba5150e522c469bce109b
 6e9e355f902a85286130031d20f4d895d43f4f623b33029fa1d18ce39a60c3adf095237319133fe5538cb2680d046a122049f2314e62f3f2ed5136089521764f  stable.riscv64.config
 f527a973211e755cb614807bbded925f5aa637f80de2c70d3dddf8dea8806fedd2193eef1c9c156b8fdfc490101bc7a8e3153ff8cca9cf75b9cfe25daf3ee730  stable.s390x.config
 e197aa852566968ebf772320b96f3b339461444778bfacb8abdb99c84c86477a39a3dbd55200f6d24c1d570f29307ca9d5ab356ff8cef6658da82ee9532f8e1f  stable.x86.config
-3b5eac420981820a853e1b7a2d9caac16da87bdb9128f2e0860cff9498e5c0035bc0aec9786e6101216b584de6e0803bd5bdcb468f7600f22e67400b4cd2aade  stable.x86_64.config
+ce3674296548d9568640a57e9474e126fdfadb8d522bef7001a0649779c571df47dac4c97b25cffc97ce1d7c1eef3792281ce8ac7e9c517afd3e7efd8cc58e4a  stable.x86_64.config
 "
