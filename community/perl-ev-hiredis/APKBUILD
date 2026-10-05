@@ -15,22 +15,17 @@ makedepends="
 	hiredis-dev perl-dev perl-file-which
 	perl-module-build perl-module-build-xsutil
 	"
-checkdepends="perl-devel-refcount perl-test-deep perl-test-tcp"
+checkdepends="
+	perl-devel-refcount
+	perl-test-deep
+	perl-test-redisserver
+	perl-test-tcp
+	"
 subpackages="$pkgname-doc"
 source="https://cpan.metacpan.org/authors/id/S/SH/SHOGO/EV-Hiredis-$pkgver.tar.gz
 	use-system-hiredis.patch
 	"
 builddir="$srcdir/$_pkgreal-$pkgver"
-
-# no perl-test-redisserver on 32-bit
-case "$CARCH" in
-armv7|armhf|x86)
-	_test_args="--test_files=t/autoload.t"
-	;;
-*)
-	checkdepends="$checkdepends perl-test-redisserver"
-	;;
-esac
 
 prepare() {
 	default_prepare
@@ -48,7 +43,7 @@ build() {
 }
 
 check() {
-	./Build test $_test_args
+	./Build test
 }
 
 package() {
