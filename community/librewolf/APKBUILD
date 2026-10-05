@@ -4,12 +4,10 @@
 # Contributor: Sertonix <sertonix@posteo.net>
 maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
 pkgname=librewolf
-pkgver=154.0_p2
+pkgver=157.0_p1
 pkgrel=0
-# https://librewolf.dev/librewolf/settings/, matching submodule version.
-_settings_commit=590dd1c2e3c248f4b3023093520e9fcd642dd899
 # https://github.com/mozilla-l10n/firefox-l10n/, matching pinned version.
-_l10n_commit=25feb12abf0f49b24210a9a6b76dcd4bca9d05bb
+_l10n_commit=1ccd8a9a31a6c858f281798805b92b609b22b55b
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
 # s390x blocked by rlbox https://bugzilla.mozilla.org/show_bug.cgi?id=1966554
@@ -24,7 +22,7 @@ depends="
 	so:libGL.so.1
 	pciutils-libs
 	"
-_llvmver=22
+_llvmver=23
 makedepends="
 	alsa-lib-dev
 	aom-dev
@@ -54,7 +52,7 @@ makedepends="
 	libwebp-dev
 	libxcomposite-dev
 	libxt-dev
-	lld
+	lld$_llvmver
 	llvm$_llvmver-dev
 	m4
 	mesa-dev
@@ -72,7 +70,7 @@ makedepends="
 	python3
 	scudo-malloc
 	sed
-	wasi-compiler-rt
+	wasi-compiler-rt~$_llvmver
 	wasi-sdk
 	wireless-tools-dev
 	xvfb-run
@@ -84,29 +82,27 @@ riscv64 | x86 | arm* | aarch64) ;;
 esac
 
 source="$pkgname-source-$pkgver.tar.gz::https://librewolf.dev/librewolf/source/archive/${pkgver/_p/-}.tar.gz
-	$pkgname-settings-$_settings_commit.tar.gz::https://librewolf.dev/librewolf/settings/archive/$_settings_commit.tar.gz
 	firefox-${pkgver%_p*}.tar.xz::https://ftp.mozilla.org/pub/firefox/releases/${pkgver%_p*}/source/firefox-${pkgver%_p*}.source.tar.xz
 	firefox-l10n-$_l10n_commit.tar.gz::https://librewolf.dev/mirror/firefox-l10n/archive/$_l10n_commit.tar.gz
 	abseil-cpp.patch
 	fix-fortify-system-wrappers.patch
 	lfs64.patch
 	no-ccache-stats.patch
+	rustix-statx-1.1.5.patch
 	rust-lto-thin.patch
 	riscv64-no-lto.patch
 	sandbox-sched_setscheduler.patch
 	sqlite-ppc.patch
-	ppc-abi.patch
 	time64.patch
 	widevine.patch
 	musl-prctl.patch
 	wasm-wasip1.patch
+	audio_thread_priority-musl-pthread_t.patch
+	parakeet-cstdint.patch
+	hunspell-csutil-ios.patch
 
 	loong0003-Define-HWCAP_LOONGARCH_LSX_and_LASX.patch
 	loong0004-Fix-ycbcr-chromium_types-warning.patch
-	loongarch-fix-row_lsx.cc-and-row_lasx.cc.patch
-	Fix-build-failure-with-with-system-av1.patch
-
-	Use-pre-fetched-firefox-l10n.patch.early
 
 	mozconfig
 	librewolf.desktop
@@ -522,18 +518,13 @@ sonameprefix="$pkgname:"
 _bump() {
 	msg "Updating commit hashes in $APKBUILD..."
 
-	# Get pinned settings submodule commit from librewolf source tag
-	local _tag=${pkgver/_p/-}
-	local _settings_commit=$(curl -sL "https://librewolf.dev/api/v1/repos/librewolf/source/contents/settings?ref=$_tag" | jq -r '.sha')
 	local _fftag="FIREFOX_$(echo "${pkgver%_p*}" | tr . _)_RELEASE"
 	local _l10n_commit=$(curl -sfL "https://raw.githubusercontent.com/mozilla-firefox/firefox/$_fftag/browser/locales/l10n-changesets.json" |
 		jq -r '[.[].revision] | unique | .[]')
 
-	msg "  settings=$_settings_commit"
 	msg "  l10n=$_l10n_commit"
 
 	sed -i \
-		-e "s|^_settings_commit=.*|_settings_commit=$_settings_commit|" \
 		-e "s|^_l10n_commit=.*|_l10n_commit=$_l10n_commit|" \
 		"$APKBUILD"
 }
@@ -547,14 +538,11 @@ _clear_vendor_checksums() {
 
 prepare() {
 	cd "$srcdir"/source
-	rmdir settings
-	mv ../settings settings
 	mv ../firefox-${pkgver%_p*} librewolf-${pkgver/_p/-}
 	mkdir -p librewolf-${pkgver/_p/-}/lw
 	mv ../firefox-l10n librewolf-${pkgver/_p/-}/lw/l10n
 
-	patch -p1 <"$srcdir"/Use-pre-fetched-firefox-l10n.patch.early
-
+	export SKIP_FETCHING_LOCALES=1
 	python3 scripts/librewolf-patches.py ${pkgver%_p*} ${pkgver#*_p}
 
 	default_prepare
@@ -564,6 +552,7 @@ prepare() {
 
 	_clear_vendor_checksums audio_thread_priority
 	_clear_vendor_checksums libc
+	_clear_vendor_checksums rustix
 	_clear_vendor_checksums cc
 	_clear_vendor_checksums zeitstempel
 	_clear_vendor_checksums wgpu-hal
@@ -763,29 +752,28 @@ package() {
 }
 
 sha512sums="
-54319a411be8f627076afd6e8d162cbdac5a65ce8ffa01ae81699f83718ece660b1a7cca47231a8784a95df14a922e3acb3e0443bcc7e5b4400f09993a77565b  librewolf-source-154.0_p2.tar.gz
-6743c0b1e310f3b458311a63ccd4033691561b7374dfc7c438e440dc1226490f66970b99753cd8d7fe5057904cbd97c0fc173c4761f6b8d9290b1e1bba4f4bd5  librewolf-settings-590dd1c2e3c248f4b3023093520e9fcd642dd899.tar.gz
-a77cd664982add628681167ef5939bd6bf0c894aa380cca66f9b5fb265947874d1e819d42264f1dd07c843f8a6dc020da268cca9ff1e064fca019de91af9b996  firefox-154.0.tar.xz
-9eb405255fa7bb02788fecea3ddb90cd61f0ed85ce0c210c111b39eacb50d8dac00ccd9ad21bc8ca55fe4c19e8ac48acf05cdf2e0819e2dea69f9a5bdf868fd4  firefox-l10n-25feb12abf0f49b24210a9a6b76dcd4bca9d05bb.tar.gz
+3de23973b4c92d419ebb4e91bb206015a84875993f771475de384bca09150d1f9d585f13ab465eafeef0bcd000e61b14fc220f2129c0cbb1a737917efb0aab26  librewolf-source-157.0_p1.tar.gz
+d0c1788102904fe83bfbeecdbdfbd4033743e9bb791ff7063ca4a2a72146c722e0c87fb7531b32be9491f5b1529960364197150c27742e0aea3cefcd13ed0dde  firefox-157.0.tar.xz
+17917cae79741cc0af18131abb24ec39d1e18a3800f48ff54bfe09a122f20116d9a4ad1a12666c8cd784241292bbeccb05b3dad691f5fea5e98a587a9c8df79f  firefox-l10n-1ccd8a9a31a6c858f281798805b92b609b22b55b.tar.gz
 616169325dc7715d3ff558c1846394d992f1a0a9427af5339e84abf3d9e7d85a5f9f6bae218ee3416ef39769a56150ac35881435ac09b976876fd556fddeac38  abseil-cpp.patch
 19eea840aa9c1c21e7bd1f832ec078989fe6f08fca40baa271be7e74f1cffeb5ab8d3218a93e664b8d90a41506dede524e2a5174cd47580866109bc6711ea969  fix-fortify-system-wrappers.patch
 e75daab5573ec6e28d3940a9bb98304d572dfb26ce7c1709e99fdd75dfa58abce170c96de683f8dc2224ea2e118aa7d78affbd54f99c4e328a4641685d64bd7d  lfs64.patch
 c0437a6753f3f350968fa12d250efdfe1bea77baf0e4c06b072b5cc9e78c774dbf4506bc536337030d349fb3ba4460097b75b0c7c5b8fb2d39d8b0a392948936  no-ccache-stats.patch
+079db1278b97eeccccd8a9a7df1c39f54a9586feaa1971c523311dd29e10c09ff807f61b8fcccc5e664afecf5d6ea9dfbcc1cd99db75859e91baa86d03a66e75  rustix-statx-1.1.5.patch
 1c6918dd6655d3a1251bfd4af2e1c561cbb00d540a883b4c1ebf7f5de530d754d9ac07b4b5f56cdab6c511d25c8910ec94043f5733e97501a67abffe1bafaeb1  rust-lto-thin.patch
 b12dbff6513ac8c231d91c257a9accecc034d9ea9c31d99ca0454334ccf80fe7b50d6a356182dc46a9f25064366ea9a177f463cb2544b1cf5368ee6bd71bc095  riscv64-no-lto.patch
 f8c3555ef6207933cbffbf4fc101a9b4c0d2990c0063162f0f0bde70ef0b46f86bfac42e7110695183424a87948de593f3927b2d8509ede3e4fc7bd8a1fad1ce  sandbox-sched_setscheduler.patch
 67bc0be3da973e6859256bf9be4df7100837430e6076fc0bd623f504c35e02e6c191e9c5a3a1d202e5ad4d89f874f254a09e164e39c7bfd97bbc8d4c8d0632a5  sqlite-ppc.patch
-2a09e1d6cdc8a6e4a357c1e10dd0dde5c381c64b4a952b3ce54eb4436cb16933f321be85ff616647334ce7379480f415db029adeac1a0782f4ef9816c83b8ca4  ppc-abi.patch
 b4a10219f3ffad660564769b9557f22cbfdee262cb1dd1024f68c13eac4f30cf05db98cc21e5bdb8386fa25dbb89e22b1ae1482aa2c06b23fd6c68b5b19d4290  time64.patch
 eadf3f2d12d469010a1f6b83bd33ba276cdbf570db8c74c61b7c3d3eda80c7e843c1ea17400412be243b5309383543456f0d6de94b18323c542ba66d5cff89db  widevine.patch
 a5427a5cbf670dc4d63256cfc471c39a401254991081cba50a39ef0035c655381f379f064daf3ebc83392d1d1080a51f6f66242f68a0331935195c1539ec7285  musl-prctl.patch
 49989fa0e87e438b76905f730299449995c67bdd78f4f41d1225b5bdf48efe293e7363d40f918efc91a5f5d7b03c69fb9b4e58a99d8f4ef36b89d66a933e52bf  wasm-wasip1.patch
+cc4a09631d9f0911255485ec73409eaba6bddc70a4f8fd4a442b3f5d2a703c11674dadc0b10813e77513779a470e88740ecebc611041bebbe9c6e164e9a38ed7  audio_thread_priority-musl-pthread_t.patch
+3f6d11219024cb8db148f95d73afce2fb58a374ac7f57d02626dcf24642578843a54e2b3637b6b92a3f6ca934e3a277e2d9118cec1eb9abcc5c63b941385827d  parakeet-cstdint.patch
+d6e0bbfc20e1d1e4a25819fc4e3558475ce14c26a2206ee8f7e0d1c3e3e671e40ee109636e564b058530dff061eee9903aac9a73d7051b6bd307e5076023f548  hunspell-csutil-ios.patch
 d21650c2a2b6f91bbd7fa16e49d3fc7056cd985ccdf20aa8d154b4180e844eba219b285d4edd673fd68c7b0a9510476bb7ca3b78d1b6a54a08a33f945b515121  loong0003-Define-HWCAP_LOONGARCH_LSX_and_LASX.patch
 f95b3a8338b34c98ae028278fcec3a1ae48d8de9fa9eed54544151ae994b57b8d0ff0e6363632257d3cbe9452bcd93ade5c139cf728d0a149a038a179a0b4016  loong0004-Fix-ycbcr-chromium_types-warning.patch
-fb8078ac8d4ae28851c5c82f81fd2609baf8d6280d07fbce31af07a50e5919733bd0b15b6dfebd6144bfb24c28e7a0bab83b9fcd75e8c1acc3cb00f8daf55192  loongarch-fix-row_lsx.cc-and-row_lasx.cc.patch
-fe4c8c350afb64c972d3173c8ad54b83706c0f21d4a74b08a5397835dfb127aeb84d60808737413b00d7b8590e018ae83914a526f2797f6f906ef566df5e2ba0  Fix-build-failure-with-with-system-av1.patch
-bc684b183ec9a1467727d76f6822c897d0f9a192c2ed5d8f8704fd19643e9afbcffeb2e2f099194613aac97150a336fb2d802260491eec588dd6c08eb13367bc  Use-pre-fetched-firefox-l10n.patch.early
-2131b105f5b8aa1e0d426ea27559ae80e5b45d339a220b2b6d4f31c8ac8c83b504992f5cf1aa3669d2b18272bc5aa0145bdac023451946ec0a6f2a61c72890d2  mozconfig
+45eb8d1cf2470b9873a8a09bbaad840aaa0a735a166b4defd01d29f4b0f2e48e8c1ab7213e44c1ab3a6b05f08aca2c69b2330bf53a76ea8167a5ecd9ad545bd8  mozconfig
 73e9c51977d1a675c38fafeaa7478499d002d0dbfc8741ed7d9810ac39fb190870bd3295b86f7c9f7e8191f0fda7b7d6454d0a4cc1d7c61f3810a4d3a165180f  librewolf.desktop
 b6ceaf541ecb16a91398e1f629c7479e37c42c467e78980895ade8fe16feeb307ead50c839bac72f18bf74b7be46382c431a1361b3194cf3dffc6d58d67f82e5  distribution.ini
 bd20f3a9606890d239b9a7fb66f75c7aa860622005613186e3dda8804fd9d8a89a00ace19b34c198e6bb5620b1c5ae36edc82a2edf437251df2dcbca67180ce7  vendor-prefs.js
