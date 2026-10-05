@@ -279,6 +279,7 @@
  #include <string>
  #include <unistd.h>
  #include <utility>
+ #include <vector>
 -#include <fmt/core.h>
 +#include <fmt/format.h>
  #include <libHX/defs.h>
@@ -484,3 +485,4 @@
  #include <libHX/defs.h>
  #include <gromox/defs.h>
  #include <gromox/mapidefs.h>
+
