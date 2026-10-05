@@ -1,7 +1,7 @@
 # Contributor: S.M Mukarram Nainar <theone@sm2n.ca>
 # Maintainer: team/rust <alpine@ptrcnull.me>
 pkgname=rust-analyzer
-pkgver=2026.09.28
+pkgver=2026.10.05
 _pkgver=${pkgver//./-}
 pkgrel=0
 pkgdesc="Rust compiler front-end for IDEs"
@@ -62,6 +62,6 @@ package() {
 }
 
 sha512sums="
-075567b69a325b22c75aebc3aab5fa86dccdc04042c7c3b38aa3db874931793095ea859392fade63cb72bbeb6279158f4d972dcdedfa1922f45148426bfc988d  rust-analyzer-2026.09.28.tar.gz
-d28d21b7bfa79cb643e028c70397efcdbeb0fd8f6448b1928c89cd6387e504f4d091153c7abbb6789416ee8c27101c1efbfc3ee262286786ca389c5339960da2  update-rustix-crate.patch
+ff36f608822126cd8c7dea88622970b8cdf9c26283d86e8f31cc3bccc4739f05fea0c34c0cd9f1aa0c3f1dc9e0d541bb9c20172118e262c75fe70a40ff57abf9  rust-analyzer-2026.10.05.tar.gz
+da6e01b4e9b93f8819cbfff5f7236d6a684bc58f185e3ca1f32fb1571f53fe86ffd54f637dfb66939b8d338caa46e8245763bd7e95322d38985e9a286ed4d9ef  update-rustix-crate.patch
 "

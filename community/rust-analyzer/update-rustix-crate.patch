@@ -2,7 +2,7 @@ fix build on ppc64le & s390x
 
 --- a/Cargo.lock
 +++ b/Cargo.lock
-@@ -2415,9 +2415,9 @@ dependencies = [
+@@ -2416,9 +2416,9 @@ dependencies = [
  
  [[package]]
  name = "rustix"
