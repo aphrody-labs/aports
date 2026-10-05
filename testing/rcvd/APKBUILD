@@ -2,7 +2,7 @@
 # Maintainer: Christopher Mosetick <office@cpm.is>
 maintainer="Christopher Mosetick <office@cpm.is>"
 pkgname=rcvd
-pkgver=0.2.0
+pkgver=0.3.1
 pkgrel=0
 pkgdesc="Privacy-first encrypted DNS engine (DoQ/DoT/DoH, no cleartext fallback)"
 url="https://rcvd.net"
@@ -63,7 +63,7 @@ package() {
 }
 
 sha512sums="
-475f967e0376334354290ebd157343a2677b4382c2c05c35473fdda9a732f58ca3f76cf566e286c3e6a0eae88a5ff47de7e7c27c701eee830170e81f13b5f2d2  rcvd-0.2.0.tar.gz
+711167f18fd37c2aba222cad2742c07d7dc9bfb5d45ba3db5215d00c1c91f7815a1a0192c6cc7050f62eba610182ba22a23a88ceb97bb2c5c32fbaf90733de84  rcvd-0.3.1.tar.gz
 b34508be64b7e019102f92ac953af8a473f6df0b589bf52060b5ea2ee11ed70c31014730ec715961f4b5b097ae24c4d3bc6f7abefcd9882893d571e13c8fa300  rcvd.initd
 74550af3a26ea243521e14956e319ae440da64f19f32ffe252d75cc282bdb5ddd1e4be94380cc29f69012f23de9757e041c5f39f3a7eb130537c220381e40bc0  rcvd.confd
 a4bc7a59307803b68745c643345cdf0299ac8adbf3d0bc0476a8eaa35ec736f7ba455ed2b1c04f113fde4aa0ed8f5ddc69325fa6f9906349610ad72ea27192aa  rcvd.sysctl.conf
