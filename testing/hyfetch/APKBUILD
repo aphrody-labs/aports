@@ -10,7 +10,9 @@ license="MIT"
 depends="bash"
 makedepends="cargo cargo-auditable"
 subpackages="$pkgname-doc $pkgname-bash-completion $pkgname-zsh-completion"
-source="$pkgname-$pkgver.tar.gz::https://github.com/hykilpikonna/hyfetch/archive/$pkgver.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://github.com/hykilpikonna/hyfetch/archive/$pkgver.tar.gz
+	rustix.patch
+	"
 options="net" # cargo fetch
 
 prepare() {
@@ -40,4 +42,5 @@ package() {
 
 sha512sums="
 ded99f53853aa35749785b604951124bdb08622ab606770c886a90abcb762aee14365a28a2ca21b2263ef85b49a0cb551861e683feac2bd378ef1f02040082b8  hyfetch-2.0.5.tar.gz
+901a901633bcb4a5e068e2cc04e1c6e3e4bd8661565ad0d025524c8c6b5f748cacd6716c1e3fff2b0b09a370f42556f49eda37bad967e399c30b5aed43478b37  rustix.patch
 "
