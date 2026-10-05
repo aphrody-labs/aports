@@ -1,7 +1,7 @@
 # Maintainer:
 pkgname=virtiofsd
 pkgver=1.13.3
-pkgrel=2
+pkgrel=3
 pkgdesc="virtio-fs vhost-user device daemon"
 url="https://gitlab.com/virtio-fs/virtiofsd"
 # fails to build on 32-bit
@@ -40,8 +40,8 @@ package() {
 
 	# Symlink to the previous install locations for backwards compat.
 	mkdir -p "$pkgdir"/usr/lib/qemu "$pkgdir"/usr/libexec/
-	ln -s ../../libexec/virtiofsd "$pkgdir"/usr/lib/qemu/
-	ln -s ../../libexec/virtiofsd "$pkgdir"/usr/libexec/
+	ln -s ../../bin/virtiofsd "$pkgdir"/usr/lib/qemu/
+	ln -s ../bin/virtiofsd "$pkgdir"/usr/libexec/
 
 	install -Dm644 50-virtiofsd.json \
 		-t "$pkgdir"/usr/share/qemu/vhost-user/
