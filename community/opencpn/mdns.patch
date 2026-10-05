@@ -1,6 +1,6 @@
 --- a/model/src/mdns_service.cpp
 +++ b/model/src/mdns_service.cpp
-@@ -26,6 +26,7 @@
+@@ -27,6 +27,7 @@
  #include <mutex>
  #include <vector>
  #include <thread>

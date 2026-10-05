@@ -1,6 +1,6 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1988,7 +1988,7 @@ add_subdirectory(libs/nmea0183)
+@@ -1998,7 +1998,7 @@ add_subdirectory(libs/nmea0183)
  add_subdirectory(libs/observable)
  add_subdirectory(libs/picosha2)
  add_subdirectory(libs/pugixml)
@@ -31,7 +31,7 @@
  endif ()
 --- a/model/src/ais_decoder.cpp
 +++ b/model/src/ais_decoder.cpp
-@@ -2028,7 +2028,7 @@ bool AisDecoder::HandleN2K_129793(const
+@@ -2032,7 +2032,7 @@ bool AisDecoder::HandleN2K_129793(const
  void AisDecoder::HandleSignalK(const SignalKMsgPtr &sK_msg) {
    rapidjson::Document root;
  
