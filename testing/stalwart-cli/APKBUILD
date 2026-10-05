@@ -1,6 +1,6 @@
 # Maintainer: Romain Isnel <alpine@frmg.eu>
 pkgname=stalwart-cli
-pkgver=1.0.12
+pkgver=1.0.13
 pkgrel=0
 pkgdesc="Stalwart Command Line Interface"
 url="https://github.com/stalwartlabs/cli"
@@ -39,5 +39,5 @@ package() {
 }
 
 sha512sums="
-1ecf5f74beefea324fbe08aeb47fa97e21cdf7e62245cd38df538eae8b9ab92670bb1d1b78dbb03bc7f4e1145a5031e58041b59d269319d9d0c1a522844754d1  cli-1.0.12.tar.gz
+799805182546371ca7cfa1d3c30d095c6b525394bcb9b787a48929af0f021eaf4d12e6d81d16b7f939f876c089729118b1b991d94585c141f182684db2db4854  cli-1.0.13.tar.gz
 "
