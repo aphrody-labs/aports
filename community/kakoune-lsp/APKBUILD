@@ -1,7 +1,7 @@
 # Contributor: Siva Mahadevan <me@svmhdvn.name>
 # Maintainer: Willow Barraco <contact@willowbarraco.fr>
 pkgname=kakoune-lsp
-pkgver=21.0.2
+pkgver=22.0.0
 pkgrel=0
 pkgdesc="Kakoune Language Server Protocol Client"
 url="https://github.com/kakoune-lsp/kakoune-lsp"
@@ -30,5 +30,5 @@ package() {
 }
 
 sha512sums="
-66e930826715317aeacbacf71cc6a9ed19607c35224da9e34d4557db8c5df3b35836515a26a1ce73af342fa10146fc0a76e05b1ddb1ddfdac965f9d9548fd9d2  kakoune-lsp-21.0.2.tar.gz
+399969aa018e3c9ba99955a49c549950873be54fbe18e3e6290dd17cca509193b61e9527bfd7a6672a4833912e25c650a53e55fff04b23264536f54cc8130aa9  kakoune-lsp-22.0.0.tar.gz
 "
