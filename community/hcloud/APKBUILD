@@ -1,6 +1,6 @@
 maintainer="Michał Polański <michal@polanski.me>"
 pkgname=hcloud
-pkgver=1.69.0
+pkgver=1.70.1
 pkgrel=0
 pkgdesc="Command-line interface for Hetzner Cloud"
 url="https://github.com/hetznercloud/cli"
@@ -45,5 +45,5 @@ package() {
 }
 
 sha512sums="
-2f67537498dbc002a5880e54da616d0213589605f180144c383e9977a1d8a848297a3a158cdbe28b4ebbe4bf725b6c728fe1d512149d2a774223eb820985b49e  hcloud-1.69.0.tar.gz
+a5f1679005d3b266d3ab16acb8169509879b9da353e9f4fee67dc03af637d661969f366ad871081146c3bc9571c042f2f2428d6629529c24d33a6c328e9ca90e  hcloud-1.70.1.tar.gz
 "
