@@ -20,6 +20,7 @@ checkdepends="dbus bash py3-gobject3 xvfb-run gobject-introspection"
 subpackages="$pkgname-dev $pkgname-python3:py3 $pkgname-lang"
 source="https://download.gnome.org/sources/libpeas/${pkgver%.*}/libpeas-$pkgver.tar.xz
 	failing-test.patch
+	pygobject.patch
 	"
 
 build() {
@@ -32,7 +33,7 @@ build() {
 }
 
 check() {
-	xvfb-run -a meson test --print-errorlogs -C output -t 10 || true #15980
+	xvfb-run -a meson test --print-errorlogs -C output -t 10
 }
 
 package() {
@@ -48,4 +49,5 @@ py3() {
 sha512sums="
 5e4dc3cde9c0fdd268acefefac3b0e200b2cbd5154dc619c5665a485f22b861396ac3f243f01d621fb40c37b3c566e23c656d95d7d700b7673fa2b0168d2ae8e  libpeas-1.38.1.tar.xz
 5f1ae155738f84f1ca9553f771d9e49ff93ca25fd630415b4b65b093e0002cfb21a450325b0a56b8f59634c6877f09e70aefd29383b60d471df65751aa5ba6a3  failing-test.patch
+64f70fb41c6e9bc30288d42fa18efe6c4b566386bb4803390dc3b5c0a293f5607436a27607d6a5394d84de5caaac604b63dfa8bebd1a51ac846b97e5786f1cc2  pygobject.patch
 "
