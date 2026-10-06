@@ -20,7 +20,7 @@ checkdepends="dbus bash py3-gobject3 xvfb-run gobject-introspection"
 subpackages="$pkgname-dev $pkgname-python3:py3 $pkgname-lang"
 source="https://download.gnome.org/sources/libpeas/${pkgver%.*}/libpeas-$pkgver.tar.xz
 	disable-extension-gjs-test_patch
-	disable-extension-c-py.patch
+	pygobject.patch
 	"
 builddir="$srcdir/libpeas-$pkgver"
 
@@ -72,5 +72,5 @@ py3() {
 sha512sums="
 9c7edaa39ef3e542c84417749979b478a592998c1ee3f33502fd43a53aa5fc57f006adb697b3b6893574d2c2796ef55271ac2bb90d868ecdd45621d1072252c5  libpeas-2.2.1.tar.xz
 5533c037dc9d9ff4f6dbb683a6433c7f6b12121143ec08e09e4f8e5232fa6058fa26c54a36577d6985ae61baa19eab1edaab1aeb6e5c1545c10de70844a0aa9b  disable-extension-gjs-test_patch
-1f6429707d7259f1463d9bf12500cbf46da4811d3a57fe1d1fcc7ae4d9b76b67fc7b82e23a9e361f481e6d2bde464bc78b3a155e4aa25fd94feccc01aae152b3  disable-extension-c-py.patch
+ffda7a63ca0bcc4ac8d69fbe059763510e1504cbc0fad2ac6bf4ad943a417837e4b51cc841c56c28c785cc3e9ec7b739eed94bade9fb4581008f874dd7fdb09b  pygobject.patch
 "
