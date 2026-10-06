@@ -1,14 +1,14 @@
 # Maintainer:
 pkgname=git-revise
-pkgver=0.7.0
-pkgrel=6
+pkgver=0.8.0
+pkgrel=0
 pkgdesc="Handy tool for doing efficient in-memory commit rebases & fixups with git"
 url="https://github.com/mystor/git-revise"
 arch="noarch"
 license="MIT"
 depends="python3 git"
-makedepends="py3-setuptools py3-gpep517"
-checkdepends="py3-pytest py3-pytest-xdist py3-tox"
+makedepends="py3-gpep517 py3-hatchling"
+checkdepends="openssh-client-default py3-pytest"
 subpackages="$pkgname-doc $pkgname-pyc"
 source="$pkgname-$pkgver.tar.gz::https://github.com/mystor/git-revise/archive/refs/tags/v$pkgver.tar.gz"
 
@@ -30,5 +30,5 @@ package() {
 		.dist/*.whl
 }
 sha512sums="
-2c61df0854b20319286aa6bf663b3a1a1bcddb4b8aa144ce7850fe5a32a26ad861898d00b423a7fe7ace60b7964149470ad2c144eed2b3e1119df0c34acbe04d  git-revise-0.7.0.tar.gz
+0ac4643aad1bb41bd7127d03ba806c19e3db0d0e11f210a6107ba0500393c195b7403a4bb66c2b137a97b84b6b33e280efe11baeefc2ae0058c32f135cde10d7  git-revise-0.8.0.tar.gz
 "
