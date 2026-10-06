@@ -2,7 +2,7 @@
 # group=kde-other
 maintainer="team/kde <bribbers@disroot.org>"
 pkgname=kirigami-addons
-pkgver=1.14.2
+pkgver=1.15.0
 pkgrel=0
 pkgdesc="Add-ons for the Kirigami framework"
 url="https://invent.kde.org/libraries/kirigami-addons"
@@ -52,5 +52,5 @@ package() {
 }
 
 sha512sums="
-1b008d2b70d1eec1cb9f8850594e0ae5d5b0062b4b227a4976e3b7c8cc5d4d48bf2e4e85b427d20f8e451656b060f5be67644bc271677a76cceedd498dfb6657  kirigami-addons-1.14.2.tar.xz
+57dc101527417eb8fe67775b4d9950ce19a5eb100ea5885c5a9269f485c418ef827c65a27a99bc0fe30a0db02e9f69e0244b681648e14334402960c885fdae58  kirigami-addons-1.15.0.tar.xz
 "
