@@ -1,0 +1,18 @@
+#!/bin/sh
+
+ver_old="$2"
+
+if [ "$(apk version -t "$ver_old" '2.7.0-r0')" = '<' ]
+then
+	cat >&2 <<-EOF
+	*
+	* OpenBao 2.7.0 removed the file storage backend. OpenBao recommends PebbleDB
+	* as a suitable replacement, and the default config in this package has been
+	* updated to use that.
+	*
+	* Make sure to migrate to a different storage backend.
+	* See https://openbao.org/docs/guides/migrations/k8s-pebbledb/ for an idea
+	* how to migrate.
+	*
+	EOF
+fi
