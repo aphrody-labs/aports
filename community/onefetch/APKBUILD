@@ -2,7 +2,7 @@
 # Maintainer: omni <omni+alpine@hack.org>
 maintainer="omni <omni+alpine@hack.org>"
 pkgname=onefetch
-pkgver=2.28.1
+pkgver=3.0.0
 pkgrel=0
 pkgdesc="Git repository summary on your terminal"
 url="https://github.com/o2sh/onefetch"
@@ -74,5 +74,5 @@ package() {
 }
 
 sha512sums="
-5b9680f9bbf97f8c428d7fc3483f35afec7597c0686927beefa75aabcec6154df5b6551a69f5fb13abea165e686f82abce95a8644c08315ffcdcf31b531d45d0  onefetch-2.28.1.tar.gz
+d1e1b3e3b6a457781aa5dec6e064a7bb2fa43ebb83bf7b194d3c453b6ad60e1a3c32fabd917fffb903d71e60eb4715383d952b54c55bbd964343354b3c4e3d30  onefetch-3.0.0.tar.gz
 "
