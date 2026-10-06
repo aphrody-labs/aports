@@ -1,14 +1,14 @@
 # Contributor: Kevin Daudt <kdaudt@alpinelinux.org>
 # Maintainer: Kevin Daudt <kdaudt@alpinelinux.org>
 pkgname=go-task
-pkgver=3.52.0
-pkgrel=1
+pkgver=3.54.0
+pkgrel=0
 pkgdesc="Task runner written in Go, installed as go-task"
 url="https://taskfile.dev/"
 arch="all"
 license="MIT"
 makedepends="go"
-checkdepends="gotestfmt"
+checkdepends="git gotestfmt"
 subpackages="
 	$pkgname-doc
 	$pkgname-task::noarch
@@ -19,6 +19,7 @@ subpackages="
 options="net" # go dependencies
 source="$pkgname-$pkgver.tar.gz::https://github.com/go-task/task/archive/refs/tags/v$pkgver.tar.gz
 	completion-rename-to-go-task.patch
+	increase-task-test-timeouts.patch
 	test-failfast-task-fix-race-condition.patch
 	"
 builddir="$srcdir/task-$pkgver"
@@ -37,7 +38,7 @@ check() {
 
 package() {
 	install -Dm0755 task "$pkgdir"/usr/bin/go-task
-	install -Dm0644 website/src/docs/reference/cli.md -t "$pkgdir"/usr/share/doc/go-task/
+	install -Dm0644 website/src/latest/docs/reference/cli.md -t "$pkgdir"/usr/share/doc/go-task/
 
 	install -Dm0644 completion/bash/task.bash \
 		"$pkgdir"/usr/share/bash-completion/completions/go-task.bash
@@ -58,7 +59,8 @@ task() {
 }
 
 sha512sums="
-f0879d100ea571bae85f470f6f528ae40a41e45c976a132b834658a28d891a6111fce5300ea26430a95a2804130a6b7d14a7155384e8373faa1c084ddcb0b05b  go-task-3.52.0.tar.gz
-b38aaf0dd9db0daffcb0a9d289ea3b3860ab5b00c33522b8024ec7505cb264c7ddfc7e6a8c9f11df9f7ab86b08b17c22074bbdd5d5c8a2dcfb24aa6e92f25b85  completion-rename-to-go-task.patch
+7ef841453b574edd8781c11ca01eda5fa108eb66d3517e830d0abcb5a1903e6c39e349734daab97cff954db79c2691cf7f0b7121f64bd4937201a44079d29987  go-task-3.54.0.tar.gz
+eedf4b846474ade4396db4073992a26483d5781a8f524f9e2c32eae1a5d216391bf3dbacd610638753542effe2987e33e7f65de81731ef1925bfa52279084bdf  completion-rename-to-go-task.patch
+9d0138e02a40c5ffbd931f33c37b67e189d98987da93b01ffc08693fd99381e34c2d1990f5706fa3c416f909e18feab5fa71b8abf8383bbb7cfed33ed297176f  increase-task-test-timeouts.patch
 bb0b65b6cfe5dfce91904bb6b639b26272db60a030d3361fba672278c946116174fe4e25048747aa1381fc7de9a7ba565d5e2dec7a051f81ad084f06a7a36943  test-failfast-task-fix-race-condition.patch
 "

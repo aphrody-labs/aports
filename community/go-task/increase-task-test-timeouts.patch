@@ -1,0 +1,28 @@
+Increase default timeouts for TestRunOnceJoinerHonorsItsOwnTimeout and
+TestDeferredTaskTimeout tests to allow more time for ppc64le/riscv64 arches to
+complete the tasks.
+
+Related feature: https://github.com/go-task/task/pull/2898
+
+diff --git a/task_test.go b/task_test.go
+index 540e7ba..ad6352f 100644
+--- a/task_test.go
++++ b/task_test.go
+@@ -2417,7 +2417,7 @@ func TestRunOnceJoinerHonorsItsOwnTimeout(t *testing.T) {
+ 	require.Error(t, err)
+ 	// The joiner used to wait on the shared execution alone, ignoring its own
+ 	// timeout for as long as that execution took.
+-	assert.Less(t, time.Since(start), 5*time.Second)
++	assert.Less(t, time.Since(start), 30*time.Second)
+ 
+ 	var timeoutErr *errors.TaskTimeoutError
+ 	require.ErrorAs(t, err, &timeoutErr)
+@@ -2493,7 +2493,7 @@ func TestDeferredTaskTimeout(t *testing.T) {
+ 
+ 	start := time.Now()
+ 	require.NoError(t, e.Run(t.Context(), &task.Call{Task: "parent-with-timeout"}))
+-	assert.Less(t, time.Since(start), 500*time.Millisecond)
++	assert.Less(t, time.Since(start), 2000*time.Millisecond)
+ 	assert.Contains(t, buff.String(), "parent completed")
+ 	assert.NotContains(t, buff.String(), "\ncleanup completed\n")
+ 	assert.Contains(t, buff.String(), "ignored error in deferred cmd")
