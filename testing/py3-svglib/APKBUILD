@@ -1,7 +1,7 @@
 # Maintainer: Marian Buschsieweke <marian.buschsieweke@posteo.net>
 pkgname=py3-svglib
 _pkgname=svglib
-pkgver=2.2.0
+pkgver=2.3.0
 pkgrel=0
 pkgdesc="pure python library for reading and converting SVG"
 url="https://github.com/deeplook/svglib"
@@ -51,5 +51,5 @@ package() {
 }
 
 sha512sums="
-66a1f03d41435a8704e1170b3d9cb24cd972d502f5f0019282f99d09f4a6e0ca4b4cc27880048fb789c97a63fd287ce2328d5579e90bd6ad80c6e4d16f01cb65  py3-svglib-2.2.0.tar.gz
+067daf7c6e7d94d778094a657b214f1e647d01232f317f7e88d05adec50bd7c2610765ea242ee0617e7e8585b182f4ff25f6f9d1a9c2dcfeeb72d789c0ffe185  py3-svglib-2.3.0.tar.gz
 "
