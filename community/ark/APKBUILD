@@ -41,7 +41,7 @@ makedepends="
 	shared-mime-info
 	xz-dev
 	"
-checkdepends="xvfb-run"
+checkdepends="xwayland-run"
 subpackages="$pkgname-doc $pkgname-lang"
 _repo_url="https://invent.kde.org/utilities/ark.git"
 source="https://download.kde.org/stable/release-service/$pkgver/src/ark-$pkgver.tar.xz"
@@ -61,7 +61,7 @@ build() {
 }
 
 check() {
-	xvfb-run -a ctest --test-dir build -E "(app-batchextract|kerfuffle-(preservemetadata|adddialog))test"
+	wlheadless-run -- ctest --test-dir build
 }
 
 package() {
