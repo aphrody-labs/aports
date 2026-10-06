@@ -1,8 +1,8 @@
-# Contributor: Jonas <3426-spameier@users.gitlab.alpinelinux.org>
-# Maintainer: Jonas <3426-spameier@users.gitlab.alpinelinux.org>
+# Contributor: Jonas <spameier+alpine@proton.me>
+# Maintainer: Jonas <spameier+alpine@proton.me>
 pkgname=pipeleek
 pkgver=1.3.2
-pkgrel=0
+pkgrel=1
 pkgdesc="Pipeleek scans CI/CD logs and artifacts to detect leaked secrets and pivot from them"
 url="https://compasssecurity.github.io/pipeleek/"
 # armhf, armv7, x86: ulikunitz/xz/lzma
