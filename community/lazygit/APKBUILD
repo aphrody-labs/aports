@@ -1,7 +1,7 @@
 # Contributor: Thomas Deutsch <thomas@tuxpeople.org>
 # Maintainer: Thomas Deutsch <thomas@tuxpeople.org>
 pkgname=lazygit
-pkgver=0.65.1
+pkgver=0.66.0
 pkgrel=0
 pkgdesc="Simple terminal UI for git commands"
 url="https://github.com/jesseduffield/lazygit"
@@ -31,5 +31,5 @@ package() {
 }
 
 sha512sums="
-2c1b8b85287b766a68a228322c05ec8f8f61181ddecc85183c7262d1b4f41d36868a0926387e01d0543670ec323b1a032a0372c4511398fb6fe6b5e586aaf477  lazygit-0.65.1.tar.gz
+e479e32b2a8081b48ccb34f0477d94257757c4ad3c286972fe5b97fa3f95aac37510388049da1ea6c087e1730fda24cfe08d9ed521b31e28ac8f26ed9f238ec3  lazygit-0.66.0.tar.gz
 "
