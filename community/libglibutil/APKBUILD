@@ -1,6 +1,6 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=libglibutil
-pkgver=1.0.82
+pkgver=1.0.83
 pkgrel=0
 pkgdesc="Library of glib utilities"
 url="https://github.com/sailfishos/libglibutil"
@@ -23,5 +23,5 @@ package() {
 }
 
 sha512sums="
-3a98a770a0de8d252f7dc1cfd3d98752a044371b621b90555ca42004edb746d1bb74e4d370d053471e1a264750cef8e493783efd7783f657df5ba50cd5bc9125  libglibutil-1.0.82.tar.gz
+01a65239a6b7dead6fa833ae9d62794ae64dd239afb4f2bbd021515df5f67c1b78e7ae80962350096e528447a5a24825efc228f694db3e7562f6032fda6e1aec  libglibutil-1.0.83.tar.gz
 "
