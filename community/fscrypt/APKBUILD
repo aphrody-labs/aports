@@ -3,7 +3,7 @@
 # Maintainer:
 pkgname=fscrypt
 pkgver=0.3.6
-pkgrel=7
+pkgrel=8
 pkgdesc="Manage Linux native filesystem encryption"
 url="https://github.com/google/fscrypt"
 # Tests fail on ppc64le with SIGSEGV and memory lock errors
@@ -38,9 +38,8 @@ package() {
 	install -Dvm755 bin/fscrypt -t "$pkgdir"/usr/bin/
 	install -Dvm644 README.md -t "$pkgdir"/usr/share/doc/$pkgname/
 
-	install -Dvm755 -o root \
-		bin/pam_fscrypt.so \
-		-t "$pkgdir"/usr/lib/security/
+	# pam_fscrypt.so is not installed, as it is currently broken on musl
+	# relevant issue: https://gitlab.alpinelinux.org/alpine/aports/-/work_items/17288
 }
 
 sha512sums="
