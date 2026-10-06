@@ -1,6 +1,6 @@
 # Maintainer: Mike Crute <mike@crute.us>
 pkgname=newsboat
-pkgver=2.43
+pkgver=2.45
 pkgrel=0
 pkgdesc="RSS/Atom feed reader for text terminals"
 url="https://newsboat.org/"
@@ -24,6 +24,7 @@ source="
 	https://newsboat.org/releases/$pkgver/newsboat-$pkgver.tar.xz
 	auditable-frozen.patch
 	fix-version-number.patch
+	update-rustix-crate.patch
 	newsboat.desktop
 	"
 options="net" # cargo fetch
@@ -55,8 +56,9 @@ package() {
 }
 
 sha512sums="
-fa401bdd09d08ebd2443f825ac4b3f2be22d153ec48112792aa60ef97d013dbe0909a295d417d42419e6c259ac677a81cb87f4e973a411067368b247b42fe2ff  newsboat-2.43.tar.xz
-ee3af61d9b6e1fad7dfa91f8fa34b57c9184f2e9d52d182d6295683bab4357b3f91ed5cc2103872f84aac2d9f33caaa760cf3d9f9c2a96a5c7306c9a3ef52e46  auditable-frozen.patch
+b72c5ea197d138718c2854010c61bc39ff7376a8fb624cbb17d1c9d91c03fc1e032c4640374da0b758d2994a2a31ff4c965c080eacfcca89fcee34f3cc7012e6  newsboat-2.45.tar.xz
+305678675f53a0b4258ca8bc0580405927f9639ee005e057704a15e388e81b395bc7663b6e5f5707ad7e290f0f26d287bba90213bf87c29a6294991c0d522531  auditable-frozen.patch
 6ed838525a41e21a179f23f4f9728daea248a523a51db93c0c44e66cdc4258f5e1ee2f55bb561ac967884ce93178a1b12969fb8e6de0b0f3356e0ef85d6d170c  fix-version-number.patch
+ad7f5f8d3031c5ea2b611e4709ef2c0a7c05f3fbe114663b797e132118f09df1fc20b4c4c0b935d40c7cce4f5af213bf53b8d45f75f5209093464e5671e6beac  update-rustix-crate.patch
 47383e96fadb26db8c505add42efa354ec099abb0b2fbe366e6f860ba12cec864c7ec0e2ce274bec478eb623c62e8f0796029aed4132a365ff1707f537c2d272  newsboat.desktop
 "

@@ -1,6 +1,15 @@
 --- a/Makefile
 +++ b/Makefile
-@@ -93,7 +93,7 @@ ifeq ($(PROFILE),1)
+@@ -34,7 +34,7 @@ LDFLAGS+=-L.
+ PACKAGE=newsboat
+ ## Do not include libnewsboat-ffi into the test executable, as it doesn't link
+ ## and can't contain any tests anyway.
+-CARGO_TEST_FLAGS=--workspace --exclude libnewsboat-ffi
++CARGO_TEST_FLAGS=--frozen --workspace --exclude libnewsboat-ffi
+ 
+ ifeq (, $(filter $(MAKECMDGOALS),distclean run-i18nspector fmt))
+ include config.mk
+@@ -95,7 +95,7 @@ ifeq ($(PROFILE),1)
  BUILD_TYPE=debug
  else
  BUILD_TYPE=release
@@ -9,7 +18,7 @@
  endif
  
  ifdef CARGO_BUILD_TARGET
-@@ -118,7 +118,7 @@ ASCIIDOCTOR=asciidoctor
+@@ -120,7 +120,7 @@ ASCIIDOCTOR=asciidoctor
  MSGFMT=msgfmt
  RANLIB?=ranlib
  AR?=ar
