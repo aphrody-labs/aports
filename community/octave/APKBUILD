@@ -59,12 +59,6 @@ source="https://ftp.gnu.org/gnu/octave/octave-$pkgver.tar.xz
 	abs.patch
 	"
 
-case "$CARCH" in
-	x86)
-		#x86 libjava.so cannot find libjvm.so
-		options="!check" ;;
-esac
-
 # https://savannah.gnu.org/bugs/?63318
 export CXXFLAGS="${CXXFLAGS/-D_GLIBCXX_ASSERTIONS=1}"
 
