@@ -2,7 +2,7 @@
 # Contributor: Fabricio Silva <hi@fabricio.dev>
 maintainer="Johannes Müller <alpinelinux@jogemu.at>"
 pkgname=pnpm
-pkgver=11.28.4
+pkgver=11.28.5
 pkgrel=0
 pkgdesc="Fast, disk space efficient package manager"
 url="https://pnpm.io"
@@ -67,7 +67,7 @@ package() {
 }
 
 sha512sums="
-f905a61563f89b49a292634d3d87d024cfdea9dccf5c66b2ccc261675fa7b2774320a959db472e6caa7f9ff7314709cd50d06c8fd64addb60647377a78d250ff  pnpm-11.28.4.tgz
-40cf84399b7edf806ae264571bea9534d8501e893a7a9bc024c237aeb907ad8cd991fbaf7ddbcd5b6bc7d1ecd00e1bb42d28d51c0438ad47a50827991201e353  0001-no-check-for-updates.patch
+484563d30b4c2ad27cb48aa94ff2b302dbcebc8ff6bf28816c2589886e146ce7f76f354f3bc1a438e6f5e9768c302aa0a6f7add8232903cd4cf81426cbc14d9e  pnpm-11.28.5.tgz
+3573a35b9500fff091c31f5cc82a0e71d1d3c5150c53bc87e80332448531a45a4539484c942e10a2d7cdf3fadd3be3c8f4b3eb9299493db021c396ffcd5b33d5  0001-no-check-for-updates.patch
 52610c7c4dbddbd5c6e09758692dd898632f4f4fad3e7beaf482607083aac9814d18d412e6ee7a6cef1ccc4ffdb25852a2c40844e89554bc3815e3d976dc2feb  0002-no-self-update.patch
 "
