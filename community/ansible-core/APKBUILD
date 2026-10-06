@@ -3,7 +3,7 @@
 # Maintainer: Sean McAvoy <seanmcavoy@gmail.com>
 pkgname=ansible-core
 _pkgname=${pkgname/-/_}
-pkgver=2.21.4
+pkgver=2.21.5
 pkgrel=0
 pkgdesc="core components of ansible: A configuration-management, deployment, task-execution, and multinode orchestration framework"
 url="https://ansible.com"
@@ -51,5 +51,5 @@ package() {
 }
 
 sha512sums="
-250502ea27636ca2e708a41a4e44c1a135ed2a0edacfd49112775c9d6e427949e35a3b7a6d5a27b54d8a8d955a7299ae2b791e42996c64cad14733311ee22368  ansible-core-2.21.4.tar.gz
+8922b02403bfdd86c8d91e8eecbee9a0e9a21745717ff24a6223b134d284c2be8eb772c661ea2910ac69fd82687cf1e27fcfc9289c9cdd19345ea9e654f5ab8c  ansible-core-2.21.5.tar.gz
 "
