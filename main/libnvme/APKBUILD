@@ -40,7 +40,7 @@ build() {
 }
 
 check() {
-	meson test --print-errorlogs -C output || [ "$CARCH" = "s390x" ]
+	meson test --print-errorlogs -C output
 }
 
 package() {
