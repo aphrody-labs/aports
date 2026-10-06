@@ -1,6 +1,6 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=jellyfin-mpv-shim
-pkgver=3.0.0
+pkgver=3.1.0
 pkgrel=0
 pkgdesc="MPV Cast Client for Jellyfin"
 url="https://github.com/jellyfin/jellyfin-mpv-shim"
@@ -35,5 +35,5 @@ package() {
 }
 
 sha512sums="
-d5fd2226514db9773ce0909c18fc7a117accfd825f4f53f86e9f08bcb8912c399d79418fd74533e8a718f4bd40a4329ed5222100a272f9e2e46a8c8538698b6e  jellyfin-mpv-shim-3.0.0.tar.gz
+098084a8cdb0c1966c0c5833655eb771ef3c722f8b69f95fb74c9f554a05e9eb4a02090efe9b0be0798ec0845c8054a26443dcbb91cf80d7a3b0ff6934816860  jellyfin-mpv-shim-3.1.0.tar.gz
 "
