@@ -1,6 +1,6 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=lmdbxx
-pkgver=1.0.2
+pkgver=1.0.3
 pkgrel=0
 pkgdesc="C++17 wrapper for the LMDB database library"
 url="https://github.com/hoytech/lmdbxx"
@@ -26,5 +26,5 @@ package() {
 }
 
 sha512sums="
-2e30dd439729f2947649be7ef3aa10e07a0feb073000128ece2948b857bf43debc84d7093472180798b62994d70810c7a4febd3f85ae9efda2483e55207df4a2  lmdbxx-1.0.2.tar.gz
+0902b2a2e81b121e1c1e9af76beeb4173e0cf785025a0cdb2909122d666f49b508f409d1f698fedb1aec6d2dc85b67887ce6822d453d985891a0d62aa8664551  lmdbxx-1.0.3.tar.gz
 "
