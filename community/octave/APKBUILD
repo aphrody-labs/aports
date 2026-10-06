@@ -55,7 +55,8 @@ checkdepends="
 	zip
 	"
 subpackages="$pkgname-dev $pkgname-doc"
-source="https://ftp.gnu.org/gnu/octave/octave-$pkgver.tar.xz
+# FIXME timeout source="https://ftp.gnu.org/gnu/octave/octave-$pkgver.tar.xz
+source="https://distfiles.alpinelinux.org/distfiles/edge/octave-$pkgver.tar.xz
 	abs.patch
 	"
 
