@@ -1,0 +1,31 @@
+From 0d08c4e367f08fc4930badf07c9bcfd6567d4d7b Mon Sep 17 00:00:00 2001
+From: unofficial-fish <unofficial-fish@proton.me>
+Date: Sat, 3 Oct 2026 23:27:31 +0000
+Subject: [PATCH] Fix #291 (build fails on 32-bit architectures)
+
+The MIN macro in libutils.h had no support for ints, as a result commit
+bf3dd41 caused f3 to fail to compile on 32-bit architectures.
+---
+ src/libutils.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/libutils.h b/src/libutils.h
+index e09333a..c995c33 100644
+--- a/src/libutils.h
++++ b/src/libutils.h
+@@ -26,10 +26,12 @@
+ 		return a < b ? a : b;			\
+ 	}
+ 
++GEN_MIN(ui, unsigned int)
+ GEN_MIN(ul, unsigned long)
+ GEN_MIN(ull, unsigned long long)
+ 
+ #define MIN(a, b) _Generic(1 ? (a) : (b),	\
++	unsigned int: ui_min,			\
+ 	unsigned long: ul_min,			\
+ 	unsigned long long: ull_min		\
+ 	)(a, b)
+-- 
+2.56.0
+

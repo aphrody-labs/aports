@@ -2,16 +2,17 @@
 # Maintainer: Francesco Colista <fcolista@alpinelinux.org>
 pkgname=f3
 pkgver=10.0
-pkgrel=0
+pkgrel=1
 pkgdesc="F3 - Fight Flash Fraud"
 url="http://oss.digirati.com.br/f3/"
-# 32-bit arches: error with '_Generic' selector at src/libutils.h:32:28
-arch="all !armhf !armv7 !x86"
+arch="all"
 license="GPL-3.0-only"
 options="!check" # no test provided
 makedepends="argp-standalone eudev-dev parted-dev linux-headers"
 subpackages="$pkgname-doc $pkgname-extra"
-source="$pkgname-$pkgver.tar.gz::https://github.com/AltraMayor/f3/archive/v$pkgver.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://github.com/AltraMayor/f3/archive/v$pkgver.tar.gz
+	0001-Fix-291-build-fails-on-32-bit-architectures.patch
+	"
 
 prepare() {
 	default_prepare
@@ -38,4 +39,5 @@ extra() {
 
 sha512sums="
 a6958bce15198f33c353b9b22e02a554912c2239475d156c2a660cde5e2e7d59b9e929af493fa38370f13dbda5070e9d3cad51856099624c155ba791600dda75  f3-10.0.tar.gz
+815123d1d85c8505776be36b11cc1ea96ab7e614493c4e7d8e8764e2c0e353d3123a5b2cbc10e448acd36901c1f2e453917d2ab5771c875ce0fe11ba11a34dd6  0001-Fix-291-build-fails-on-32-bit-architectures.patch
 "
