@@ -1,6 +1,6 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=py3-jellyfin-apiclient-python
-pkgver=1.19.0
+pkgver=1.20.0
 pkgrel=0
 pkgdesc="Python API client for Jellyfin"
 url="https://github.com/jellyfin/jellyfin-apiclient-python"
@@ -33,5 +33,5 @@ package() {
 }
 
 sha512sums="
-e34604986cb90cf7a1ccf627c81eb9ee24134bf36a267336880df34263fda85ced88f0edee6c4fc001e9d1a30dab63cf8e50ee0c57ea60ad15e5ac39baf52f81  jellyfin_apiclient_python-1.19.0.tar.gz
+32e715dd7f4d3c04bb2593e98bfd7795725b4f6ee2f8d318124c7d478329d78386819a5d18375c2bcdcf8fb48f56a4a4f88c0c5852a4307256dc543e59204f5e  jellyfin_apiclient_python-1.20.0.tar.gz
 "
