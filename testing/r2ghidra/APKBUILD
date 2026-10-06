@@ -1,7 +1,7 @@
 # Contributor: Maxim Karasev <mxkrsv@disroot.org>
 # Maintainer: Patrycja Rosa <alpine@ptrcnull.me>
 pkgname=r2ghidra
-pkgver=6.2.2
+pkgver=6.2.4
 _ghidra_native=483ae94bcbc661a77667e52f1eff75928cb6aa2e # see subprojects/ghidra-native.wrap
 pkgrel=0
 pkgdesc="native ghidra decompiler for radare2"
@@ -54,7 +54,7 @@ package() {
 }
 
 sha512sums="
-2435f52aab6e3eb70c4a496a9d7c0cf86c1b0102ca7f865b5efdef8597b929e24ade65c45986dfeba14368ef7e6791a976becd11f1dd5ebcc4d21bc4f3dbde10  r2ghidra-6.2.2.tar.gz
+cb18b0cdd60642438d79ddaca3c7ddebe2630248a6e792fa814c5157652898cbbfc977a9e7ff641251d61e3037ac6082bc04c3b69cd306bc8bb3e87c9b199056  r2ghidra-6.2.4.tar.gz
 ccd71e0e66be945a2c34b03ee3a0b67a0767515320783c41ed6f22bfff4a7d4b1fafe5900eb63834573c3bb296f4c08ea5b6d05dbf33c6903a23aefef840ebe6  ghidra-native-483ae94bcbc661a77667e52f1eff75928cb6aa2e.tar.gz
 fb2e8c5c4d075f92f325dae39016713d4290b3f3d7824749fc247a7bc876ee55e3d90edf583db96e554840dc4bfb2d44c8b8113aaece64534da06ce172138fa6  use-system-zlib.patch
 "
