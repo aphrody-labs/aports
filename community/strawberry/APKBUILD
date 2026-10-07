@@ -1,7 +1,7 @@
 # Contributor: Artur Weber <alpine@uart.sh>
 # Maintainer: Artur Weber <alpine@uart.sh>
 pkgname=strawberry
-pkgver=1.2.30
+pkgver=1.2.31
 pkgrel=0
 pkgdesc="Strawberry Music Player"
 url="https://strawberrymusicplayer.org"
@@ -26,6 +26,7 @@ makedepends="
 	libebur128-dev
 	libgpod-dev
 	libmtp-dev
+	libsecret-dev
 	libxcb-dev
 	pulseaudio-dev
 	qt6-qtbase-dev
@@ -36,6 +37,7 @@ makedepends="
 	sparsehash
 	sqlite-dev
 	taglib-dev
+	uchardet-dev
 "
 checkdepends="gtest-dev xvfb-run"
 subpackages="$pkgname-doc"
@@ -62,5 +64,5 @@ package() {
 }
 
 sha512sums="
-4a240c9697652ddd7f3967db1d99cc40dc6e387dfb35d51c6d593a5d2feaf215baedf934d9cb934d5e93997d20d7d4bf21522026002f0bf0279854bcad3b21ec  strawberry-1.2.30.tar.xz
+694e79a8cce0fbb71758850a0aa985630a5ca475e71007eaf1e66244e8da7769aec50d8f65787f40ce72d6cd40d6c7a7e231035024e26a0ab3492e506fcee399  strawberry-1.2.31.tar.xz
 "
