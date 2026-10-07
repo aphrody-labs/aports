@@ -2,26 +2,25 @@
 # Maintainer:
 pkgname=netifrc
 pkgver=0.7.14
-pkgrel=1
+pkgrel=2
 pkgdesc="Gentoo Network Interface Management Scripts"
 url="https://gitweb.gentoo.org/proj/netifrc.git/"
 arch="noarch"
 license="BSD-2-Clause"
-depends="udev"
 makedepends="eudev-dev"
-subpackages="$pkgname-openrc $pkgname-doc"
+subpackages="$pkgname-doc $pkgname-openrc $pkgname-udev"
 source="https://gitweb.gentoo.org/proj/netifrc.git/snapshot/netifrc-$pkgver.tar.gz"
 
 build() {
 	make PREFIX=/usr SYSCONFDIR=/etc SBINDIR=/sbin all
 }
 
-package() {
-	make DESTDIR="$pkgdir" PREFIX=/usr SYSCONFDIR=/etc SBINDIR=/sbin install
-}
-
 check() {
 	make check
+}
+
+package() {
+	make DESTDIR="$pkgdir" PREFIX=/usr SYSCONFDIR=/etc SBINDIR=/sbin install
 }
 
 sha512sums="
