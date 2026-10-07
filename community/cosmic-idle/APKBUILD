@@ -1,14 +1,14 @@
 # Contributor: Clayton Craft <clayton@craftyguy.net>
-# Maintainer: Clayton Craft <clayton@craftyguy.net>
+# Maintainer: team/cosmic <clayton@craftyguy.net>
 pkgname=cosmic-idle
-pkgver=1.9.0
+pkgver=1.10.0
 _upstreamver="${pkgver/_beta/-beta.}"
 _upstreamver="${_upstreamver/_p/.}"
 pkgrel=0
 pkgdesc="Idle daemon for the COSMIC Desktop Environment"
 url="https://github.com/pop-os/cosmic-idle"
 # riscv64: too slow to build
-# ppc64le, s390x: rustix statx failure
+# ppc64le, s390x: DO NOT RE-ENABLE: rustix fails often on this arch
 arch="all !ppc64le !riscv64 !s390x"
 license="GPL-3.0-only"
 depends="
@@ -42,5 +42,5 @@ package() {
 }
 
 sha512sums="
-96dd7eb4dcc337a3f9c720177f1f1188cdc6f12bbed239e8265a0a9b6f46d0c743bdbbf469d9050e0fbcad461408fb8d38e775024317e5d8228f15c0e763922f  cosmic-idle-1.9.0.tar.gz
+b895389ec902b3fa6a8551c32f7007978e698ee68ceaedba79340a4f4f62787bb5ea9555c42795d8af26ddaec40d59ed5fcca744abe31732b84f7482b63d9c16  cosmic-idle-1.10.0.tar.gz
 "
