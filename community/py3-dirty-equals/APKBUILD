@@ -1,8 +1,8 @@
 # Contributor: Jacek Pruciak <alpine@juniorjpdj.pl>
 # Maintainer: Jacek Pruciak <alpine@juniorjpdj.pl>
 pkgname=py3-dirty-equals
-pkgver=0.8.0
-pkgrel=1
+pkgver=0.11.0
+pkgrel=0
 pkgdesc="Doing dirty (but extremely useful) things with equals."
 url="https://github.com/samuelcolvin/dirty-equals"
 license="MIT"
@@ -39,5 +39,5 @@ package() {
 }
 
 sha512sums="
-8fc6ee0eefe700c89acf5b2181e502422835a89e8f0bb771b07133bda48b804f09b18e452919c8eb7d50e579b032732edad3e9ec150cd7bc7a33a4db77d9ab5c  dirty-equals-0.8.0.tar.gz
+eb4e8725305dbe60b76171d7c4ad4c11ccf9d882e8b4adab7fd9937e580abae512e83e8f0691935c483e727b60c2f8d4881e03e15e74376c52556817f5db83b5  dirty-equals-0.11.0.tar.gz
 "
