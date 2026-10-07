@@ -2,7 +2,7 @@
 # Contributor: Maxim Karasev <begs@disroot.org>
 maintainer="Achill Gilgenast <achill@achill.org>"
 pkgname=gamescope
-pkgver=3.16.29
+pkgver=3.16.31
 pkgrel=0
 _libliftoff=8b08dc1c14fd019cc90ddabe34ad16596b0691f4
 _openvr=ff87f683f41fe26cc9353dd9d9d7028357fd8e1a
@@ -65,7 +65,6 @@ source="https://github.com/Plagman/gamescope/archive/refs/tags/$pkgver/gamescope
 	wlroots-$_wlroots.tar.gz::https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/$_wlroots/wlroots-$_wlroots.tar.gz
 	system-spirv-headers.patch
 	system-deps.patch
-	0001-Fix-undefined-type-uint.patch
 	"
 
 prepare() {
@@ -115,7 +114,7 @@ package() {
 		-C output
 }
 sha512sums="
-f062b9aac33b9874f4c3dcbd2efa03b200976bac3a72a5b14c8747b550691109d471babc9eee1c70292b3a54895abdaa7517c8cd40a1e54ca23cdb6d2dabf92d  gamescope-3.16.29.tar.gz
+a21b6a337aa1d979512ed6297d1782a1407bcf3c05add5557a9a5672a77d0830aaa293fae342cf1a5ee0dc47496b2eb46374edf2e34f0c7a341c42b44b240d98  gamescope-3.16.31.tar.gz
 9547f26523a90c7ccb92881579f59cf59b1dff1a1c482ba3eabe5ef5b2f0f03e2c804dbd64e98437c23c44713f544c823bbe4d29667f780d706d123b5dc0e3ae  libliftoff-8b08dc1c14fd019cc90ddabe34ad16596b0691f4.tar.gz
 823ece755fedea53b0d66eb4c6425f9258d7bb9e2c63e00ff03f93ff9f33aa51ba068ebfd353a32166d9b03366dc2f3ffb3d3a69ef607ff03e00fc55c0cb283b  openvr-ff87f683f41fe26cc9353dd9d9d7028357fd8e1a.tar.gz
 7fe1fe07622efd90bd94e1755019ca47657acd07137669e00b97bf70017a58c1f699e3dec1c720caafd1296275c7a25fd2f4d6e478cebbdf48bd69f985a00cdf  reshade-696b14cd6006ae9ca174e6164450619ace043283.tar.gz
@@ -124,5 +123,4 @@ f062b9aac33b9874f4c3dcbd2efa03b200976bac3a72a5b14c8747b550691109d471babc9eee1c70
 addbf8633aabfa56e3eb363c3dd3df20fea1d2604f4014f7144941e22094c673956f889c49b416c6aa56d4f4940f0227237b72079fd09eb65585fb7d58209c7c  wlroots-d783533489e1f75d6886c2ab5c5960090ef268f8.tar.gz
 b9ff1a1208941f62ee8a2f328b37afa9ae0fcacfa3e962a4c789f23f9eaf775b6f7a834664089ff596b899bc509613a3ddec24101d05d83c45f31f06a4388eb6  system-spirv-headers.patch
 ffd2d5f3977022b702064e18c60058fca23e59c84337ba6d833b175fc5f22622a2dd894bb3936bc4e86f2caf27c65bfb9189109e1e8f369c6294dc115d8a7023  system-deps.patch
-0f85d7bd1e3e692b5720c21b45b04e1cdfabafd9c445fdc0f79b8b83328edb3b6902a1f7fc44a9df57f381b3aba8afe13b95fdcbca82c79368d246d67786f880  0001-Fix-undefined-type-uint.patch
 "
