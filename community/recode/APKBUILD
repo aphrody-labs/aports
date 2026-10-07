@@ -1,6 +1,6 @@
 # Maintainer: Nicolas Lorin <androw95220@gmail.com>
 pkgname=recode
-pkgver=3.7.16
+pkgver=3.7.17
 pkgrel=0
 pkgdesc="Charset converter tool and library"
 url="https://github.com/rrthomas/recode"
@@ -41,5 +41,5 @@ package() {
 }
 
 sha512sums="
-7f21319820e7fcbf35b63418e11c25827798c74ca0c8b4fcd0517602e15b5356ba9d9455382bdcccf25ffd61f0538d3a6d6db9685976526220462db70249a0d6  recode-3.7.16.tar.gz
+ef0677b26b16fa7e077288ede95f48de8f888df50c64247762407e7d1242395ad308716a9dcb8dba0e0d140d1e937f4bbe474e91fa852ce0e315ff241f9ecf2f  recode-3.7.17.tar.gz
 "
