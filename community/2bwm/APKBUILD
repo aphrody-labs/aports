@@ -1,8 +1,8 @@
 # Contributor: prspkt <prspkt@protonmail.com>
 # Maintainer: prspkt <prspkt@protonmail.com>
 pkgname=2bwm
-pkgver=0.3
-pkgrel=3
+pkgver=0.4
+pkgrel=0
 pkgdesc="Fast floating window manager"
 url="https://github.com/venam/2bwm"
 arch="all"
@@ -10,10 +10,7 @@ license="ISC"
 makedepends="libxcb-dev xcb-util-keysyms-dev xcb-util-wm-dev xcb-util-xrm-dev"
 options="!check" # no test suite
 subpackages="$pkgname-doc"
-source="
-	$pkgname-$pkgver.tar.gz::https://github.com/venam/2bwm/archive/v$pkgver.tar.gz
-	gcc-15.patch
-	"
+source="$pkgname-$pkgver.tar.gz::https://github.com/venam/2bwm/archive/v$pkgver.tar.gz"
 
 prepare() {
 	default_prepare
@@ -29,6 +26,5 @@ package() {
 }
 
 sha512sums="
-088a97e5245287890c72e2b0685f7348a4cc0fd49582893b7ce7a081f80a4d7454a3c0eadf4609589314351ded02fd8b75548019b782e797350ad5db5c939f92  2bwm-0.3.tar.gz
-bbb3fc36d3ff5cd1ab13b39eb8c29cf71ab78517ff437658a50ceb44ff338c661438310df6d2abe341b43b21f385d3432e6efbd4b07f38773293ffb551e28f93  gcc-15.patch
+2e8cc9d644cdb811e54db013115728b4b2ce2e815045d4ba65bcb8325af31b701364a177e4bb99e7b2379960165c912d77b2e7005b027d52a6bc3b317ccdc42d  2bwm-0.4.tar.gz
 "
