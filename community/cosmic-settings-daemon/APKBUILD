@@ -1,7 +1,7 @@
 # Contributor: Clayton Craft <clayton@craftyguy.net>
-# Maintainer: Clayton Craft <clayton@craftyguy.net>
+# Maintainer: team/cosmic <clayton@craftyguy.net>
 pkgname=cosmic-settings-daemon
-pkgver=1.9.0
+pkgver=1.10.0
 _upstreamver="${pkgver/_beta/-beta.}"
 _upstreamver="${_upstreamver/_p/.}"
 pkgrel=1
@@ -9,7 +9,7 @@ pkgdesc="Settings daemon for the COSMIC Desktop Environment"
 url="https://github.com/pop-os/cosmic-settings-daemon"
 # armv7, armhf, x86: DO NOT RE-ENABLE! 32-bit is problematic, often requires carrying patches to fix
 # riscv64: too slow to build
-# ppc64le, s390x: rustix statx failure
+# ppc64le, s390x: DO NOT RE-ENABLE: rustix fails often on this arch
 arch="aarch64 loongarch64 x86_64"
 license="GPL-3.0-only"
 depends="
@@ -20,6 +20,7 @@ depends="
 makedepends="
 	cargo-auditable
 	clang22-libclang
+	just
 	libinput-dev
 	libxkbcommon-dev
 	openssl-dev
@@ -29,7 +30,6 @@ makedepends="
 options="net !check"  # fetch dependencies, no tests
 source="
 	$pkgname-$pkgver.tar.gz::https://github.com/pop-os/cosmic-settings-daemon/archive/refs/tags/epoch-$_upstreamver.tar.gz
-	0001-Upgrade-rustix-crate.patch
 	"
 builddir="$srcdir/$pkgname-epoch-$_upstreamver"
 
@@ -47,10 +47,9 @@ check() {
 }
 
 package() {
-	make DESTDIR="$pkgdir" install
+	just rootdir="$pkgdir" install
 }
 
 sha512sums="
-142c4152a2bae59137845fb28f166a6cde5e157d787394ee7b7c244a030874dd797354b5959f51cb3b0b34e9bde9c4b9e78c3ea221db8bab77bc64342cd6b0c8  cosmic-settings-daemon-1.9.0.tar.gz
-ed46efa23da53e1193699dcd5467d9aa46e167ddaec995c1b0840cb38a7d0547965f318f09ab06e1b6c99ec3afccc73f9b98c01bcfb6ab2da1843d402ee6bbe5  0001-Upgrade-rustix-crate.patch
+3b9909bbc8c65315dee2e43be6412ac1e00875f577b937c695cbf2000e86a66f447cc220fcade0065eb5a44dcb19a8499d4cf57fffe07fb90e868f4f499d27e9  cosmic-settings-daemon-1.10.0.tar.gz
 "
