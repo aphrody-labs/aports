@@ -1,7 +1,7 @@
 # Contributor: Holger Jaekel <holger.jaekel@gmx.de>
 maintainer="Holger Jaekel <holger.jaekel@gmx.de>"
 pkgname=aws-sdk-cpp
-pkgver=1.11.870
+pkgver=1.11.900
 pkgrel=0
 pkgdesc="Amazon Web Services SDK for C++"
 url="https://github.com/aws/aws-sdk-cpp"
@@ -103,6 +103,7 @@ _libs="
 	cloudsearchdomain
 	cloudtrail-data
 	cloudtrail
+	cloudwatchomni
 	codeartifact
 	codebuild
 	codecatalyst
@@ -179,6 +180,7 @@ _libs="
 	emr-serverless
 	entityresolution
 	es
+	eventbridgev2
 	eventbridge
 	events
 	evs
@@ -207,6 +209,7 @@ _libs="
 	guardduty
 	health
 	healthlake
+	iam-toolbox
 	iam
 	identity-management
 	identitystore
@@ -303,6 +306,7 @@ _libs="
 	neptune
 	neptunedata
 	network-firewall
+	network-security-manager
 	networkflowmonitor
 	networkmanager
 	networkmonitor
@@ -508,5 +512,5 @@ library() {
 }
 
 sha512sums="
-74b25bd53bbaa1951e4d37ec948c2ffb637dacc33c98040528463da10065402859b53b8af1d176a6408b70cc38b85a0921bb14515a844c067723b8daca0854da  aws-sdk-cpp-1.11.870.tar.gz
+d91c720c219e7ea733880a167499ac12610343f405d3477240347ca7efafaf0f0bb6fd23605d6ad6e2c090b4990d9af10c2f76249fcdf3b92a73563d656fe37b  aws-sdk-cpp-1.11.900.tar.gz
 "
