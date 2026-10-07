@@ -1,7 +1,7 @@
 # Contributor: Clayton Craft <clayton@craftyguy.net>
-# Maintainer: Clayton Craft <clayton@craftyguy.net>
+# Maintainer: team/cosmic <clayton@craftyguy.net>
 pkgname=cosmic-app-library
-pkgver=1.9.0
+pkgver=1.10.0
 _upstreamver="${pkgver/_beta/-beta.}"
 _upstreamver="${_upstreamver/_p/.}"
 pkgrel=0
@@ -9,7 +9,7 @@ pkgdesc="Application launcher for the COSMIC Desktop Environment"
 url="https://github.com/pop-os/cosmic-applibrary"
 # armv7, armhf, x86: DO NOT RE-ENABLE! 32-bit is problematic, often requires carrying patches to fix
 # riscv64: too slow to build
-# ppc64le, s390x: rustix statx failure
+# ppc64le, s390x: DO NOT RE-ENABLE: rustix fails often on this arch
 arch="aarch64 loongarch64 x86_64"
 license="GPL-3.0-only"
 depends="
@@ -44,5 +44,5 @@ package() {
 }
 
 sha512sums="
-7ece6e18190545aa9f793c215f971c42b43c8539235150dddfcaa52df195c248a3a9033017b8803a89da4aebc1cac3ed05730eb7e7a0723d466c800fa4c969fa  cosmic-app-library-1.9.0.tar.gz
+9b9e69eb49e56a64900436819fb48b1568901a05d12b12a08727cca4c3146a49875f9c1fbec38849f681650703d09a249f9e91c4dd4ee8011aaf6285063874a8  cosmic-app-library-1.10.0.tar.gz
 "
