@@ -1,12 +1,12 @@
 # Contributor: Clayton Craft <clayton@craftyguy.net>
-# Maintainer: Clayton Craft <clayton@craftyguy.net>
+# Maintainer: team/cosmic <clayton@craftyguy.net>
 pkgname=pop-launcher
-pkgver=1.9.0
+pkgver=1.10.0
 pkgrel=0
 pkgdesc="Modular IPC-based desktop launcher service"
 url="https://github.com/pop-os/launcher"
 # riscv64: too slow to build
-# ppc64le, s390x: rustix statx failure
+# ppc64le, s390x: DO NOT RE-ENABLE: rustix fails often on this arch
 arch="all !ppc64le !riscv64 !s390x"
 license="MPL-2.0 AND GPL-3.0-only"
 depends="
@@ -45,5 +45,5 @@ package() {
 }
 
 sha512sums="
-0eb0ed7907076d7eee9c12c20cc240af70272281f5e1aaa2d0b4de84bbb3e770097a1e1304946fc9d8ad78ccba094f489e4d825228ef785f58453c7276b8cecc  pop-launcher-1.9.0.tar.gz
+1c64bc308d254da4af8271d93de76105bd56bdd9023f50c73c74a5670dc3eec595147c34a9c26f43b9dc7c8270195e3bf1a2d3b1afb7d1f68c62172911acc711  pop-launcher-1.10.0.tar.gz
 "
