@@ -1,7 +1,7 @@
 # Contributor: Clayton Craft <clayton@craftyguy.net>
-# Maintainer: Clayton Craft <clayton@craftyguy.net>
+# Maintainer: team/cosmic <clayton@craftyguy.net>
 pkgname=cosmic-session
-pkgver=1.9.0
+pkgver=1.10.0
 _upstreamver="${pkgver/_beta/-beta.}"
 _upstreamver="${_upstreamver/_p/.}"
 pkgrel=0
@@ -11,7 +11,7 @@ url="https://github.com/pop-os/cosmic-session"
 # armv7,armhf: depends on cosmic-applets and cosmic-settings with std::bad_alloc <- deadly signal
 # riscv64: too slow to build
 # x86: DO NOT RE-ENABLE! missing many cosmic components
-# ppc64le, s390x: rustix statx failure
+# ppc64le, s390x: DO NOT RE-ENABLE: rustix fails often on this arch
 arch="aarch64 loongarch64 x86_64"
 license="GPL-3.0-or-later"
 depends="
@@ -65,5 +65,5 @@ package() {
 }
 
 sha512sums="
-0656606c2933d688e98f36427dfc934f4a7a6e6f76050a84c386853fb71949c022e536cfa408250dc419ae79c9a5243d57acdae6f7a3f8f6cb3351842f4d2df4  cosmic-session-1.9.0.tar.gz
+a292a6f96fc391ec859357758b077e53bd3ccbe5420ef67b5b55094920d5cc337a5397fa1a93fee3c819e58da5af09c1a239ec8c605e7c9b52d0dffc2919b5cf  cosmic-session-1.10.0.tar.gz
 "
