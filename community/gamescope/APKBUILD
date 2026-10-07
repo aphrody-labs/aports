@@ -1,6 +1,7 @@
 # Contributor: Alisa <corg@disroot.org>
 # Contributor: Maxim Karasev <begs@disroot.org>
-maintainer="Achill Gilgenast <achill@achill.org>"
+# Contributor: Achill Gilgenast <achill@achill.org>
+maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
 pkgname=gamescope
 pkgver=3.16.31
 pkgrel=0
