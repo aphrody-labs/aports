@@ -1,7 +1,7 @@
 # Contributor: WrenIX <dev.alpine@wrenix.eu>
-# Maintainer: Clayton Craft <clayton@craftyguy.net>
+# Maintainer: team/cosmic <clayton@craftyguy.net>
 pkgname=cosmic-wallpapers
-pkgver=1.9.0
+pkgver=1.10.0
 _upstreamver="${pkgver/_beta/-beta.}"
 _upstreamver="${_upstreamver/_p/.}"
 pkgrel=0
@@ -19,5 +19,5 @@ package() {
 }
 
 sha512sums="
-c34dafcdf6b1ff5c06305d85783cc96f3a712a35b43b004ed87dcd347fc4a56a532a25c87540669179d17ae2c946f62b0826bd470813debab99ec74084f59e63  cosmic-wallpapers-1.9.0.tar.gz
+551669bf8346f3affb55e57b2549c6dd2736b857a6470a7f21e7fd2dded476282a0d18e36aba7ca53f10b19cc611856fdc0e7627602099b79b6c5e23d31fc212  cosmic-wallpapers-1.10.0.tar.gz
 "
