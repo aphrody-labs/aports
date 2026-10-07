@@ -1,7 +1,7 @@
 # Contributor: mio <miyopan@e.email>
 # Maintainer: Will Sinatra <wpsinatra@gmail.com>
 pkgname=nomacs
-pkgver=3.22.3
+pkgver=3.22.4
 pkgrel=0
 pkgdesc="Cross platform image viewer"
 url="https://nomacs.org/"
@@ -61,5 +61,5 @@ lang() {
 }
 
 sha512sums="
-73f4aeaea47201a6210710f8973fed5330104b5b8d8c2b727903d4356f9374f89505224f97dd225354d77e288353e310af9ba54d5731ec845a98fdca04eaccee  nomacs-3.22.3.tar.gz
+717c865d663896561e0fe4b619a185462854ace4a4c397e404e484c556743a9dcbb4309a98581a5037d43516a83223fbc113cc74120a3c53d949fbcb7289fa1f  nomacs-3.22.4.tar.gz
 "
