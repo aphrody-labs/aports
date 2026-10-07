@@ -1,7 +1,7 @@
 # Contributor: Jakub Jirutka <jakub@jirutka.cz>
 # Maintainer: Jakub Jirutka <jakub@jirutka.cz>
 pkgname=mediainfo
-pkgver=26.05
+pkgver=26.10
 pkgrel=0
 pkgdesc="Supplies technical and tag information about media files"
 url="https://mediaarea.net/en/MediaInfo"
@@ -80,5 +80,5 @@ gui() {
 }
 
 sha512sums="
-219ca43d78dc84c4f66f9a5140705470a2555d879de26857e96080e47120b156ca56f1b22de6459fe0ea74d4a8b2ae75c9ffc8e55501f8982e7d5b41de0ee75c  mediainfo_26.05.tar.xz
+6b0f7b2362ff15167139f4f678a14e0d1686c4bf60f86e0d8e5023c78866a909f3800f313e01cff0ec765fbf9276d78e388ed711cc5e1ac50b484a13da19f97b  mediainfo_26.10.tar.xz
 "
