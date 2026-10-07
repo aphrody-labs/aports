@@ -1,7 +1,7 @@
 # Contributor: Aleks Bunin <alpinelinux@compuix.com>
 # Maintainer: Aleks Bunin <alpinelinux@compuix.com>
 pkgname=delta
-pkgver=0.19.2
+pkgver=0.20.1
 pkgrel=0
 pkgdesc="Syntax-highlighting pager for git and diff output"
 url="https://dandavison.github.io/delta/"
@@ -55,5 +55,5 @@ package() {
 }
 
 sha512sums="
-c965d6e4dcaa952798f02266533ca0f4fef8c5a6fbc186ce4c9764abe6c855b3ff7140a0681e88088726a02f0013fabff64376b7c24ced0e7689e386e2f22e1b  delta-0.19.2.tar.gz
+518000aeb6fc4333cf8b49f5346f5221d42fb6c50afd8b09d7747ad71094f4a1bc60122c2a731b799abe49f3f84a410d08e0f2432e7417315df01ec1729ca67e  delta-0.20.1.tar.gz
 "
