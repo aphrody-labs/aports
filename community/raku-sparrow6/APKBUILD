@@ -1,7 +1,7 @@
 # Contributor: Celeste <cielesti@protonmail.com>
 # Maintainer: Robert Mongold <rmongold@gmail.com>
 pkgname=raku-sparrow6
-pkgver=0.0.95
+pkgver=0.0.96
 pkgrel=0
 pkgdesc="Raku-based automation framework"
 url="https://github.com/melezhik/Sparrow6"
@@ -46,5 +46,5 @@ package() {
 }
 
 sha512sums="
-e67391ff501a360f42ab3659657c68b4670ac03be68c73dee2a71d6aa8f0c606b5e4005160f148c96cb900bc4347f2e2357dff955931fbb00cb3438501ff8a1e  raku-sparrow6-0.0.95.tar.gz
+6562c16044bf051b9f394dc797066cc53e664322c2fcbb87834aaf94702082db769f4d691bc6829875c37896897edff2fdb1aabe1425888db8de120badbd2f4b  raku-sparrow6-0.0.96.tar.gz
 "
