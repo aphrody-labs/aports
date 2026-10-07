@@ -1,7 +1,7 @@
 # Contributor: André Klitzing <aklitzing@gmail.com>
 # Maintainer: André Klitzing <aklitzing@gmail.com>
 pkgname=ausweisapp
-pkgver=2.5.5
+pkgver=2.6.0
 pkgrel=0
 pkgdesc="Official authentication app for German ID card and residence permit"
 url="https://www.ausweisapp.bund.de/"
@@ -37,6 +37,7 @@ subpackages="
 	"
 source="https://github.com/Governikus/AusweisApp/releases/download/$pkgver/AusweisApp-$pkgver.tar.gz
 	$pkgname.nft
+	version.patch
 	"
 builddir="$srcdir/AusweisApp-$pkgver"
 
@@ -62,6 +63,7 @@ package() {
 }
 
 sha512sums="
-4d3c700ceedafd5f9047b1fab1c75a690917e49b95e48535650993b50aac57fe20e481b4ff7867f5bfddc7e3e4ad4bbb978cef01d7cb86144a0aa8a34745ca72  AusweisApp-2.5.5.tar.gz
+bdf30ef78eb7f03fead160ccb44f9751458cd74738df6a8d775122ae3d4158c0e6e0e4bed1baabf49ce0d6240e43b7726add1754c10b518fef76653278210862  AusweisApp-2.6.0.tar.gz
 a3f3fc76a636b1bed9de251f93cef46139b06e1c13113a6b6100ef08e79d249cb89a1b61d9b6bfbec73bdefdeb47360a6bb048488b4bccc2dccfc26d0635b579  ausweisapp.nft
+c6ac753413d55c10d33a3eaf27fee8ab40098e33b5faf35de49f04facc3de160daa8c5af98a795e3508d993aa6b9972c2d15e0e5ae0ec2b91d0c50e3be9942eb  version.patch
 "
