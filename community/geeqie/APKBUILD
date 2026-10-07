@@ -1,7 +1,7 @@
 # Contributor: ScrumpyJack <scrumpyjack@st.ilet.to>
 # Maintainer: ScrumpyJack <scrumpyjack@st.ilet.to>
 pkgname=geeqie
-pkgver=3.2
+pkgver=3.3
 pkgrel=0
 pkgdesc="Gtk+ based image viewer and organiser"
 url="http://www.geeqie.org/"
@@ -38,5 +38,5 @@ package() {
 }
 
 sha512sums="
-a37707ea542951dec7e74e300caaff9b99139abdc352f3b5dac6fa50596e6ce7ed91b87f96608c530c6c2a9a20b95057e2a0e64989c302ce7371e72943621954  geeqie-3.2.tar.xz
+230c85f8edc654ef6d9e304811dc2c7efa9558867005a722283165435c0e435773c2e43a44ead000a6ab1ebacc7e84e626f2de18153efcddf2e8d758ed682d8a  geeqie-3.3.tar.xz
 "
