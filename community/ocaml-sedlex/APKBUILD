@@ -3,7 +3,7 @@
 # Maintainer: Robert Mongold <rtmongold@gmail.com>
 pkgname=ocaml-sedlex
 _pkgname=sedlex
-pkgver=3.7
+pkgver=3.8.1
 pkgrel=0
 pkgdesc="OCaml lexer generator for Unicode"
 url="https://github.com/ocaml-community/sedlex"
@@ -76,5 +76,5 @@ scan_python3_dependency() {
 }
 
 sha512sums="
-053bceea4944309705e6b8014381711a2c4f7f0ab235cd239e2d2f5a2dbd3efe1b1c2d533631a8545dacf563cdb5b7469fe53982ef79ace270ee8a4a471f1fe2  sedlex-3.7.tar.gz
+6ee642111acefc2015e417fce5e82213887dc579fad32de52de836a5e8bce1d3fd49ba2eccc9d7620531af1c82c6b68b738b9322ae650af4910743ea88ef785f  sedlex-3.8.1.tar.gz
 "
