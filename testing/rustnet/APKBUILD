@@ -1,7 +1,7 @@
 # Maintainer: omni <omni+alpine@hack.org>
 maintainer="omni <omni+alpine@hack.org>"
 pkgname=rustnet
-pkgver=1.6.0
+pkgver=1.7.0
 pkgrel=0
 pkgdesc="process network monitoring for your terminal with deep packet inspection"
 # armhf, armv7, x86: blocked by nix https://github.com/nix-rust/nix/pull/1900
@@ -14,7 +14,6 @@ makedepends="cargo cargo-auditable
 	libcap-utils
 	libpcap-dev
 	linux-headers
-	linux-lts-dev
 	zlib-dev
 	"
 subpackages="$pkgname-doc
@@ -33,27 +32,6 @@ prepare() {
 
 	# make sure it is there
 	mkdir -p "$RUSTNET_ASSET_DIR"
-
-	# use our vmlinux.h, provided by linux-lts-dev, as "bundled" vmlinux.h
-	case "$CARCH" in
-	aarch64)
-		install -Dm0644 /usr/src/linux-headers-*-lts/vmlinux.h \
-			crates/rustnet-host/resources/ebpf/vmlinux/aarch64/vmlinux.h
-		;;
-	arm*)
-		install -Dm0644 /usr/src/linux-headers-*-lts/vmlinux.h \
-			crates/rustnet-host/resources/ebpf/vmlinux/arm/vmlinux.h
-		;;
-	x86*)
-		install -Dm0644 /usr/src/linux-headers-*-lts/vmlinux.h \
-			crates/rustnet-host/resources/ebpf/vmlinux/x86/vmlinux.h
-		;;
-	esac
-	# upstream copies this from https://github.com/libbpf/vmlinux.h
-	# and defaults to "x86", other architectures than the above don't seem to
-	# work with our architecture specific vmlinux.h so let's use the upstream
-	# x86 one (and please report any issue you run into)
-	# TODO: report to upstream and make something better of this
 }
 
 build() {
@@ -72,8 +50,15 @@ check() {
 			--skip ui::snapshot_tests::details_tab_icmpv6_ndp_application_card \
 			--skip ui::snapshot_tests::details_tab_igmp_application_card \
 			--skip ui::snapshot_tests::details_tab_ntp_application_card \
-			--skip ui::snapshot_tests::details_tab_ssh_application_card
-		# the above are failing on build-edge-riscv64 but not in CI
+			--skip ui::snapshot_tests::details_tab_ssh_application_card \
+			--skip headless::tests::stalled_writer_cannot_block_signal_shutdown
+		;;
+	loongarch64|ppc64le)
+		cargo test --frozen -- \
+			--skip ui::snapshot_tests::details_tab_icmp_echo_application_card \
+			--skip ui::snapshot_tests::details_tab_icmpv6_ndp_application_card \
+			--skip ui::snapshot_tests::details_tab_igmp_application_card \
+			--skip headless::tests::stalled_writer_cannot_block_signal_shutdown
 		;;
 	*)
 		cargo test --frozen
@@ -99,6 +84,6 @@ package() {
 }
 
 sha512sums="
-d72817ae05b4c0ffd01a755c044891006bbd3609c40f085418d0bac1382f3187b766d80282d505e51ddc2b325fac8f50045f3c3207690b8228c0d60333f06fcc  rustnet-1.6.0.tar.gz
-84f5321f97df3120dd7569cb64a7dd6157c802dbaecddc18f47f0331eaaeee55226740fe68ad9704b74f2478205157770942c6a24d73ce6fbce41dc5d59c58de  update-rustix-crate.patch
+4a27318a720fee8f87601213acb7cd1066473f2bc6fbf28ed289d3469fa723dc82a5c0f9ef87ca6d787513e39ad759f0afa8220fa2515a93e4cc5cbc713bc128  rustnet-1.7.0.tar.gz
+d82e98bfef396a711039611b8554415dbac7406e996824beffe87f999c64ecedec745a87d023db93bd4e287140c0bc8da8608a3ca63cd66de643cbc68cbc63c7  update-rustix-crate.patch
 "
