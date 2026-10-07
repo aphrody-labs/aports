@@ -4,14 +4,14 @@
 # Contributor: Fabian Affolter <fabian@affolter-engineering.ch>
 # Maintainer: Sean McAvoy <seanmcavoy@gmail.com>
 pkgname=ansible
-pkgver=14.4.0
+pkgver=14.5.0
 pkgrel=0
 pkgdesc="core components for Ansible"
 url="https://ansible.com/"
 options="!check" # TODO: enable tests
 arch="noarch"
 license="GPL-3.0-or-later"
-depends="python3 ansible-core>=2.21.4"
+depends="python3 ansible-core>=2.21.5"
 makedepends="
 	py3-gpep517
 	py3-setuptools
@@ -38,5 +38,5 @@ package() {
 }
 
 sha512sums="
-d82dd687a6bfab31d46069c8b55037da468017dc899f76cafed022cf3e776f40f4ee12376f8f62102142017e1455106df1dd77a1298b60491881f6c58f281a33  ansible-14.4.0.tar.gz
+3bb9403071b5b4976e2ba1df4a2a56194256006b33b7d3dfda5b2b732fa7f21835d8878b9312f695adfaf56ea9bcbab413ce43db74756cd11536266cb092d48a  ansible-14.5.0.tar.gz
 "
