@@ -1,7 +1,7 @@
 # Contributor: Clayton Craft <clayton@craftyguy.net>
-# Maintainer: Clayton Craft <clayton@craftyguy.net>
+# Maintainer: team/cosmic <clayton@craftyguy.net>
 pkgname=xdg-desktop-portal-cosmic
-pkgver=1.9.0
+pkgver=1.10.0
 _upstreamver="${pkgver/_beta/-beta.}"
 _upstreamver="${_upstreamver/_p/.}"
 pkgrel=0
@@ -9,7 +9,7 @@ pkgdesc="xdg-desktop-portal implementation for the COSMIC Desktop Environment"
 url="https://github.com/pop-os/xdg-desktop-portal-cosmic"
 # armv7, armhf, x86: DO NOT RE-ENABLE! 32-bit is problematic, often requires carrying patches to fix
 # riscv64: too slow to build
-# ppc64le, s390x: rustix statx failure
+# ppc64le, s390x: DO NOT RE-ENABLE: rustix fails often on this arch
 arch="aarch64 loongarch64 x86_64"
 license="GPL-3.0-only"
 depends="
@@ -54,5 +54,5 @@ package() {
 }
 
 sha512sums="
-97c4b1997a5a6c55d658d5a8f93d20a62ccf42d76f821d1693a9c32ab52b7f299c5982494bfb0155d1d5e90baef45b2c0e15b915b8508cbeab131dfe1b23ec0b  xdg-desktop-portal-cosmic-1.9.0.tar.gz
+074fffc53a0ed7b8a7561053be69dbff8ada8eb11f3ce0c82a9af9bdad8d516c0275c1626ffab2ba062ed11b05aa59c0f836a8b610f2621c9774471f8e889ed0  xdg-desktop-portal-cosmic-1.10.0.tar.gz
 "
