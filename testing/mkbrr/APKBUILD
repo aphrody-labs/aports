@@ -1,7 +1,7 @@
 # Contributor: Fabricio Silva <hi@fabricio.dev>
 maintainer="Fabricio Silva <hi@fabricio.dev>"
 pkgname=mkbrr
-pkgver=1.25.1
+pkgver=1.27.0
 pkgrel=0
 pkgdesc="mkbrr is a tool to create, modify and inspect torrent files."
 url="https://github.com/autobrr/mkbrr"
@@ -35,6 +35,6 @@ package() {
 }
 
 sha512sums="
-5d84931d4b4c481a91bc111be4cadb2097b0f63da55ce5f7cbb193de97441c3819a7659a45e95bd6c9e1d6c4b1eb5ccf79842108cfd1fe3012e69c0b478c2124  mkbrr-1.25.1.tar.gz
+f7faa5455388e17b9f50c492f1d4e0eeec20493b35ba2bad1eb6984b0e3f114ed903bab71333afb986851199218cb050e6672e94fc63b14f0775d7d4826a6b7d  mkbrr-1.27.0.tar.gz
 dd73cbdf6bef71f706bdf585e0f2abe2bfe6625c6bdbd2b29bfadd1e9891cd52c121081c05e1c905ce5ced01ea2828a62ad02abf13069058469d4528543269c8  no-self-update.patch
 "
