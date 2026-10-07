@@ -1,6 +1,6 @@
 maintainer="Bart Ribbers <bribbers@disroot.org>"
 pkgname=qxmpp
-pkgver=1.16.3
+pkgver=1.17.0
 pkgrel=0
 pkgdesc="Cross-platform C++ XMPP client and server library"
 # armhf blocked by failing generation of documentation
@@ -47,5 +47,5 @@ package() {
 }
 
 sha512sums="
-9c0be1fa79020b26e8cd97ec70ead056b2c18017cb1e27351ca8bb8d7a03784ab0f9c6e2ecca22ac6223947e3c0b54910bea7243820f24a952dabd4c3b5d49a4  qxmpp-1.16.3.tar.xz
+fb1813f617b03eff2d92cb840454f424b02bfcd0365d9dd118a9fa214e9b06a6352bfd56b1fe1cf2c8289833d8458c36cb2f94598b654039917441c5cfeb19ce  qxmpp-1.17.0.tar.xz
 "
