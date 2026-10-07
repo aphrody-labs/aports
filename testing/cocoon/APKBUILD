@@ -1,6 +1,7 @@
 maintainer="Fabricio Silva <hi@fabricio.dev>"
 pkgname=cocoon
-pkgver=0.11.3
+pkgver=0.13.0
+_pkgver=0.13 # upstream dont adds the .0 versions
 pkgrel=0
 pkgdesc="ATProtocol PDS written in Go with a SQLite block and blob store"
 url="https://github.com/haileyok/cocoon"
@@ -11,10 +12,11 @@ options="net" # net for go
 subpackages="$pkgname-doc $pkgname-openrc"
 install="$pkgname.pre-install"
 source="
-	$pkgname-$pkgver.tar.gz::https://github.com/haileyok/cocoon/archive/v$pkgver.tar.gz
+	$pkgname-$pkgver.tar.gz::https://github.com/haileyok/cocoon/archive/v$_pkgver.tar.gz
 	cocoon.initd
 	cocoon.confd
 	"
+builddir="$srcdir/$pkgname-$_pkgver"
 
 build() {
 	go build -ldflags "-X main.Version=$pkgver" ./cmd/cocoon
@@ -33,7 +35,7 @@ package() {
 }
 
 sha512sums="
-d1a3e925dcd6f155e51a30f7406d5c1f0aa1321a2ba26b6f417eb1d921b141873a111c8080ee4fb8f9cbc5f3c1e7a28db5c56099ecc493446a7e96783f04583a  cocoon-0.11.3.tar.gz
+e73965a50de1047c22f84a58057c5b6daeb16dd1d3da215ec8e0897f32e0f38174c613c9248f005d021ecd84c253e6aac6fc6deea2ad271a7a8d79e9b820c0f0  cocoon-0.13.0.tar.gz
 1dcde51567ddcb658012d189ad4e70f6df45322f4bba878e9b75bdf553579c517e76dcce311a4fa344a56ba37507e5425f6bb08f329d1edefc2834d4891aa2db  cocoon.initd
 41b874eebb1e67096bfa56deb427b085c02bb45a0f445dda18215f31338d895c7f42288a9210ab6682baa4c4e2334b0fbafb3c53749847090296992133b0b8ad  cocoon.confd
 "
