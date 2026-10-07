@@ -1,7 +1,7 @@
 # Contributor: Iztok Fister, Jr. <iztok@iztok-jr-fister.eu>
 # Maintainer: Will Sinatra <wpsinatra@gmail.com>
 pkgname=py3-bayesian-optimization
-pkgver=3.3.0
+pkgver=3.4.0
 pkgrel=0
 pkgdesc="A Python implementation of global optimization with gaussian processes"
 url="https://github.com/fmfn/BayesianOptimization"
@@ -32,5 +32,5 @@ package() {
 }
 
 sha512sums="
-aecb81b348011355b582ac6d43e760fe11c683490f9307c3757de75ca2b537d0bea01db3aed31984d5534c1aa28523613a74027e664ee3ad15913130e4127f5e  bayesian-optimization-3.3.0.tar.gz
+6483db6850aa33af246a22ce45c77c3814d973ce325af8491e630f1e2615250640afc588bc7325e6450d59ecc19fbbb62badfc9bed4277b4852bbe62c374c27c  bayesian-optimization-3.4.0.tar.gz
 "
