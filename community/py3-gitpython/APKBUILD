@@ -1,6 +1,6 @@
 maintainer="Wen Heping <wenhepingalpine@sohu.com>"
 pkgname=py3-gitpython
-pkgver=3.1.61
+pkgver=3.2.0
 pkgrel=0
 pkgdesc="Python3 Git Library"
 url="https://github.com/gitpython-developers/GitPython"
@@ -63,5 +63,5 @@ package() {
 }
 
 sha512sums="
-a1e97542d96317151247da3a96b9c141785d525470cb2ae45b1f6d01ad003a76aabc877e3b233716fbb130aa94ee0d6570bc91d6df7a87a92255633526118957  GitPython-3.1.61.tar.gz
+fa2862a8fd18c8bb26ed6bf523ec79d8a1eaa41364f29f2265774561ddf6a10eb67d47bd0df29023bda7bd9940ef64486210513f3dcc6dcf345c6dcf8480cd68  GitPython-3.2.0.tar.gz
 "
