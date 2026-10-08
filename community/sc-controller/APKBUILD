@@ -1,8 +1,8 @@
 # Contributor: Joshua Murphy <joshuamurphy@posteo.net>
 maintainer="Joshua Murphy <joshuamurphy@posteo.net>"
 pkgname=sc-controller
-pkgver=1.0.5
-pkgrel=1
+pkgver=1.0.6
+pkgrel=0
 pkgdesc="User-mode driver and GTK4 based GUI for the Steam Controller"
 url="https://github.com/C0rn3j/sc-controller"
 arch="all"
@@ -55,6 +55,6 @@ package() {
 }
 
 sha512sums="
-f5a075dfe565e8912312f95ea388a86b72af375ab2395dc54b9082e8fcb392b28a0c486f8adf0a2ea88b362a2c14b4f1bdfc6bda43b220727b80f21685b685d6  sc-controller-1.0.5.tar.gz
+00c98442e0f1502fa627133353e4fc727184fafaafcbc6f2472c59ed0f5dcddaf26b4826539c54098f89a9a8598fdcf17a0eae7ded6879c0428e12c276d2a5ef  sc-controller-1.0.6.tar.gz
 d6ed9dd70488bcdc6c8e64a1c51e54095e9a076a7d1c66482754f6bb17a43d546aae98fd456a805129609a3f171a9a70a509873576e93619595bef02adf66609  fix-so-loading.patch
 "
