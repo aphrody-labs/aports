@@ -53,7 +53,7 @@ check() {
 			--skip ui::snapshot_tests::details_tab_ssh_application_card \
 			--skip headless::tests::stalled_writer_cannot_block_signal_shutdown
 		;;
-	loongarch64|ppc64le)
+	aarch64|loongarch64|ppc64le)
 		cargo test --frozen -- \
 			--skip ui::snapshot_tests::details_tab_icmp_echo_application_card \
 			--skip ui::snapshot_tests::details_tab_icmpv6_ndp_application_card \
