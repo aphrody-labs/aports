@@ -1,8 +1,8 @@
 maintainer="Achill Gilgenast <achill@achill.org>"
 pkgname=apkmr
-pkgver=0_git20260831
+pkgver=0_git20261008
 pkgrel=0
-_commit=a2351cc114d74c71b16cf48caf2bbefbcc1f4b66
+_commit=2c173f9d53da8a7354333b260407ee1aa006286a
 pkgdesc="Apply aports/pmaports merge requests to a testing system"
 url="https://gitlab.postmarketos.org/postmarketOS/apkmr"
 arch="noarch"
@@ -20,5 +20,5 @@ package() {
 }
 
 sha512sums="
-670a861cd9411f0b419f7c8f4f656632f11bfc43576dddc7816c9c39b9f553b56c209ac1333e8ef13bc212e987d0f65702be6d4cf9d2454b07ecb0ba8635c8cd  apkmr-a2351cc114d74c71b16cf48caf2bbefbcc1f4b66.tar.gz
+dcef7c24ff4a0805933531c27ad97080bdcfa8ff10606ef03970b77cde65b8739ab6decc74bf9b7e0fa382dd600e84682aa11ac355a9ae01bf7aa0d65d57a277  apkmr-2c173f9d53da8a7354333b260407ee1aa006286a.tar.gz
 "
