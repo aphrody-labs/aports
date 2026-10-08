@@ -1,8 +1,8 @@
 # Contributor: Stuart Cardall <developer@it-offshore.co.uk>
 maintainer="Achill Gilgenast <achill@achill.org>"
 pkgname=libqmi
-pkgver=1.38.0_git20260414
-_commit=cff17a676e10d75081516dafa997fe9bc9043c38
+pkgver=1.38.0_git20261005
+_commit=1c972b8ab901565f26b9f95e1705269277bbfa1b
 pkgrel=0
 pkgdesc="QMI modem protocol helper library"
 url="https://www.freedesktop.org/wiki/Software/libqmi"
@@ -56,5 +56,5 @@ utils() {
 }
 
 sha512sums="
-fc178689675b47faaa46c14b126dc054354044238ea00464b4cc4910c5f2c73faaa12d80a5219fbfad65ab575e38f7af3fd79ae7974ea80ed67bfffe027b85c3  libqmi-cff17a676e10d75081516dafa997fe9bc9043c38.tar.gz
+40c40a81eeff9180dafa39e4a51d8b71381351b7f999f36252bc3fcfd0f6cd62ab384d769ea12364f7f202926b73ebc8325daac1e48825d067c04ffc53bb9a3f  libqmi-1c972b8ab901565f26b9f95e1705269277bbfa1b.tar.gz
 "
