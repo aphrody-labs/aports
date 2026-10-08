@@ -13,13 +13,15 @@ subpackages="
 	$pkgname-fish-completion
 	$pkgname-zsh-completion
 	"
-source="https://github.com/neocmakelsp/neocmakelsp/archive/v$pkgver/neocmakelsp-$pkgver.tar.gz"
+source="https://github.com/neocmakelsp/neocmakelsp/archive/v$pkgver/neocmakelsp-$pkgver.tar.gz
+	rustix-1.1.5.patch
+	"
 options="net" # cargo fetch
 
 prepare() {
 	default_prepare
 
-	cargo fetch --target="$CTARGET" --locked
+	cargo fetch --target="$CHOST" --locked
 }
 
 build() {
@@ -46,4 +48,5 @@ package() {
 
 sha512sums="
 394a37916557becbf29658034d8421cf0e4e5dfce0c392c1774e328f17717f9c96ca04eff006044bd7a7d30e9690b9ed69d16c6901089a402515d957334443c6  neocmakelsp-0.11.2.tar.gz
+6ff2d8d17dd3481a14d2c5ab2eb0ea86aa2d939968c0d2e320486133966b35767a81b2a01cd00dc8d34956f275d20956287a4716d632ebea9da63f9652385057  rustix-1.1.5.patch
 "
