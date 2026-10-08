@@ -1,6 +1,6 @@
 # Maintainer: omni <omni+alpine@hack.org>
 pkgname=rset
-pkgver=3.4
+pkgver=3.5
 pkgrel=0
 pkgdesc="Configure systems using any scripting language"
 url="https://scriptedconfiguration.org/"
@@ -24,12 +24,12 @@ check() {
 
 package() {
 	make DESTDIR="$pkgdir" PREFIX=/usr install
-	install -Dm0644 NEWS -t "$pkgdir"/usr/share/doc/"$pkgname"
-	install -Dm0644 LICENSE -t "$pkgdir"/usr/share/licenses/"$pkgname"
+	install -Dm0644 NEWS -t "$pkgdir"/usr/share/doc/"$pkgname"/
+	install -Dm0644 LICENSE -t "$pkgdir"/usr/share/licenses/"$pkgname"/
 }
 
 sha512sums="
-cd66a1517fd119597a38702a70dd2820bd9bf609ec56a603e5fbf6084d23b72bcff7f72001a43bedebe56ff6c613d327017d57f66bbefe74eee879d4d3d15c26  rset-3.4.tar.gz
-bbd9e433bc770b43329be6c3b0a621f54340bd9d2a9c542f982a256491caafd92825e30b053500f4d49cd2fa4087bd1830bd36d9e4822a91df66c2c6a3bf73d2  tests_Makefile.patch
+b64b385bd25c8db536d4a278edabce95cc818f5a7dabd3a12b3cb4f383ea71af4cf2c1278082c75f48573844cfc36fc562b4d056ffe3dd38302557556acbec7c  rset-3.5.tar.gz
+8db029c5ae0f2826e000f5bbddf99fdfcaa2fbaafc22193145d4c4cb785555e6070fe28bd931f96dc2f945983f26b1c190681bd06001692c54a06405544a7299  tests_Makefile.patch
 9797eb0588113709d6b167369d2e6504de729064f6b5b50679a8639524e5d5408a46758bd8589a9094e0224cf9a744e374fb3d92334334114e90f0c8494d1221  test_miniquark_wait_for_listen.patch
 "
