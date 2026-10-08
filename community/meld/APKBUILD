@@ -2,7 +2,7 @@
 # Contributor: Rasmus Thomsen <oss@cogitri.dev>
 # Maintainer: Wen Heping <wenhepingalpine@sohu.com>
 pkgname=meld
-pkgver=3.24.0
+pkgver=3.24.1
 pkgrel=0
 pkgdesc="Visual diff and merge tool"
 url="https://meldmerge.org"
@@ -48,5 +48,5 @@ package() {
 }
 
 sha512sums="
-bc485b457a7ff5ab1c2158696ca4c8a57fa085213ff841468f5e4c6d1355211bbaf69b8e6145160e593301f7887050fa0d66a7a046842adbffb248856532f941  meld-3.24.0.tar.xz
+0121b673f6ce2f02d315f6c567ea40493edf44b2367c4a7e026f14520ace917c064a744b254aeef35e68548848a30e861f53eb2fb63a6b160ab2988b049c51e5  meld-3.24.1.tar.xz
 "
