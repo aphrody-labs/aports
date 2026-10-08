@@ -1,6 +1,6 @@
 maintainer="Hugo Osvaldo Barrera <hugo@whynothugo.nl>"
 pkgname=sof-firmware
-pkgver=2025.12.2
+pkgver=2026.09.2
 pkgrel=0
 pkgdesc="Sound Open Firmware"
 url="https://github.com/thesofproject/sof-bin"
@@ -24,5 +24,5 @@ package() {
 }
 
 sha512sums="
-5eb64665c2cb87967ff2aa81f7d39397dc6e813abea531e89c12bb5c0a15821e7cbfd8c485af196e37984c1cdf9ac72c93f9feea1205d9d71736d163f5af0084  sof-bin-2025.12.2.tar.gz
+016c3ba08fb73553fa581e8ce7b9c19ceb5b0575d79d50da46b158a4a3e71ac4a30eba6914fe45f9264f56bd9541453e319dbfe01a5fc57f3e7650f624be8f9f  sof-bin-2026.09.2.tar.gz
 "
