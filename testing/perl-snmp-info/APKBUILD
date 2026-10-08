@@ -2,7 +2,7 @@
 # Contributor: Timo Teräs <timo.teras@iki.fi>
 # Maintainer: Timo Teräs <timo.teras@iki.fi>
 pkgname=perl-snmp-info
-pkgver=3.975000
+pkgver=3.978002
 pkgrel=0
 #_pkgreal is used by apkbuild-cpan to find modules at MetaCpan
 _pkgreal=SNMP-Info
@@ -38,5 +38,5 @@ package() {
 }
 
 sha512sums="
-a299d252f5e7ac3ae6819fe813f645be9cb084056ed426066ae6edee76ab775443a66aebcc775d1a383ca577840c54219f5eae0a548c0082714cb6d18b86005e  SNMP-Info-3.975000.tar.gz
+a8120a2b0033cb0e49b409a2eb9f4e4af6a491ba39318844ab51b6d776c03c1797ee051a0b41ea6192149d1c4cb1cd5f2574c9899338399059f8441acfafe299  SNMP-Info-3.978002.tar.gz
 "
