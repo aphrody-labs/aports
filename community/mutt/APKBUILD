@@ -3,7 +3,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=mutt
 pkgver=2.3.2
-pkgrel=0
+pkgrel=1
 pkgdesc="Small and very powerful text-mode email client"
 url="http://www.mutt.org"
 arch="all"
@@ -23,9 +23,12 @@ options="!check"
 install="$pkgname.post-upgrade"
 subpackages="$pkgname-doc $pkgname-lang"
 source="http://ftp.mutt.org/pub/mutt/mutt-$pkgver.tar.gz
+	CVE-2026-107570.patch
 	"
 
 # secfixes:
+#   2.3.2-r1:
+#     - CVE-2026-107570
 #   2.2.3-r0:
 #     - CVE-2022-1328
 #   2.0.4-r1:
@@ -76,4 +79,5 @@ package() {
 
 sha512sums="
 78d7bcce1466bc7e188c579c00df0f308ea73b3f574b6fdecd399dc5f361ced971a6cecb09877b689a15aac8d02271b13d1f61e0d3197d79b6a348e6bf04f3ea  mutt-2.3.2.tar.gz
+7bea2b2feec6e444b4e7814312b5eedd951d4bf6b6c91b6890cd8157e7baa7693119b5b3e93b7474dd96978d35138872a0b758fbe74a552c7235a8be3ec8d8e4  CVE-2026-107570.patch
 "
