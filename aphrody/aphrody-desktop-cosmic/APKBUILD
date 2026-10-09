@@ -11,16 +11,18 @@
 #
 # COSMIC 1.0.15 comes from 3.24 community; cosmic-monitor, cosmic-osk, cosmic-sound-theme,
 # cosmic-viewer, cosmic-wallpapers (1.10.0, absent from 3.24) and system76-scheduler from aphrody/.
+# bun-cosmic gives bun:cosmic its windows and notifications on the desktop.
 # Users of the desktop need the groups seat, video, input and audio.
 maintainer="aphrody-dev <yohanpierre15@gmail.com>"
 pkgname=aphrody-desktop-cosmic
 pkgver=1.0.15
-pkgrel=0
+pkgrel=1
 pkgdesc="Aphrody Alpine COSMIC desktop (meta)"
 url="https://github.com/aphrody-labs/aports"
 arch="aarch64 x86_64"
 license="MIT"
 depends="
+	bun-cosmic
 	cosmic-session
 	cosmic-edit
 	cosmic-files

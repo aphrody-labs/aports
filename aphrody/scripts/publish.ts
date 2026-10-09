@@ -38,6 +38,7 @@ const DESKTOP = [
   "cosmic-osk",
   "cosmic-viewer",
   "system76-scheduler",
+  "bun-cosmic",
   "aphrody-desktop-cosmic",
 ];
 

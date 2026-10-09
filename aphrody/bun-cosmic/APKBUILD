@@ -1,0 +1,51 @@
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+#
+# The libcosmic window and notification helper of bun:cosmic (aphrody-labs/bun,
+# packages/bun-cosmic). bun:cosmic finds it in PATH as `bun-cosmic`. Built from the three files
+# of the helper at a pushed bun commit, not from the whole bun tree. Same libcosmic revision as
+# the COSMIC 1.10.0 apps (cosmic-osk, cosmic-viewer); libcosmic is linked statically.
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=bun-cosmic
+pkgver=0.1.0_git20261009
+_commit=afc5000b62a07a9b241418e67e3920cd71c20d22
+pkgrel=0
+pkgdesc="libcosmic window and desktop notification helper for bun:cosmic"
+url="https://github.com/aphrody-labs/bun/tree/main/packages/bun-cosmic"
+# Same architectures as the rest of the Aphrody COSMIC desktop.
+arch="aarch64 x86_64"
+license="MIT"
+makedepends="
+	cargo-auditable
+	libxkbcommon-dev
+"
+options="net !check"  # fetch dependencies, the helper has no tests (bun:cosmic tests drive it)
+_raw="https://raw.githubusercontent.com/aphrody-labs/bun/$_commit/packages/bun-cosmic"
+source="
+	bun-cosmic-Cargo.toml::$_raw/Cargo.toml
+	bun-cosmic-Cargo.lock::$_raw/Cargo.lock
+	bun-cosmic-main.rs::$_raw/src/main.rs
+"
+builddir="$srcdir/bun-cosmic"
+
+prepare() {
+	mkdir -p "$builddir/src"
+	cp "$srcdir/bun-cosmic-Cargo.toml" "$builddir/Cargo.toml"
+	cp "$srcdir/bun-cosmic-Cargo.lock" "$builddir/Cargo.lock"
+	cp "$srcdir/bun-cosmic-main.rs" "$builddir/src/main.rs"
+	default_prepare
+	cargo fetch --target="$CHOST" --locked
+}
+
+build() {
+	cargo auditable build --release --frozen
+}
+
+package() {
+	install -Dm755 target/release/bun-cosmic -t "$pkgdir"/usr/bin/
+}
+
+sha512sums="
+40c5ddccfce8f313bc1340741fff6810b87b0f21d9be2d5dadab62ec96027aa7e3371dcff714f315efefb4f20f9c47e4c588d1ac5911821b6da16503fce047e9  bun-cosmic-Cargo.toml
+118d1cde63cce766d40532e442950c781c5e23cb6cb894b0c4acf05d186f80b450103e7dd62aa541d7931ada777a318e4564d7ddd7b33ce1d322caafaca8adfd  bun-cosmic-Cargo.lock
+85465e76aaaaf46e021d21022e9f16640e1be12311a12e7d72a8c1b6e3b2314eeb80ee1f7de289cf99223a24dd7ec7d8648ee62212d1aa8f6a244aa930b72a71  bun-cosmic-main.rs
+"
