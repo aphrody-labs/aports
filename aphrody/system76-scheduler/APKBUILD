@@ -33,6 +33,8 @@ options="net !check" # fetch dependencies, no tests upstream
 
 prepare() {
 	default_prepare
+	# getrandom 0.2.8 + libc 0.2.141 link open64, absent from musl >= 1.2.4
+	cargo update -p getrandom -p libc
 	cargo fetch --target="$CHOST" --locked
 }
 

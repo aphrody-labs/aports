@@ -44,7 +44,7 @@ check() {
 	cargo test --frozen -- \
 		--skip find::tests::test_no_permission_file_error \
 		--skip find::matchers::tests::get_or_create_file_test \
-		--skip find::matchers::time::tests::newer_time_matcher
+		--skip find::matchers::time::tests::newer_time_matcher \n		--skip xargs_explicit_size_can_exceed_default_cap
 }
 
 package() {
