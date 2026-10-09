@@ -55,7 +55,7 @@ echo '${repoLine}' >> /etc/apk/repositories
 apk update -q || true`);
 
   // aphrody-labs/aphrody is private: abuild cannot fetch its tarball anonymously.
-  const ver = (await sh(`. aphrody/aphrody/APKBUILD; echo $pkgver $_commit`).text()).trim().split(" ");
+  const ver = (await sh(`set +u; . aphrody/aphrody/APKBUILD; echo $pkgver $_commit`).text()).trim().split(" ");
   if (process.env.APHRODY_SOURCE_TOKEN && !(only.length && !only.includes("aphrody"))) {
     await $`gh api repos/aphrody-labs/aphrody/tarball/${ver[1]} > ${root}/aphrody/.work/src/aphrody-${ver[0]}.tar.gz`.env({
       ...process.env,
