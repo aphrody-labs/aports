@@ -39,6 +39,8 @@ build() {
 	# (abuild default) is required by the crate: unwinding into C is UB.
 	export CARGO_PROFILE_RELEASE_OPT_LEVEL=3
 	export RUSTFLAGS="${RUSTFLAGS-} -C link-arg=-Wl,-soname,libz.so.1"
+	# gzprintf uses #![feature(c_variadic)], still unstable on the 3.24 rust
+	export RUSTC_BOOTSTRAP=1
 	cargo auditable build --frozen --release --features gz,gzprintf
 }
 
