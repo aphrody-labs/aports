@@ -1,0 +1,380 @@
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+#
+# Based on aports 3.24-stable main/linux-lts, commit 52fae6d7d56f3958f32e5bf9121a7536524b9ef4
+# ("main/linux-lts: upgrade to 6.18.55"), original maintainer Natanael Copa <ncopa@alpinelinux.org>.
+#
+# Aphrody changes:
+# - x86_64 and aarch64 only, two flavors from one config:
+#     aphrody     generic (x86-64 v1, armv8.0-a), package linux-aphrody
+#     aphrody-v3  KCFLAGS -march=x86-64-v3 (Haswell/Zen and later) on x86_64, -march=armv8.2-a on
+#                 aarch64, package linux-aphrody-v3. X86_64_VERSION is not a 6.18 Kconfig symbol;
+#                 this uses the same KCFLAGS/KRUSTFLAGS route as upstream X86_NATIVE_CPU.
+# - Built with LLVM=1 (clang, lld, llvm binutils) and CONFIG_RUST=y (Documentation/rust).
+# - Config: lts.<arch>.config + config-aphrody.fragment (system, Rust) + bun.config (options
+#   serving Bun/JSC) [+ lto.config when APHRODY_KERNEL_LTO=1], merged by
+#   scripts/kconfig/merge_config.sh, then `make LLVM=1 olddefconfig` (see _prepareconfig).
+#   aphrody/kernel/check-config.ts checks a running kernel against the same fragments.
+#
+# Kernel source (_kernel_source):
+#   kernel.org  linux-$_kernver tarball + stable patch + the Alpine linux-lts patches (default).
+#   fork        aphrody-labs/linux branch aphrody-bun (workstream V: Rust modules, Bun
+#               integration), pinned to _fork_commit; the fork carries the Alpine patches.
+#               Set _kernel_source=fork, _fork_commit=<sha>, pkgver to the fork's kernel
+#               version, then `abuild checksum`.
+#
+# Environment: APHRODY_STRICT_CONFIG=1 makes a fragment option refused by Kconfig fatal;
+# APHRODY_KERNEL_LTO=1 adds Clang ThinLTO (drops BTF, sched_ext and MODVERSIONS, see lto.config).
+# The kernel is for the host (VM/metal), not for the container image.
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+_flavor=aphrody
+pkgname=linux-$_flavor
+pkgver=6.18.55
+_kernver=${pkgver%.*}
+pkgrel=0
+pkgdesc="Linux kernel for Aphrody Alpine (lts + Rust, LLVM, io_uring, BPF/BTF, sched_ext, cgroup v2, Landlock, BBR)"
+url="https://www.kernel.org"
+depends="initramfs-generator"
+_kernel_source=kernel.org
+_fork_commit=""
+_llvm_depends="clang lld llvm"
+_rust_depends="rust rust-src rust-bindgen rustfmt"
+_depends_dev="perl gmp-dev mpc1-dev mpfr-dev elfutils-dev bash flex bison zstd $_llvm_depends $_rust_depends"
+makedepends="$_depends_dev sed installkernel bc linux-headers linux-firmware-any openssl-dev>3 mawk
+	diffutils elfutils findutils zstd pahole>=1.24 python3 bpftool"
+options="!strip !check"
+_aports="https://raw.githubusercontent.com/alpinelinux/aports/52fae6d7d56f3958f32e5bf9121a7536524b9ef4/main/linux-lts"
+_configs="
+	lts.x86_64.config::$_aports/lts.x86_64.config
+	lts.aarch64.config::$_aports/lts.aarch64.config
+	config-aphrody.fragment
+	bun.config
+	lto.config
+	"
+case "$_kernel_source" in
+fork)
+	source="linux-aphrody-$_fork_commit.tar.gz::https://github.com/aphrody-labs/linux/archive/$_fork_commit.tar.gz
+		$_configs"
+	builddir="$srcdir"/linux-$_fork_commit
+	;;
+*)
+	source="https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/linux-$_kernver.tar.xz
+		0002-x86-Compress-vmlinux-with-zstd-19-instead-of-22.patch::$_aports/0002-x86-Compress-vmlinux-with-zstd-19-instead-of-22.patch
+		0003-kexec-add-kexec_load_disabled-boot-option.patch::$_aports/0003-kexec-add-kexec_load_disabled-boot-option.patch
+		0004-objtool-respect-AWK-setting.patch::$_aports/0004-objtool-respect-AWK-setting.patch
+		0001-x86-CPU-AMD-avoid-printing-reset-reasons-on-Xen-domU.patch::$_aports/0001-x86-CPU-AMD-avoid-printing-reset-reasons-on-Xen-domU.patch
+		$_configs"
+	builddir="$srcdir"/linux-$_kernver
+	if [ "${pkgver%.0}" = "$pkgver" ]; then
+		# Prepend to apply first
+		source="patch-$pkgver.patch.xz::https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/patch-$pkgver.xz $source"
+	fi
+	;;
+esac
+_flavors="$_flavor $_flavor-v3"
+subpackages="$pkgname-dev:_dev:$CBUILD_ARCH
+	linux-$_flavor-v3:_v3:$CBUILD_ARCH
+	linux-$_flavor-v3-dev:_dev:$CBUILD_ARCH
+	$pkgname-doc"
+arch="x86_64 aarch64"
+license="GPL-2.0-only"
+
+prepare() {
+	if [ "$_kernel_source" = fork ] && [ -z "$_fork_commit" ]; then
+		error "_kernel_source=fork needs _fork_commit (aphrody-labs/linux aphrody-bun commit)"
+		return 1
+	fi
+	default_prepare
+
+	# remove localversion from patch if any
+	rm -f localversion*
+}
+
+_kernelarch() {
+	local arch="$1"
+	case "$arch" in
+		aarch64*) arch="arm64" ;;
+	esac
+	echo "$arch"
+}
+
+# Common make arguments: LLVM toolchain (required by CONFIG_RUST and ThinLTO).
+_kmake() {
+	make ARCH="$(_kernelarch $CARCH)" LLVM=1 AWK="${AWK:-mawk}" "$@"
+}
+
+# Compiler flags of a flavor (aphrody-v3: x86-64-v3 / armv8.2-a). The kernel appends KCFLAGS and
+# KRUSTFLAGS after its own -march, and keeps its explicit -mno-sse/-mno-avx/-mgeneral-regs-only.
+_flavor_flags() {
+	case "$1:$CARCH" in
+		*-v3:x86_64) echo "KCFLAGS=-march=x86-64-v3 KRUSTFLAGS=-Ctarget-cpu=x86-64-v3" ;;
+		*-v3:aarch64) echo "KCFLAGS=-march=armv8.2-a KRUSTFLAGS=-Ctarget-feature=+v8.2a" ;;
+	esac
+}
+
+# Keep only the options of a fragment that apply to $CARCH ("# @arch ..." marker before an
+# option), drop comments and blank lines.
+_filter_fragment() {
+	awk -v carch="$CARCH" '
+	/^# @arch / {
+		list = $0
+		sub(/^# @arch /, "", list)
+		n = split(list, a, " ")
+		ok = 0
+		for (i = 1; i <= n; i++) if (a[i] == carch) ok = 1
+		pending = 1
+		next
+	}
+	/^(CONFIG_|# CONFIG_)/ {
+		if (pending && !ok) { pending = 0; next }
+		pending = 0
+		print
+		next
+	}
+	' "$1"
+}
+
+_fragments() {
+	echo config-aphrody.fragment bun.config
+	if [ "${APHRODY_KERNEL_LTO:-0}" = 1 ]; then echo lto.config; fi
+}
+
+_prepareconfig() {
+	local _f="$1"
+	local _arch="$2"
+	local _builddir="$srcdir"/build-$_f.$_arch
+	local _frag _merge=""
+	mkdir -p "$_builddir"
+	echo "-$pkgrel-$_f" > "$_builddir"/localversion-alpine
+
+	cp "$srcdir"/lts.$_arch.config "$_builddir"/.config
+	for _frag in $(_fragments); do
+		_filter_fragment "$srcdir"/$_frag > "$_builddir"/$_frag
+		_merge="$_merge $_builddir/$_frag"
+	done
+
+	msg "Checking the Rust toolchain (make LLVM=1 rustavailable)"
+	_kmake -C "$builddir" O="$_builddir" rustavailable
+
+	msg "Merging$(printf ' %s' $(_fragments)) into the lts $_arch config"
+	KCONFIG_CONFIG="$_builddir"/.config \
+	"$builddir"/scripts/kconfig/merge_config.sh -m -O "$_builddir" \
+		"$_builddir"/.config $_merge
+
+	msg "Configuring $_f kernel ($_arch)"
+	_kmake -C "$builddir" O="$_builddir" olddefconfig
+
+	# Check that Kconfig kept every requested value; the last fragment setting a symbol wins.
+	# "is not set" is satisfied by an absent symbol (invisible symbols are not written).
+	local _missing=0 _line _sym
+	cat $_merge | awk '{ s = $0; sub(/^# /, "", s); sub(/[= ].*/, "", s); if (!(s in v)) o[++n] = s; v[s] = $0 }
+		END { for (i = 1; i <= n; i++) print v[o[i]] }' > "$_builddir"/aphrody.expected
+	while IFS= read -r _line; do
+		case "$_line" in
+		"# CONFIG_"*" is not set")
+			_sym="${_line#\# }"; _sym="${_sym%% *}"
+			grep -q "^$_sym=" "$_builddir"/.config || continue
+			;;
+		*)
+			grep -qxF -- "$_line" "$_builddir"/.config && continue
+			;;
+		esac
+		warning "config not applied by Kconfig: $_line"
+		_missing=1
+	done < "$_builddir"/aphrody.expected
+	if [ "$_missing" = 1 ] && [ "${APHRODY_STRICT_CONFIG:-0}" = 1 ]; then
+		error "fragment options refused by Kconfig"
+		return 1
+	fi
+
+	if grep "CONFIG_MODULE_SIG=y" "$_builddir"/.config >/dev/null; then
+		if [ -f "$KERNEL_SIGNING_KEY" ]; then
+			sed -i -e "s:^CONFIG_MODULE_SIG_KEY=.*:CONFIG_MODULE_SIG_KEY=\"$KERNEL_SIGNING_KEY\":" \
+				"$_builddir"/.config
+			msg "Using $KERNEL_SIGNING_KEY to sign $_f kernel ($_arch) modules"
+		else
+			warning "KERNEL_SIGNING_KEY was not set. A signing key will be generated, but 3rd"
+			warning "party modules can not be signed"
+		fi
+	fi
+}
+
+# Print the effective config for review (CONFIG changes vs lts), run before a version bump
+prepareconfigs() {
+	local _f
+	for _f in $_flavors; do
+		_prepareconfig "$_f" "$CARCH"
+	done
+}
+
+set_kbuild_timestamp() {
+	# KBUILD_BUILD_TIMESTAMP needs to be parsable by busybox date
+	export KBUILD_BUILD_TIMESTAMP="$(date '+%Y-%m-%d %H:%M:%S' -u${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
+}
+
+_build() {
+	local _f="$1"
+	_prepareconfig "$_f" "$CARCH"
+
+	msg "Building $_f kernel"
+	cd "$srcdir"/build-$_f.$CARCH
+
+	# set org in cert for modules signing
+	# https://www.kernel.org/doc/html/v6.1/admin-guide/module-signing.html#generating-signing-keys
+	mkdir -p certs
+	sed -e 's/#O = Unspecified company/O = alpinelinux.org/' \
+		"$builddir"/certs/default_x509.genkey \
+		> certs/x509.genkey
+
+	# shellcheck disable=SC2046
+	_kmake $(_flavor_flags "$_f") \
+		KBUILD_BUILD_VERSION="$((pkgrel + 1 ))-Alpine"
+
+	if grep -q '^CONFIG_DEBUG_INFO_BTF=y' .config; then
+		# Generate vmlinux.h
+		bpftool btf dump file vmlinux format c > vmlinux.h
+	fi
+}
+
+build() {
+	unset LDFLAGS
+	# for some reason these sometimes leak into the kernel build,
+	# -Werror=format-security breaks some stuff
+	unset CFLAGS CPPFLAGS CXXFLAGS RUSTFLAGS
+	set_kbuild_timestamp
+	local _f
+	for _f in $_flavors; do
+		_build "$_f"
+	done
+}
+
+_package() {
+	local _buildflavor="$1" _outdir="$2"
+	set_kbuild_timestamp
+
+	cd "$srcdir"/build-$_buildflavor.$CARCH
+	local _abi_release="$(_kmake -s kernelrelease)"
+	cp Module.symvers Module.symvers.backup
+
+	mkdir -p "$_outdir"/boot "$_outdir"/lib/modules
+
+	local _install
+	case "$CARCH" in
+		aarch64) _install="zinstall dtbs_install";;
+		*) _install=install;;
+	esac
+
+	# shellcheck disable=SC2046
+	_kmake modules_install $_install $(_flavor_flags "$_buildflavor") \
+		INSTALL_MOD_PATH="$_outdir" \
+		INSTALL_MOD_STRIP=1 \
+		INSTALL_PATH="$_outdir"/boot \
+		INSTALL_DTBS_PATH="$_outdir/boot/dtbs-$_buildflavor"
+
+	cp Module.symvers.backup Module.symvers
+
+	rm -f "$_outdir"/lib/modules/"$_abi_release"/build \
+		"$_outdir"/lib/modules/"$_abi_release"/source
+	rm -rf "$_outdir"/lib/firmware
+
+	install -D -m644 include/config/kernel.release \
+		"$_outdir"/usr/share/kernel/$_buildflavor/kernel.release
+
+	ln -sf /boot/vmlinuz-"$_buildflavor" \
+		"$_outdir"/lib/modules/"$_abi_release"/vmlinuz
+}
+
+package() {
+	depends="$depends linux-firmware-any"
+
+	_package "$_flavor" "$pkgdir"
+
+	# copy files for linux-aphrody-doc sub package
+	mkdir -p "$pkgdir"/usr/share/doc
+	cp -r "$builddir"/Documentation \
+		"$pkgdir"/usr/share/doc/linux-doc-"$pkgver"/
+	# remove files that aren't part of the documentation itself
+	for nondoc in \
+		.gitignore conf.py docutils.conf \
+		Kconfig Makefile
+	do
+		rm "$pkgdir"/usr/share/doc/linux-doc-"$pkgver"/"$nondoc"
+	done
+	# create /usr/share/doc/linux-doc symlink
+	cd "$pkgdir"/usr/share/doc; ln -s linux-doc-"$pkgver" linux-doc
+}
+
+_v3() {
+	pkgdesc="$pkgdesc, x86-64-v3 / armv8.2-a build"
+	depends="$depends linux-firmware-any"
+	_package "$_flavor-v3" "$subpkgdir"
+}
+
+_dev() {
+	local _flavor=$(echo $subpkgname | sed -E 's/(^linux-|-dev$)//g')
+	local _builddir="$srcdir"/build-$_flavor.$CARCH
+	local _abi_release="$(_kmake -C "$_builddir" -s kernelrelease)"
+	local _karch="$(_kernelarch $CARCH | sed 's/x86_64/x86/')"
+	# copy only the parts needed to build third party kernel modules and
+	# install them as /usr/src/linux-headers (same layout as linux-lts-dev);
+	# out-of-tree modules build with LLVM=1 (and rust for Rust modules)
+	pkgdesc="Headers and script for third party modules for $_flavor kernel"
+	depends="$_depends_dev"
+	local dir="$subpkgdir"/usr/src/linux-headers-"$_abi_release"
+	set_kbuild_timestamp
+
+	mkdir -p "$dir"
+	cp -a "$_builddir"/.config "$_builddir"/localversion-alpine \
+		"$dir"/
+
+	install -D -t "$dir"/certs "$_builddir"/certs/signing_key.x509 || :
+
+	# Install vmlinux.h
+	if grep -q '^CONFIG_DEBUG_INFO_BTF=y' "$_builddir"/.config; then
+		install -Dm644 "$_builddir"/vmlinux.h -t "$dir/"
+	fi
+
+	_kmake -C "$builddir" \
+		O="$dir" \
+		prepare modules_prepare scripts
+
+	# remove the stuff that points to real sources
+	rm "$dir"/Makefile "$dir"/source
+
+	cd "$builddir"
+	find .  -path './include/*' -prune \
+		-o -path './scripts/*' -prune -o -type f \
+		\( -name 'Makefile*' -o -name 'Kconfig*' -o -name 'Kbuild*' -o \
+		   -name '*.sh' -o -name '*.pl' -o -name '*.lds' -o -name 'Platform' \) \
+		-print | cpio -pdm "$dir"
+
+	cp -a scripts include "$dir"
+
+	find "arch/$_karch" "tools/include" "tools/arch/$_karch" -type f -path '*/include/*' \
+		-print | cpio -pdm "$dir"
+
+	install -Dm644 "$srcdir"/build-$_flavor.$CARCH/Module.symvers \
+		"$dir"/Module.symvers
+
+	msg "Removing documentation..."
+	rm -r "$dir"/Documentation
+	sed -i -e '/Documentation/d' "$dir"/Kconfig
+	find "$dir" -type f \( -name '*.o' -o -name '*.cmd' \) -exec rm -v -- {} +
+
+	mkdir -p "$subpkgdir"/lib/modules/"$_abi_release"
+	ln -sf /usr/src/linux-headers-"$_abi_release" \
+		"$subpkgdir"/lib/modules/"$_abi_release"/build
+}
+
+sha512sums="
+274d804a47fc28a8260907ac27f2efc95a4668f67d31a036e88c82cdaf16e8a2ba33dce18f7b344595d2cbd60d310e7b6b0ccae6d1f4dab2eb65badb61e8ef66  patch-6.18.55.patch.xz
+88599ffdec96d150c1feb9b261ba93bb0301a9d0e1ad6bef7aeab1f5372cbfc57d8b43c7e902bd8f76921d1dbd8189663c142ea869e51d0e2b483b150ee00fe0  linux-6.18.tar.xz
+055e10e7b3e00bb3621389315d5206a8feb5022a1f0dc51c3aa107facfe83d191da05a502a0c62488be7299677a63c1da84f87c42cbf3125788c56db67e810ee  0002-x86-Compress-vmlinux-with-zstd-19-instead-of-22.patch
+e1d2d5358f5b8189236108973395f00eafce8db6d5baaf55025b1360f08ab7cffc930d3818719f220b98e7e8541cc8a7f056611b6e290f224a102c1addbe34ac  0003-kexec-add-kexec_load_disabled-boot-option.patch
+28c83be4c97152001381cd5e3a8acb8552a42d9dac9aaec8f096e3762b7944035aa5a4363fb4602f9bb427c4f72cfd2f996a0a725f7f9e07ab250317985aff9e  0004-objtool-respect-AWK-setting.patch
+4e72af8e77a555d2a850837b64a525a51d5d118048584dc3ea0d0e8620bb56bf56b69a94aa67dac879b841c9ba033e33d94610da0028fde7b6602ad2fe63f02f  0001-x86-CPU-AMD-avoid-printing-reset-reasons-on-Xen-domU.patch
+85ff8229b3ba540defe93406b472d5d34c158727e6c01dbd964c0bafe413dacbd807b0c030beac0addcd19d0575607c391a95b10826ec909d033ef62f0289825  lts.x86_64.config
+2a80c98aeac63bab061b799440a575524d128679d56fa819659952e703d4693c0a7f82b79e5d6edf4dd0f7b6c0c5b8465e3a05aa73b99bfcb07d75b466f44a8f  lts.aarch64.config
+3137aabd172e8eac754d372b144199773aebb34b37e3cc9231236922c569381d4c95b386980a296147381fba442b8e13c716d4c60c2336674f3d79ba72dd1f45  config-aphrody.fragment
+c9f802a605f61ea5db3d1db576c526101cb79af415e1f5896adecfffd15bb3955b5d2b7afbb95d14a1399ac906c547d93408481da6e0e96d8d73551215f57eb1  bun.config
+bb0926c62a6d10eaba79379eb8aa4af170657c3aba1b01da7510cfae6d525994d550539ea6849902ae7387091485f5168a606fe5915dad2f206e7a395efa215a  lto.config
+"

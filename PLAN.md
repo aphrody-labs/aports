@@ -28,9 +28,14 @@ Public key: `aphrody/keys/aphrody-labs.rsa.pub` (copy to `/etc/apk/keys/`). Priv
 | `rust-nightly` | 2026-09-15 | Official musl dist, `/usr/lib/rust-nightly` (Bun's `rust-toolchain.toml`) |
 | `rust-stable` | 1.98.1 | Official musl dist, `/usr/lib/rust-stable` (3.24 ships 1.96) |
 | `aphrody-bun-build-deps` | 1 | Meta: everything needed to build Bun |
+| `sudo-rs` | 0.2.15 | U3. From 3.24 community 8b25d8295f3f; `provides=sudo`, replaces sudo/doas; subpackage `aphrody-sudoers` (group `aphrody`, `/etc/sudoers.d/aphrody` NOPASSWD) |
+| `aphrody-sysctl` | 1.1 | U3. `/etc/sysctl.d/90-aphrody-bun.conf`, `/etc/security/limits.d/90-aphrody-bun.conf`, `/etc/modules-load.d/aphrody.conf` |
+| `linux-aphrody`, `linux-aphrody-v3` | 6.18.55 | U3. linux-lts + `config-aphrody.fragment` + `bun.config` (+ `lto.config`), LLVM=1, CONFIG_RUST=y; `-v3` = x86-64-v3 / armv8.2-a. Source switch to aphrody-labs/linux `aphrody-bun` (V). Check: `bun aphrody/kernel/check-config.ts` |
 
 ## To do
 
 - `abuild checksum` for `aphrody`, `rust-nightly`, `rust-stable` (sha512sums empty; the publish
   script computes them per run and warns).
 - Bump `bun` to the first fork release that contains `bunsh`.
+- U3: add `sudo-rs`, `aphrody-sysctl` to `ORDER` in `publish.ts` (owner U1); `linux-aphrody` builds two
+  kernels, run it in its own job (6 h cap).
