@@ -3,7 +3,7 @@
 // consumes as an NDX repository:
 //   https://github.com/aphrody-labs/aports/releases/download/aphrody-3.24-${APK_ARCH}/APKINDEX.tar.gz
 //
-//   bun aphrody/scripts/publish.ts build [pkg...]   default: ORDER; .apk assets only
+//   bun aphrody/scripts/publish.ts build [pkg...]   default: ORDER; @desktop = DESKTOP; .apk assets only
 //   bun aphrody/scripts/publish.ts index            rebuild and sign APKINDEX over every published .apk
 //
 // Packages whose .apk files are already assets are skipped, so a run cut by
@@ -29,7 +29,20 @@ const ORDER = [
   "aphrody-bun-build-deps",
 ];
 
-const [mode = "build", ...only] = process.argv.slice(2);
+// COSMIC desktop (chantier C1), its own job: `publish.ts build @desktop`. The rest of COSMIC
+// (1.0.15) comes from 3.24 community.
+const DESKTOP = [
+  "cosmic-sound-theme",
+  "cosmic-wallpapers",
+  "cosmic-monitor",
+  "cosmic-osk",
+  "cosmic-viewer",
+  "system76-scheduler",
+  "aphrody-desktop-cosmic",
+];
+
+const [mode = "build", ...args] = process.argv.slice(2);
+const only = args.flatMap(a => (a === "@desktop" ? DESKTOP : [a]));
 if (mode !== "build" && mode !== "index") throw new Error(`unknown mode ${mode}: build | index`);
 const arch = process.env.APK_ARCH ?? (process.arch === "arm64" ? "aarch64" : "x86_64");
 const flavor = process.env.APHRODY_KERNEL_FLAVOR ?? "";

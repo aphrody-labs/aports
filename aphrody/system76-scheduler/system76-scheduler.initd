@@ -1,0 +1,22 @@
+#!/sbin/openrc-run
+
+name="System76 Scheduler"
+description="Process priority manager for desktop responsiveness"
+command="/usr/bin/system76-scheduler"
+command_args="daemon"
+command_background="yes"
+pidfile="/run/$RC_SVCNAME.pid"
+output_log="/var/log/$RC_SVCNAME.log"
+error_log="/var/log/$RC_SVCNAME.log"
+extra_started_commands="reload"
+
+depend() {
+	need dbus
+	after modules
+}
+
+reload() {
+	ebegin "Reloading $name configuration"
+	/usr/bin/system76-scheduler daemon reload
+	eend $?
+}

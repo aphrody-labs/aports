@@ -17,7 +17,8 @@ Public key: `aphrody/keys/aphrody-labs.rsa.pub` (copy to `/etc/apk/keys/`). Priv
 `APHRODY_ABUILD_KEY`. `APHRODY_SYNC_TOKEN` fetches the private aphrody source and pushes syncs.
 
 Jobs (each under the 6 h cap): `build <arch>` (userland, `ORDER` in `publish.ts`), one `kernel` job per
-flavor and arch (`APHRODY_KERNEL_FLAVOR=aphrody|aphrody-v3`, `linux-aphrody` builds only that one), then
+flavor and arch (`APHRODY_KERNEL_FLAVOR=aphrody|aphrody-v3`, `linux-aphrody` builds only that one), `desktop <arch>`
+(`publish.ts build @desktop`, the C1 packages below), then
 `index <arch>` signs `APKINDEX.tar.gz` over every published `.apk` (the only writer of the index).
 
 ## Packages (`aphrody/`)
@@ -35,6 +36,9 @@ flavor and arch (`APHRODY_KERNEL_FLAVOR=aphrody|aphrody-v3`, `linux-aphrody` bui
 | `sudo-rs` | 0.2.15 | U3. From 3.24 community 8b25d8295f3f; `provides=sudo`, replaces sudo/doas; subpackage `aphrody-sudoers` (group `aphrody`, `/etc/sudoers.d/aphrody` NOPASSWD) |
 | `aphrody-sysctl` | 1.1 | U3. `/etc/sysctl.d/90-aphrody-bun.conf`, `/etc/security/limits.d/90-aphrody-bun.conf`, `/etc/modules-load.d/aphrody.conf` |
 | `linux-aphrody`, `linux-aphrody-v3` | 6.18.55 | U3. linux-lts + `config-aphrody.fragment` + `bun.config` (+ `lto.config`), LLVM=1, CONFIG_RUST=y; `-v3` = x86-64-v3 / armv8.2-a. Source switch to aphrody-labs/linux `aphrody-bun` (V). Check: `bun aphrody/kernel/check-config.ts` |
+| `cosmic-monitor`, `cosmic-osk`, `cosmic-sound-theme`, `cosmic-viewer`, `cosmic-wallpapers` | 1.10.0 | C1. Backport of aports master `cbc8344575b9` (absent from 3.24, whose community has the rest of COSMIC at 1.0.15); upstream sha512 re-checked on the downloaded tarballs |
+| `system76-scheduler` | 2.0.2 | C1. Not in Alpine. OpenRC service, execsnoop from `bcc-tools` (`EXECSNOOP_PATH`) |
+| `aphrody-desktop-cosmic` | 1.0.15 | C1. Meta: the only list of desktop packages (session, apps, portals, PipeWire autostart, Mesa, fonts, Xwayland); `-host`: seatd, cosmic-greeter, system76-scheduler, services enabled. Used by aphrody-labs/aphrody `tools/config/container/aphrody-os` target `desktop` |
 
 ## To do
 

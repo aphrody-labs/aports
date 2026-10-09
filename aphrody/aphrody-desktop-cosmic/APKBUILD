@@ -1,0 +1,78 @@
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+#
+# COSMIC desktop for Aphrody Alpine: the single list of desktop packages. Consumers install this
+# package instead of repeating the list: the desktop image (aphrody-labs/aphrody,
+# tools/config/container/aphrody-os, target desktop) and bare-metal/VM hosts (-host).
+#
+#   aphrody-desktop-cosmic        session (cosmic-session pulls comp, panel, applets, greeter...),
+#                                 apps, portals, PipeWire, Mesa (software fallback), fonts, Xwayland
+#   aphrody-desktop-cosmic-host   seatd + greetd/cosmic-greeter + system76-scheduler, OpenRC services
+#                                 enabled at install (dbus, seatd, cosmic-greeter, system76-scheduler)
+#
+# COSMIC 1.0.15 comes from 3.24 community; cosmic-monitor, cosmic-osk, cosmic-sound-theme,
+# cosmic-viewer, cosmic-wallpapers (1.10.0, absent from 3.24) and system76-scheduler from aphrody/.
+# Users of the desktop need the groups seat, video, input and audio.
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=aphrody-desktop-cosmic
+pkgver=1.0.15
+pkgrel=0
+pkgdesc="Aphrody Alpine COSMIC desktop (meta)"
+url="https://github.com/aphrody-labs/aports"
+arch="aarch64 x86_64"
+license="MIT"
+depends="
+	cosmic-session
+	cosmic-edit
+	cosmic-files
+	cosmic-monitor
+	cosmic-osk
+	cosmic-player
+	cosmic-sound-theme
+	cosmic-store
+	cosmic-term
+	cosmic-viewer
+	cosmic-wallpapers
+	xdg-desktop-portal
+	xdg-desktop-portal-cosmic
+	xdg-utils
+	dbus
+	pipewire
+	pipewire-alsa
+	pipewire-pulse
+	wireplumber
+	mesa-dri-gallium
+	mesa-egl
+	mesa-gles
+	mesa-vulkan-swrast
+	font-fira
+	font-noto
+	xwayland
+	"
+subpackages="$pkgname-host:host:noarch"
+source="aphrody-pipewire.desktop"
+install="$pkgname-host.post-install"
+options="!check"
+
+package() {
+	install -Dm644 "$srcdir"/aphrody-pipewire.desktop \
+		"$pkgdir"/etc/xdg/autostart/aphrody-pipewire.desktop
+}
+
+host() {
+	pkgdesc="Aphrody Alpine COSMIC desktop on a host: seatd, cosmic-greeter, system76-scheduler"
+	depends="
+		$pkgname=$pkgver-r$pkgrel
+		cosmic-greeter
+		cosmic-greeter-openrc
+		dbus-openrc
+		seatd
+		seatd-openrc
+		system76-scheduler
+		system76-scheduler-openrc
+		"
+	mkdir -p "$subpkgdir"
+}
+
+sha512sums="
+7ed071d30e30068deea7a31e3570fe3ddf604387fb3ff4aaa185322de31ff8abf04da41871f2d128651932c61f97c859171c229fb4bf552725914f990ef600ef  aphrody-pipewire.desktop
+"

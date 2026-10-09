@@ -1,0 +1,36 @@
+# Contributor: Clayton Craft <clayton@craftyguy.net>
+# Backport to 3.24 of aports master community/cosmic-sound-theme (commit cbc8344575b9,
+# COSMIC epoch 1.10.0). New in edge: 3.24 community has the other COSMIC 1.0.15 packages, not this one.
+# https://github.com/alpinelinux/aports/blob/cbc8344575b90a7a5aa7c711aabd4f3c69368e55/community/cosmic-sound-theme/APKBUILD
+# Aphrody changes: maintainer; drops master's stale first source= line (cosmic-screenshot URL,
+# overridden by the second one).
+# Original maintainer: team/cosmic (Clayton Craft).
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=cosmic-sound-theme
+pkgver=1.10.0
+_upstreamver="${pkgver/_beta/-beta.}"
+_upstreamver="${_upstreamver/_p/.}"
+pkgrel=0
+pkgdesc="sound theme for the COSMIC desktop environment"
+url="https://github.com/pop-os/cosmic-sound-theme"
+arch="noarch"
+license="CC-BY-SA-4.0"
+makedepends="meson"
+source="$pkgname-$pkgver.tar.gz::https://github.com/pop-os/cosmic-sound-theme/archive/refs/tags/epoch-$_upstreamver.tar.gz"
+options="!check"  # no tests
+builddir="$srcdir/$pkgname-epoch-$_upstreamver"
+
+build() {
+	abuild-meson \
+		output .
+	meson compile -C output
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+27444453f355e4902eab0fad5512823fbf5e267fee28c8a982f9955a54756260004e0813907b9c25100ec96d0371188de06c37fac6af4d9dd019f7a8f63d3c7b  cosmic-sound-theme-1.10.0.tar.gz
+"

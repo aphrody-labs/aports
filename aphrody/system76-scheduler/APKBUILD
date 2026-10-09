@@ -1,0 +1,56 @@
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+#
+# Not packaged by Alpine. Pop!_OS daemon that raises the priority of the focused window's process
+# tree (COSMIC reports it over DBus), lowers background and build jobs, and boosts PipeWire clients.
+# musl: pure Rust (tokio, zbus 3, ioprio via libc); process launches are watched through bcc's
+# execsnoop (python3 + BPF, kernel needs BPF_SYSCALL and KPROBES, both in linux-aphrody/linux-lts).
+# Upstream ships only a systemd unit: OpenRC service added here. The CFS latency knobs it writes
+# under /sys/kernel/debug/sched are ignored by EEVDF kernels (>= 6.6); priorities still apply.
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=system76-scheduler
+pkgver=2.0.2
+pkgrel=0
+pkgdesc="Process priority manager for desktop responsiveness (Pop!_OS, COSMIC)"
+url="https://github.com/pop-os/system76-scheduler"
+arch="aarch64 x86_64"
+license="MPL-2.0"
+depends="bcc-tools dbus"
+makedepends="
+	cargo
+	cargo-auditable
+	clang22-libclang
+	dbus-dev
+	linux-headers
+	pipewire-dev
+	"
+subpackages="$pkgname-openrc"
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/pop-os/system76-scheduler/archive/refs/tags/$pkgver.tar.gz
+	system76-scheduler.initd
+	"
+options="net !check" # fetch dependencies, no tests upstream
+
+prepare() {
+	default_prepare
+	cargo fetch --target="$CHOST" --locked
+}
+
+build() {
+	EXECSNOOP_PATH=/usr/share/bcc/tools/execsnoop \
+		cargo auditable build --release --frozen -p system76-scheduler
+}
+
+package() {
+	install -Dm755 target/release/system76-scheduler -t "$pkgdir"/usr/bin/
+	install -Dm644 data/config.kdl "$pkgdir"/etc/system76-scheduler/config.kdl
+	install -Dm644 data/pop_os.kdl \
+		"$pkgdir"/etc/system76-scheduler/process-scheduler/pop_os.kdl
+	install -Dm644 data/com.system76.Scheduler.conf \
+		"$pkgdir"/usr/share/dbus-1/system.d/com.system76.Scheduler.conf
+	install -Dm755 "$srcdir"/system76-scheduler.initd "$pkgdir"/etc/init.d/system76-scheduler
+}
+
+sha512sums="
+81ad13ff883ab879b84f35ae5b35fda47b74062c1eae5047fc0a9d05840b9b3abfeeec02ae76a41eeaec40b63b34ea07f4324f6401da38fdd981ce18c0607796  system76-scheduler-2.0.2.tar.gz
+a4379fa440abf7089897959045ab45ebb94401570866c817449c8be5b9f3d53e0e5cdc707b876186347e9a567a6ada0e06ae70a77bd3d7dc010b018d8807a95a  system76-scheduler.initd
+"

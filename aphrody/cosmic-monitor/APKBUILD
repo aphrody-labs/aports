@@ -1,0 +1,51 @@
+# Contributor: WrenIX <dev.alpine@wrenix.eu>
+# Backport to 3.24 of aports master community/cosmic-monitor (commit cbc8344575b9,
+# COSMIC epoch 1.10.0). New in edge: 3.24 community has the other COSMIC 1.0.15 packages, not this one.
+# https://github.com/alpinelinux/aports/blob/cbc8344575b90a7a5aa7c711aabd4f3c69368e55/community/cosmic-monitor/APKBUILD
+# Aphrody changes: none besides the maintainer; builds with 3.24 rust 1.96 (COSMIC needs >= 1.93);
+# libcosmic is linked statically, so it runs next to the 1.0.15 session.
+# Original maintainer: team/cosmic (Clayton Craft).
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=cosmic-monitor
+pkgver=1.10.0
+_upstreamver="${pkgver/_beta/-beta.}"
+_upstreamver="${_upstreamver/_p/.}"
+pkgrel=0
+pkgdesc="System Monitor for the COSMIC Desktop Environment"
+url="https://github.com/pop-os/cosmic-monitor"
+# armv7, armhf, x86: DO NOT RE-ENABLE! 32-bit is problematic, often requires carrying patches to fix
+# riscv64: too slow to build
+arch="all !armv7 !armhf !riscv64 !x86"
+license="GPL-3.0-only"
+makedepends="
+	cargo-auditable
+	just
+	libxkbcommon-dev
+"
+options="net !check"  # fetch dependencies, no tests
+source="
+	$pkgname-$pkgver.tar.gz::https://github.com/pop-os/cosmic-monitor/archive/refs/tags/epoch-$_upstreamver.tar.gz
+"
+builddir="$srcdir/$pkgname-epoch-$_upstreamver"
+
+prepare() {
+	default_prepare
+	cargo fetch --target="$CHOST" --locked
+}
+
+build() {
+	cargo auditable build --release --frozen
+}
+
+check() {
+	cargo test --frozen
+}
+
+package() {
+	just rootdir="$pkgdir" install
+}
+
+sha512sums="
+bd5d3ef1943fb1c4949d0c1c312389d42837852612666d645195292283eef201d2c5c46b61a14319585c2dfce6434044f2761b4955e25b0dcb4af97afe2d3c54  cosmic-monitor-1.10.0.tar.gz
+"

@@ -1,0 +1,30 @@
+# Contributor: WrenIX <dev.alpine@wrenix.eu>
+# Backport to 3.24 of aports master community/cosmic-wallpapers (commit cbc8344575b9,
+# COSMIC epoch 1.10.0). New in edge: 3.24 community has the other COSMIC 1.0.15 packages, not this one.
+# https://github.com/alpinelinux/aports/blob/cbc8344575b90a7a5aa7c711aabd4f3c69368e55/community/cosmic-wallpapers/APKBUILD
+# Aphrody changes: none besides the maintainer; builds with 3.24 rust 1.96 (COSMIC needs >= 1.93);
+# libcosmic is linked statically, so it runs next to the 1.0.15 session.
+# Original maintainer: team/cosmic (Clayton Craft).
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=cosmic-wallpapers
+pkgver=1.10.0
+_upstreamver="${pkgver/_beta/-beta.}"
+_upstreamver="${_upstreamver/_p/.}"
+pkgrel=0
+pkgdesc="Wallpapers for the COSMIC Desktop Environment"
+url="https://github.com/pop-os/cosmic-wallpapers"
+# riscv64: too slow to build
+arch="noarch !riscv64"
+license="GPL-3.0-or-later AND CC-BY-SA-4.0"
+options="!check"  # no tests
+source="$pkgname-$pkgver.tar.gz::https://github.com/pop-os/cosmic-wallpapers/archive/refs/tags/epoch-$_upstreamver.tar.gz"
+builddir="$srcdir/$pkgname-epoch-$_upstreamver"
+
+package() {
+	make DESTDIR="$pkgdir" install
+}
+
+sha512sums="
+551669bf8346f3affb55e57b2549c6dd2736b857a6470a7f21e7fd2dded476282a0d18e36aba7ca53f10b19cc611856fdc0e7627602099b79b6c5e23d31fc212  cosmic-wallpapers-1.10.0.tar.gz
+"

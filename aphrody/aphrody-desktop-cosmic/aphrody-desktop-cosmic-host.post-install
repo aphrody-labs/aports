@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# The greeter's compositor (cosmic-comp, user cosmic-greeter) opens the seat and the GPU.
+for group in seat video input render; do
+	getent group "$group" >/dev/null && addgroup cosmic-greeter "$group" 2>/dev/null
+done
+
+if [ -x /sbin/rc-update ]; then
+	rc-update add dbus default >/dev/null 2>&1
+	rc-update add seatd default >/dev/null 2>&1
+	rc-update add cosmic-greeter default >/dev/null 2>&1
+	rc-update add system76-scheduler default >/dev/null 2>&1
+fi
+
+cat <<EOF
+ * COSMIC: add desktop users to the groups seat, video, input and audio, e.g.
+ *   addgroup <user> seat; addgroup <user> video; addgroup <user> input; addgroup <user> audio
+ * then reboot (or: rc-service cosmic-greeter start).
+EOF
+
+exit 0

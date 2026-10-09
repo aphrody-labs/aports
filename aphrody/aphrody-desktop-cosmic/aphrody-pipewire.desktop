@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=PipeWire
+Comment=PipeWire, WirePlumber and pipewire-pulse for the COSMIC session (no systemd user units on Alpine)
+Exec=/usr/libexec/pipewire-launcher
+OnlyShowIn=COSMIC;
+NoDisplay=true
+X-GNOME-AutoRestart=false
