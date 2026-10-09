@@ -1,0 +1,76 @@
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+#
+# Rust userland for Aphrody Alpine: the single list of the Rust rewrites that replace the
+# GNU/busybox tools. Consumers install this package instead of repeating the list: the CLI
+# image (aphrody-labs/aphrody, tools/config/container/aphrody-os, target cli) and the
+# rust userland variant of ghcr.io/aphrody-labs/alpine (aphrody-labs/bun,
+# scripts/aphrody/aphrody-alpine.Dockerfile, USERLAND=rust).
+#
+#   aphrody-rust-base    uutils coreutils/findutils/diffutils, sudo-rs + su, ntpd-rs (NTS),
+#                        Sequoia sq/sqv (OpenPGP), shells (Nushell, fish 4, Ion) and the
+#                        interactive tools of the CLI image (eza, ripgrep, fd, bottom, helix,
+#                        yazi, zellij, starship)
+#   aphrody-rust-tools   Rust build tooling: cargo-auditable, cargo-deny, cargo-nextest,
+#                        sccache, mold, wild, uv
+#
+# Everything comes from 3.24 main/community except uutils-findutils, uutils-diffutils and
+# ntpd-rs (aphrody/). The uutils packages take over the GNU/busybox files through
+# replaces + replaces_priority; busybox keeps /bin/sh (busybox-binsh: apk scripts are POSIX
+# sh) and its trigger restores the applet symlinks if a replacement is removed.
+# zlib-rs (aphrody/) stays opt-in and is not pulled: LD_LIBRARY_PATH=/usr/lib/zlib-rs.
+# Left out until mature: sequoia-chameleon-gnupg (beta), uutils procps/util-linux (no
+# release), rustls-openssl-compat (glibc, still needs libcrypto), rav1d (slower than dav1d).
+# Sources and decisions: PLAN-ALPINE-BUN.md section C2 in aphrody-labs/bun.
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=aphrody-rust-base
+pkgver=1.0.0
+pkgrel=0
+pkgdesc="Aphrody Alpine Rust userland (meta)"
+url="https://github.com/aphrody-labs/aports"
+arch="noarch"
+license="MIT"
+depends="
+	uutils-coreutils
+	uutils-coreutils-groups
+	uutils-coreutils-hostname
+	uutils-coreutils-more
+	uutils-coreutils-uptime
+	uutils-findutils
+	uutils-diffutils
+	sudo-rs
+	sudo-rs-su
+	ntpd-rs
+	sequoia-sq
+	sequoia-sqv
+	nushell
+	fish
+	ion-shell
+	eza
+	ripgrep
+	fd
+	bottom
+	helix
+	yazi
+	zellij
+	starship
+	"
+subpackages="aphrody-rust-tools:_tools:noarch"
+options="!check"
+
+package() {
+	mkdir -p "$pkgdir"
+}
+
+_tools() {
+	pkgdesc="Aphrody Alpine Rust build tooling (meta)"
+	depends="
+		cargo-auditable
+		cargo-deny
+		cargo-nextest
+		sccache
+		mold
+		wild
+		uv
+		"
+	mkdir -p "$subpkgdir"
+}

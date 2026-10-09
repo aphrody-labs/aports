@@ -1,0 +1,66 @@
+# New package: zlib-rs is in neither aports 3.24-stable nor edge.
+#
+# Aphrody: zlib-rs (memory-safe zlib, C API of zlib 1.3.2, used by Firefox >= 151) as an
+# opt-in drop-in: /usr/lib/zlib-rs/libz.so.1 carries the soname libz.so.1, so
+#   LD_LIBRARY_PATH=/usr/lib/zlib-rs <program>
+# runs a program linked against the system zlib on zlib-rs instead. The system libz is
+# never replaced (somask keeps so:libz.so.1 out of the provides), and musl's loader
+# ignores symbol versions, so the cdylib needs no zlib.map version script.
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=zlib-rs
+pkgver=0.6.8
+pkgrel=0
+pkgdesc="Memory-safe zlib implementation in Rust (opt-in libz.so.1 under /usr/lib/zlib-rs)"
+url="https://github.com/trifectatechfoundation/zlib-rs"
+arch="all"
+license="Zlib"
+makedepends="
+	cargo
+	cargo-auditable
+	"
+# check() links two small programs against the system zlib, then runs them on zlib-rs
+checkdepends="zlib-dev"
+somask="libz.so.1"
+source="$pkgname-$pkgver.tar.gz::https://github.com/trifectatechfoundation/zlib-rs/archive/refs/tags/v$pkgver.tar.gz"
+# the cdylib crate is outside the workspace and has its own Cargo.lock
+builddir="$srcdir/zlib-rs-$pkgver/libz-rs-sys-cdylib"
+# net: cargo fetch
+options="net"
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	# Hot inner loops: speed over the default opt-level "s" of abuild. panic=abort
+	# (abuild default) is required by the crate: unwinding into C is UB.
+	export CARGO_PROFILE_RELEASE_OPT_LEVEL=3
+	export RUSTFLAGS="${RUSTFLAGS-} -C link-arg=-Wl,-soname,libz.so.1"
+	cargo auditable build --frozen --release --features gz,gzprintf
+}
+
+check() {
+	mkdir -p check
+	ln -sf ../target/release/libz_rs.so check/libz.so.1
+
+	printf '#include <stdio.h>\n#include "zlib.h"\nint main(void) { puts(zlibVersion()); return 0; }\n' > check/version.c
+	${CC:-cc} -I include -o check/version check/version.c -lz
+	${CC:-cc} -I include -o check/zpipe zpipe.c -lz
+
+	# the system-zlib binaries pick up zlib-rs through the soname alone
+	LD_LIBRARY_PATH="$builddir"/check check/version | grep -q zlib-rs
+	LD_LIBRARY_PATH="$builddir"/check check/zpipe < Cargo.toml \
+		| LD_LIBRARY_PATH="$builddir"/check check/zpipe -d | cmp - Cargo.toml
+}
+
+package() {
+	install -Dm755 target/release/libz_rs.so "$pkgdir"/usr/lib/zlib-rs/libz.so.1
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname/
+}
+
+sha512sums="
+4414c5379adafacc56321ba0f6549a3de5094f551e33cc1d5d7ea020168e911958f75b6cc54fd368dd161b8f1b4ff1e71df26cafbfb79d6b49821364b3e5b73d  zlib-rs-0.6.8.tar.gz
+"

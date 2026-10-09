@@ -1,0 +1,56 @@
+# New package: uutils/diffutils is in neither aports 3.24-stable nor edge.
+#
+# Aphrody: diff and cmp (symlinks to the multi-call binary, which dispatches on argv[0])
+# take over the files of GNU diffutils (replaces + replaces_priority) and busybox's
+# applet symlinks. The diffutils name is not provided: upstream has no diff3 nor sdiff,
+# so GNU diffutils can stay installed next to it for those two.
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=uutils-diffutils
+pkgver=0.5.0
+pkgrel=0
+pkgdesc="Rust implementation of GNU diffutils (diff, cmp)"
+url="https://github.com/uutils/diffutils"
+arch="all"
+license="MIT OR Apache-2.0"
+makedepends="
+	cargo
+	cargo-auditable
+	"
+# the unit tests apply the generated diffs with patch(1) and ed(1)
+checkdepends="
+	ed
+	patch
+	"
+replaces="diffutils"
+replaces_priority=100
+source="$pkgname-$pkgver.tar.gz::https://github.com/uutils/diffutils/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir/diffutils-$pkgver"
+# net: cargo fetch
+options="net"
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	cargo auditable build --frozen --release
+}
+
+check() {
+	cargo test --frozen
+}
+
+package() {
+	install -Dm755 target/release/diffutils -t "$pkgdir"/usr/bin/
+	ln -s diffutils "$pkgdir"/usr/bin/diff
+	ln -s diffutils "$pkgdir"/usr/bin/cmp
+	install -Dm644 LICENSE-APACHE LICENSE-MIT \
+		-t "$pkgdir"/usr/share/licenses/$pkgname/
+}
+
+sha512sums="
+f10a02ed4b0141a455da080bcf0f85985a3f69669314e93ca183bdabaad0b66fa9a4414625466cb5b945294d52aabe48e2b06ead39a3c5264b8d779bc0989c97  uutils-diffutils-0.5.0.tar.gz
+"

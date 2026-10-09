@@ -1,0 +1,53 @@
+# New package: uutils/findutils is in neither aports 3.24-stable nor edge.
+#
+# Aphrody: find and xargs from uutils/findutils take over the files of GNU findutils
+# (replaces + replaces_priority, whatever the install order) and busybox's applet
+# symlinks, which the busybox trigger restores when this package is removed. The
+# findutils name is not provided: locate/updatedb are left out (experimental upstream)
+# and some GNU-only primaries are missing (84 % of the GNU find test suite passes).
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=uutils-findutils
+pkgver=0.10.0
+pkgrel=0
+pkgdesc="Rust implementation of GNU findutils (find, xargs)"
+url="https://github.com/uutils/findutils"
+arch="all"
+license="MIT"
+makedepends="
+	cargo
+	cargo-auditable
+	oniguruma-dev
+	"
+replaces="findutils"
+replaces_priority=100
+source="$pkgname-$pkgver.tar.gz::https://github.com/uutils/findutils/archive/refs/tags/$pkgver.tar.gz"
+builddir="$srcdir/findutils-$pkgver"
+# net: cargo fetch
+options="net"
+
+export RUSTONIG_DYNAMIC_LIBONIG=1
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CTARGET" --locked
+}
+
+build() {
+	cargo auditable build --frozen --release --bin find --bin xargs
+}
+
+check() {
+	cargo test --frozen
+}
+
+package() {
+	install -Dm755 target/release/find target/release/xargs \
+		-t "$pkgdir"/usr/bin/
+	install -Dm644 LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname/
+}
+
+sha512sums="
+ff6fa0d4f31933fa69d29f0ffe014a9b02cc93ceefb2353088d24664830c008e4645cc933053fe05767dc8a9c30b56f66c9d3d42433aedbaf7103cb520faa3dd  uutils-findutils-0.10.0.tar.gz
+"

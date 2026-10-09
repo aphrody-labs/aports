@@ -18,7 +18,8 @@ Public key: `aphrody/keys/aphrody-labs.rsa.pub` (copy to `/etc/apk/keys/`). Priv
 
 Jobs (each under the 6 h cap): `build <arch>` (userland, `ORDER` in `publish.ts`), one `kernel` job per
 flavor and arch (`APHRODY_KERNEL_FLAVOR=aphrody|aphrody-v3`, `linux-aphrody` builds only that one), `desktop <arch>`
-(`publish.ts build @desktop`, the C1 packages below), then
+(`publish.ts build @desktop`, the C1 packages below), `rust-base <arch>` (`publish.ts build @rust-base`, the C2
+packages below; mold, sccache cached in `aphrody/.work/sccache`, `aphrody/scripts/abuild-rust.conf`), then
 `index <arch>` signs `APKINDEX.tar.gz` over every published `.apk` (the only writer of the index).
 
 ## Packages (`aphrody/`)
@@ -39,6 +40,11 @@ flavor and arch (`APHRODY_KERNEL_FLAVOR=aphrody|aphrody-v3`, `linux-aphrody` bui
 | `cosmic-monitor`, `cosmic-osk`, `cosmic-sound-theme`, `cosmic-viewer`, `cosmic-wallpapers` | 1.10.0 | C1. Backport of aports master `cbc8344575b9` (absent from 3.24, whose community has the rest of COSMIC at 1.0.15); upstream sha512 re-checked on the downloaded tarballs |
 | `system76-scheduler` | 2.0.2 | C1. Not in Alpine. OpenRC service, execsnoop from `bcc-tools` (`EXECSNOOP_PATH`) |
 | `aphrody-desktop-cosmic` | 1.0.15 | C1. Meta: the only list of desktop packages (session, apps, portals, PipeWire autostart, Mesa, fonts, Xwayland); `-host`: seatd, cosmic-greeter, system76-scheduler, services enabled. Used by aphrody-labs/aphrody `tools/config/container/aphrody-os` target `desktop` |
+| `uutils-findutils` | 0.10.0 | C2. New (not in Alpine). `find`, `xargs`; `replaces=findutils` + `replaces_priority=100` (wins over GNU and the busybox applets), no `provides=findutils` (no locate/updatedb) |
+| `uutils-diffutils` | 0.5.0 | C2. New. `diff`, `cmp` (multi-call, argv[0]); `replaces=diffutils`, priority 100; GNU `diff3`/`sdiff` can stay installed |
+| `ntpd-rs` | 1.9.0 | C2. From edge testing 104f7fb8a887 (3.24 has no testing repository): NTS, OpenRC `ntpd-rs`, `ntpd-rs-metrics-exporter` |
+| `zlib-rs` | 0.6.8 | C2. New. Opt-in `/usr/lib/zlib-rs/libz.so.1` (`LD_LIBRARY_PATH=/usr/lib/zlib-rs`), `somask`: never provides `so:libz.so.1`; opt-level 3 |
+| `aphrody-rust-base` | 1.0.0 | C2. Meta: the only list of the Rust userland (uutils coreutils/findutils/diffutils, sudo-rs + su, ntpd-rs, sq/sqv, Nushell, fish, Ion, eza, ripgrep, fd, bottom, helix, yazi, zellij, starship); `aphrody-rust-tools`: cargo-auditable/deny/nextest, sccache, mold, wild, uv. Used by aphrody-os target `cli` and the `USERLAND=rust` variant of ghcr.io/aphrody-labs/alpine |
 
 ## To do
 

@@ -4,8 +4,9 @@ name: Aphrody packages
 # repository as the release aphrody-3.24-<arch> (aphrody/scripts/publish.ts).
 # Every job stays under the 6 h cap: the userland packages in one job per
 # arch, each kernel flavor in its own job, the COSMIC desktop packages
-# (publish.ts @desktop) in one job per arch, then one job per arch signs the
-# index over everything published.
+# (publish.ts @desktop) and the Rust userland (publish.ts @rust-base, mold +
+# sccache) in one job per arch each, then one job per arch signs the index over
+# everything published.
 
 permissions:
   contents: write
@@ -26,6 +27,10 @@ on:
         default: true
       desktop:
         description: "Build the COSMIC desktop packages (publish.ts @desktop)"
+        type: boolean
+        default: true
+      rust_base:
+        description: "Build the Rust userland packages (publish.ts @rust-base)"
         type: boolean
         default: true
 
@@ -100,8 +105,35 @@ jobs:
           APK_ARCH: ${{ matrix.arch }}
         run: bun aphrody/scripts/publish.ts build @desktop
 
+  rust-base:
+    if: github.repository == 'aphrody-labs/aports' && (github.event_name != 'workflow_dispatch' || inputs.rust_base)
+    name: rust-base ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: x86_64, runner: ubuntu-latest }
+          - { arch: aarch64, runner: ubuntu-24.04-arm }
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Restore sccache
+        uses: actions/cache@v4
+        with:
+          path: aphrody/.work/sccache
+          key: sccache-rust-base-${{ matrix.arch }}-${{ hashFiles('aphrody/uutils-*/APKBUILD', 'aphrody/ntpd-rs/APKBUILD', 'aphrody/zlib-rs/APKBUILD') }}
+          restore-keys: sccache-rust-base-${{ matrix.arch }}-
+      - name: Build and publish
+        env:
+          APK_ARCH: ${{ matrix.arch }}
+          # container path of aphrody/.work/sccache (the checkout is mounted on /work)
+          SCCACHE_DIR: /work/aphrody/.work/sccache
+        run: bun aphrody/scripts/publish.ts build @rust-base
+
   index:
-    needs: [build, kernel, desktop]
+    needs: [build, kernel, desktop, rust-base]
     if: always() && github.repository == 'aphrody-labs/aports'
     name: index ${{ matrix.arch }}
     strategy:
