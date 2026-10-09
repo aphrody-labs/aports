@@ -1,0 +1,28 @@
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=aphrody-sysctl
+pkgver=1.1
+pkgrel=0
+pkgdesc="Aphrody Alpine: sysctls and limits for Bun (network, memory, inotify, perf, io_uring), boot modules"
+url="https://github.com/aphrody-labs/aports"
+arch="noarch"
+license="MIT"
+depends="busybox"
+source="90-aphrody-bun.conf
+	aphrody-bun.limits.conf
+	aphrody.modules-load.conf
+	"
+install="$pkgname.post-install $pkgname.post-upgrade"
+options="!check"
+
+package() {
+	install -Dm644 "$srcdir"/90-aphrody-bun.conf "$pkgdir"/etc/sysctl.d/90-aphrody-bun.conf
+	install -Dm644 "$srcdir"/aphrody-bun.limits.conf "$pkgdir"/etc/security/limits.d/90-aphrody-bun.conf
+	install -Dm644 "$srcdir"/aphrody.modules-load.conf "$pkgdir"/etc/modules-load.d/aphrody.conf
+}
+
+sha512sums="
+3bb654e95a7619ed9eb9f01646a7af622e82946ba0f6e4366acbf003425371e87c32fe4053659c7267b720695c3beadd05d743f26305b70a479bd26c81161dbc  90-aphrody-bun.conf
+0b9bda4b7df544d89ed5a13c1dd24bda678fbaaa873d67423ae6ff45e071c221f46058f95d19431acca061e3b03b0b379978ee877f49275636de3f5c9b2e680e  aphrody-bun.limits.conf
+7b76bf01d68ec59309406285b618e728e6f0a6693bb2806b08fbef4f9fc71e68c2c4c5803f1b7e24699724b1574d6d197f22ce5855b7eb0be03604b4479d62ee  aphrody.modules-load.conf
+"

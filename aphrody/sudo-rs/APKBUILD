@@ -1,0 +1,131 @@
+# Based on aports 3.24-stable community/sudo-rs (commit 8b25d8295f3f257fcaa79e339138f1d50772816a,
+# "community/sudo-rs: security upgrade to 0.2.15")
+# https://gitlab.alpinelinux.org/alpine/aports/-/blob/3.24-stable/community/sudo-rs/APKBUILD
+# (mirror: https://github.com/alpinelinux/aports/blob/3.24-stable/community/sudo-rs/APKBUILD)
+#
+# Aphrody changes: replaces sudo and doas, provides "sudo", enables @includedir in /etc/sudoers,
+# ships PAM services sudo / sudo-i, and the subpackage aphrody-sudoers
+# (/etc/sudoers.d/aphrody: group aphrody -> NOPASSWD: ALL; pre-install creates the group).
+# Original maintainers: Aster Boese, co-maintainers Aelin and Achill Gilgenast.
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=sudo-rs
+pkgver=0.2.15
+pkgrel=1
+pkgdesc="Memory safe implementation of sudo and su (Aphrody: replaces sudo and doas)"
+arch="all"
+url="https://github.com/trifectatechfoundation/sudo-rs"
+license="Apache-2.0 OR MIT"
+depends="
+	linux-pam
+	tzdata
+"
+makedepends="
+	cargo
+	cargo-auditable
+	linux-pam-dev
+	tzdata
+"
+checkdepends="
+	busybox-binsh
+	uutils-coreutils
+	xz
+"
+provides="sudo sudo-virt"
+replaces="sudo doas"
+provider_priority=100
+subpackages="$pkgname-doc $pkgname-su aphrody-sudoers:_aphrody_sudoers:noarch"
+source="$pkgname-$pkgver.tar.gz::https://github.com/trifectatechfoundation/sudo-rs/archive/refs/tags/v$pkgver.tar.gz
+	sudoers
+	sudo.pam
+	sudo-i.pam
+	aphrody.sudoers
+	"
+# script of the subpackage aphrody-sudoers (abuild matches by subpackage name prefix)
+install="aphrody-sudoers.pre-install"
+# net: cargo fetch
+# suid: su and sudo binaries
+options="net suid"
+
+prepare() {
+	default_prepare
+
+	cargo fetch --target="$CHOST" --locked
+}
+
+build() {
+	cargo auditable build --target="$CHOST" --frozen --release
+}
+
+check() {
+	# canonicalization: requires /bin to be a symlink to /usr/bin
+	# test_build_run_context: requires /bin to be a symlink to /usr/bin
+	# mark_fds_as_cloexec: uses a syscall that takes a very long time
+	# test_traverse_secure_open_positive: no perms to write file in CI
+	# secure_open_is_predictable: expects /etc/hosts
+	cargo test --frozen -- \
+		--skip \
+		common::resolve::test::canonicalization \
+		--skip \
+		common::context::tests::test_build_run_context \
+		--skip \
+		system::tests::mark_fds_as_cloexec \
+		--skip \
+		system::audit::test::test_traverse_secure_open_positive \
+		--skip \
+		system::audit::test::secure_open_is_predictable
+}
+
+package() {
+	# setuid root: required for `sudo -n` as an unprivileged user
+	local suid_bins="su sudo"
+	for i in $suid_bins; do
+		install -Dm4755 "$builddir"/target/"$CHOST"/release/"$i" \
+			-t "$pkgdir"/usr/bin/
+	done
+	install -Dm755 "$builddir"/target/"$CHOST"/release/visudo \
+		-t "$pkgdir"/usr/bin/
+
+	# sudoedit is a symlink to sudo (the binary itself is already named sudo)
+	ln -s sudo "$pkgdir"/usr/bin/sudoedit
+
+	# sudo-rs reads /etc/sudoers (or /etc/sudoers-rs first) and supports @includedir
+	install -Dm440 "$srcdir"/sudoers "$pkgdir"/etc/sudoers
+	install -dm750 "$pkgdir"/etc/sudoers.d
+
+	# PAM services used by sudo-rs ("sudo" and "sudo-i")
+	install -Dm644 "$srcdir"/sudo.pam "$pkgdir"/etc/pam.d/sudo
+	install -Dm644 "$srcdir"/sudo-i.pam "$pkgdir"/etc/pam.d/sudo-i
+
+	install -Dm644 LICENSE-APACHE LICENSE-MIT -t \
+		"$pkgdir"/usr/share/licenses/"$pkgname"
+	install -Dm644 docs/man/sudo.8.man \
+		"$pkgdir"/usr/share/man/man8/sudo.8
+	install -Dm644 docs/man/sudoers.5.man \
+		"$pkgdir"/usr/share/man/man5/sudoers.5
+	install -Dm644 docs/man/visudo.8.man \
+		"$pkgdir"/usr/share/man/man8/visudo.8
+}
+
+su() {
+	pkgdesc="$pkgdesc (su binary)"
+
+	amove usr/bin/su
+}
+
+_aphrody_sudoers() {
+	pkgdesc="Aphrody: passwordless sudo for group aphrody"
+	depends="$pkgname"
+
+	# mode 0440 root:root, required by sudo-rs for drop-ins
+	install -Dm440 "$srcdir"/aphrody.sudoers \
+		"$subpkgdir"/etc/sudoers.d/aphrody
+}
+
+sha512sums="
+18a2c8bc44fa2c0cea75379764c445e50e2a6ab086d10b7cb8135952dfc5fedcfc3069d57b03f5f74d8a31248aa0705bef7bbc13b3aab43ee90bf3dc2fae6801  sudo-rs-0.2.15.tar.gz
+4dec93c020869e56441844b15dbbc3a87c2db149c16b41bd09c92a54e166bf77128e480e219a2813efa258c59700eb8773d49d219cd760ecb2830e4714e5e25b  sudoers
+2ec6445e03bce924cca9dcb3590d493ac38eb36565e0a038accc6086b9a39d21b9b5caf22c3848a43c0a32368329c51fae75dd04a0f64aab458b1cc2fa2a1380  sudo.pam
+4142ace3525b07a26c96a0ab70c41bbb8482951d00d62c0b2f9d1f76330ee6c63e6f39f0e93cd56119090ef29fbe2906838b7fd93324e65511e63841cab85797  sudo-i.pam
+b31417c51e80e8c506542de377637a024069a9b4739467f87fb0346d203307d7d140a16ec9ce75748ea29d58939cbcfe326324e9f71cb2ce7590201df503275b  aphrody.sudoers
+"

@@ -1,0 +1,5 @@
+#%PAM-1.0
+# PAM service "sudo-i" used by sudo-rs for `sudo -i` (login shell).
+auth		include		base-auth
+account		include		base-account
+session		include		base-session

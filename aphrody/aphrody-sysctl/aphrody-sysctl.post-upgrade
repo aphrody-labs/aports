@@ -1,0 +1,5 @@
+#!/bin/sh
+# Apply the Aphrody sysctls now; never fail the installation (container build, missing keys,
+# read-only /proc/sys). -e ignores unknown keys in busybox sysctl.
+sysctl -e -p /etc/sysctl.d/90-aphrody-bun.conf >/dev/null 2>&1 || true
+exit 0

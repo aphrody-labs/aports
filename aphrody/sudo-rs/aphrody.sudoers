@@ -1,0 +1,2 @@
+# Aphrody Alpine: members of group "aphrody" get passwordless root (no human in the loop).
+%aphrody ALL=(ALL:ALL) NOPASSWD: ALL

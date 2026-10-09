@@ -1,0 +1,5 @@
+#%PAM-1.0
+# PAM service "sudo" used by sudo-rs. Uses Alpine linux-pam base stacks (/usr/lib/pam.d).
+auth		include		base-auth
+account		include		base-account
+session		include		base-session-noninteractive

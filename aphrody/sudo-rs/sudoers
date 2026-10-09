@@ -1,0 +1,13 @@
+## sudoers (Aphrody Alpine). Base: aports 3.24-stable community/sudo-rs/sudoers,
+## with @includedir enabled so /etc/sudoers.d/aphrody (group aphrody) is read.
+## Edit with visudo. sudo-rs reads /etc/sudoers-rs first if it exists, else this file.
+
+Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+root ALL=(ALL:ALL) ALL
+
+## Members of group wheel
+%wheel ALL=(ALL:ALL) ALL
+
+## Drop-in files (files containing '.' or ending in '~' are ignored)
+@includedir /etc/sudoers.d
