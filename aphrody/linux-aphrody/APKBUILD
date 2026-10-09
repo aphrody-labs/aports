@@ -121,10 +121,11 @@ _kmake() {
 
 # Compiler flags of a flavor (aphrody-v3: x86-64-v3 / armv8.2-a). The kernel appends KCFLAGS and
 # KRUSTFLAGS after its own -march, and keeps its explicit -mno-sse/-mno-avx/-mgeneral-regs-only.
+# aarch64: +crypto, since clang lets -march override the -mcpu=generic+crypto of aegis128-neon-inner.c.
 _flavor_flags() {
 	case "$1:$CARCH" in
 		*-v3:x86_64) echo "KCFLAGS=-march=x86-64-v3 KRUSTFLAGS=-Ctarget-cpu=x86-64-v3" ;;
-		*-v3:aarch64) echo "KCFLAGS=-march=armv8.2-a KRUSTFLAGS=-Ctarget-feature=+v8.2a" ;;
+		*-v3:aarch64) echo "KCFLAGS=-march=armv8.2-a+crypto KRUSTFLAGS=-Ctarget-feature=+v8.2a" ;;
 	esac
 }
 
