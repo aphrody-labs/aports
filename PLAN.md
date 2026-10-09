@@ -16,6 +16,10 @@ https://github.com/aphrody-labs/aports/releases/download/aphrody-3.24-${APK_ARCH
 Public key: `aphrody/keys/aphrody-labs.rsa.pub` (copy to `/etc/apk/keys/`). Private key: secret
 `APHRODY_ABUILD_KEY`. `APHRODY_SYNC_TOKEN` fetches the private aphrody source and pushes syncs.
 
+Jobs (each under the 6 h cap): `build <arch>` (userland, `ORDER` in `publish.ts`), one `kernel` job per
+flavor and arch (`APHRODY_KERNEL_FLAVOR=aphrody|aphrody-v3`, `linux-aphrody` builds only that one), then
+`index <arch>` signs `APKINDEX.tar.gz` over every published `.apk` (the only writer of the index).
+
 ## Packages (`aphrody/`)
 
 | Package | Version | Notes |
@@ -37,5 +41,3 @@ Public key: `aphrody/keys/aphrody-labs.rsa.pub` (copy to `/etc/apk/keys/`). Priv
 - `abuild checksum` for `aphrody`, `rust-nightly`, `rust-stable` (sha512sums empty; the publish
   script computes them per run and warns).
 - Bump `bun` to the first fork release that contains `bunsh`.
-- U3: add `sudo-rs`, `aphrody-sysctl` to `ORDER` in `publish.ts` (owner U1); `linux-aphrody` builds two
-  kernels, run it in its own job (6 h cap).

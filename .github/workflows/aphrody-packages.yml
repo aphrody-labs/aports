@@ -2,6 +2,9 @@ name: Aphrody packages
 
 # Builds aphrody/* with abuild in alpine:3.24 and publishes the signed apk
 # repository as the release aphrody-3.24-<arch> (aphrody/scripts/publish.ts).
+# Every job stays under the 6 h cap: the userland packages in one job per
+# arch, each kernel flavor in its own job, then one job per arch signs the
+# index over everything published.
 
 permissions:
   contents: write
@@ -13,25 +16,32 @@ on:
   workflow_dispatch:
     inputs:
       packages:
-        description: "Space-separated aphrody/* packages to build (empty: all missing)"
+        description: "Space-separated aphrody/* packages for the userland job (empty: ORDER)"
         required: false
         default: ""
+      kernels:
+        description: "Build the linux-aphrody kernels"
+        type: boolean
+        default: true
 
 concurrency:
   group: aphrody-packages-${{ github.ref }}
   cancel-in-progress: false
 
+env:
+  GH_TOKEN: ${{ github.token }}
+  APHRODY_ABUILD_KEY: ${{ secrets.APHRODY_ABUILD_KEY }}
+
 jobs:
   build:
     if: github.repository == 'aphrody-labs/aports'
+    name: build ${{ matrix.arch }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - arch: x86_64
-            runner: ubuntu-latest
-          - arch: aarch64
-            runner: ubuntu-24.04-arm
+          - { arch: x86_64, runner: ubuntu-latest }
+          - { arch: aarch64, runner: ubuntu-24.04-arm }
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 360
     steps:
@@ -40,7 +50,46 @@ jobs:
       - name: Build and publish
         env:
           APK_ARCH: ${{ matrix.arch }}
-          GH_TOKEN: ${{ github.token }}
-          APHRODY_ABUILD_KEY: ${{ secrets.APHRODY_ABUILD_KEY }}
           APHRODY_SOURCE_TOKEN: ${{ secrets.APHRODY_SYNC_TOKEN }}
-        run: bun aphrody/scripts/publish.ts ${{ inputs.packages }}
+        run: bun aphrody/scripts/publish.ts build ${{ inputs.packages }}
+
+  kernel:
+    if: github.repository == 'aphrody-labs/aports' && (github.event_name != 'workflow_dispatch' || inputs.kernels)
+    name: ${{ matrix.flavor }} ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        flavor: [aphrody, aphrody-v3]
+        arch: [x86_64, aarch64]
+    runs-on: ${{ matrix.arch == 'aarch64' && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
+    timeout-minutes: 360
+    steps:
+      - name: Free disk space
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache || true
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Build and publish
+        env:
+          APK_ARCH: ${{ matrix.arch }}
+          APHRODY_KERNEL_FLAVOR: ${{ matrix.flavor }}
+        run: bun aphrody/scripts/publish.ts build linux-aphrody
+
+  index:
+    needs: [build, kernel]
+    if: always() && github.repository == 'aphrody-labs/aports'
+    name: index ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: x86_64, runner: ubuntu-latest }
+          - { arch: aarch64, runner: ubuntu-24.04-arm }
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Sign and publish APKINDEX
+        env:
+          APK_ARCH: ${{ matrix.arch }}
+        run: bun aphrody/scripts/publish.ts index

@@ -22,7 +22,9 @@
 #               Set _kernel_source=fork, _fork_commit=<sha>, pkgver to the fork's kernel
 #               version, then `abuild checksum`.
 #
-# Environment: APHRODY_STRICT_CONFIG=1 makes a fragment option refused by Kconfig fatal;
+# Environment: APHRODY_KERNEL_FLAVOR=aphrody|aphrody-v3 builds one flavor (package linux-aphrody, or
+# linux-aphrody-v3 alone): one kernel per CI job, under the 6 h cap (aphrody/scripts/publish.ts).
+# Unset, both flavors are built. APHRODY_STRICT_CONFIG=1 makes a fragment option refused by Kconfig fatal;
 # APHRODY_KERNEL_LTO=1 adds Clang ThinLTO (drops BTF, sched_ext and MODVERSIONS, see lto.config).
 # The kernel is for the host (VM/metal), not for the container image.
 maintainer="aphrody-dev <yohanpierre15@gmail.com>"
@@ -70,11 +72,25 @@ fork)
 	fi
 	;;
 esac
-_flavors="$_flavor $_flavor-v3"
-subpackages="$pkgname-dev:_dev:$CBUILD_ARCH
+case "${APHRODY_KERNEL_FLAVOR:-}" in
+$_flavor)
+	_flavors="$_flavor"
+	subpackages="$pkgname-dev:_dev:$CBUILD_ARCH $pkgname-doc"
+	;;
+$_flavor-v3)
+	_flavors="$_flavor-v3"
+	pkgname=linux-$_flavor-v3
+	pkgdesc="$pkgdesc, x86-64-v3 / armv8.2-a build"
+	subpackages="$pkgname-dev:_dev:$CBUILD_ARCH"
+	;;
+*)
+	_flavors="$_flavor $_flavor-v3"
+	subpackages="$pkgname-dev:_dev:$CBUILD_ARCH
 	linux-$_flavor-v3:_v3:$CBUILD_ARCH
 	linux-$_flavor-v3-dev:_dev:$CBUILD_ARCH
 	$pkgname-doc"
+	;;
+esac
 arch="x86_64 aarch64"
 license="GPL-2.0-only"
 
@@ -286,7 +302,8 @@ _package() {
 package() {
 	depends="$depends linux-firmware-any"
 
-	_package "$_flavor" "$pkgdir"
+	_package "${_flavors%% *}" "$pkgdir"
+	[ "${_flavors%% *}" = "$_flavor" ] || return 0
 
 	# copy files for linux-aphrody-doc sub package
 	mkdir -p "$pkgdir"/usr/share/doc
