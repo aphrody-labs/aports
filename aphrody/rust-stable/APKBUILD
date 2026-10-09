@@ -1,0 +1,30 @@
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+#
+# The stable Rust that aphrody and n2b need (rust-version 1.97; Alpine 3.24 ships 1.96), repackaged
+# from the official musl-host dist tarballs into /usr/lib/rust-stable, beside Alpine's `rust`.
+pkgname=rust-stable
+_version=1.98.1
+pkgver=$_version
+pkgrel=0
+pkgdesc="Rust stable toolchain $_version (rustc, cargo, std, rust-src, clippy, rustfmt, llvm-tools)"
+url="https://www.rust-lang.org/"
+arch="x86_64 aarch64"
+license="Apache-2.0 OR MIT"
+depends="gcc musl-dev"
+options="!strip !check !tracedeps"
+_triple="$CARCH-unknown-linux-musl"
+source="rust-$_version-$CARCH.tar.xz::https://static.rust-lang.org/dist/rust-$_version-$_triple.tar.xz
+	rust-src-$_version.tar.xz::https://static.rust-lang.org/dist/rust-src-$_version.tar.xz
+	"
+_prefix=/usr/lib/rust-stable
+
+package() {
+	"$srcdir"/rust-$_version-$_triple/install.sh \
+		--prefix=$_prefix --destdir="$pkgdir" --disable-ldconfig \
+		--components=rustc,cargo,rust-std-$_triple,clippy-preview,rustfmt-preview,llvm-tools-preview
+	"$srcdir"/rust-src-$_version/install.sh \
+		--prefix=$_prefix --destdir="$pkgdir" --disable-ldconfig
+	rm -f "$pkgdir"$_prefix/lib/rustlib/install.log "$pkgdir"$_prefix/lib/rustlib/uninstall.sh
+}
+
+sha512sums=""

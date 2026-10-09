@@ -1,0 +1,40 @@
+name: Aphrody upstream sync
+
+# Merges alpinelinux/aports 3.24-stable into the fork's 3.24-stable. Fork content
+# lives only under aphrody/ and .github/workflows/aphrody-*, so a conflict
+# means upstream touched those paths: the run fails and the branch is left as is.
+
+permissions:
+  contents: read
+
+on:
+  schedule:
+    - cron: "41 */6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: aphrody-upstream-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'aphrody-labs/aports'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      # GITHUB_TOKEN cannot push commits that touch .github/workflows: a token
+      # with the `workflow` scope goes in the APHRODY_SYNC_TOKEN secret.
+      - uses: actions/checkout@v4
+        with:
+          ref: 3.24-stable
+          fetch-depth: 0
+          token: ${{ secrets.APHRODY_SYNC_TOKEN || github.token }}
+      - uses: oven-sh/setup-bun@v2
+      - name: Merge upstream
+        run: |
+          git config user.name "aphrody-dev"
+          git config user.email "contact@aphrody.com"
+          git remote add upstream https://github.com/alpinelinux/aports.git
+          bun -e 'import { $ } from "bun"; await $`git fetch upstream 3.24-stable`; await $`git merge --no-edit upstream/3.24-stable`; await $`git push origin HEAD:3.24-stable`;'

@@ -1,0 +1,40 @@
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+#
+# n2b: Node -> Bun migration analyzer (packages/bun-n2b of aphrody-labs/bun). The source tarball is
+# a release asset of the fork (`git archive <commit>:packages/bun-n2b`).
+pkgname=n2b
+pkgver=0.7.1
+pkgrel=0
+pkgdesc="Node.js to Bun migration scanner and rewriter"
+url="https://github.com/aphrody-labs/bun/tree/main/packages/bun-n2b"
+arch="x86_64 aarch64"
+license="Apache-2.0"
+makedepends="rust-stable"
+source="n2b-$pkgver.tar.gz::https://github.com/aphrody-labs/bun/releases/download/n2b-v$pkgver/n2b-$pkgver.tar.gz"
+builddir="$srcdir/n2b-$pkgver"
+# cargo fetch needs the network in prepare().
+options="net"
+
+export PATH="/usr/lib/rust-stable/bin:$PATH"
+export CARGO_PROFILE_RELEASE_LTO=true
+
+prepare() {
+	default_prepare
+	cargo fetch --locked --target="$CTARGET"
+}
+
+build() {
+	cargo build --frozen --release -p aphrody-n2b --bin n2b
+}
+
+check() {
+	cargo test --frozen --release -p aphrody-n2b-core
+}
+
+package() {
+	install -Dm755 target/release/n2b "$pkgdir"/usr/bin/n2b
+}
+
+sha512sums="
+abbe73f3e424a2f51950c21fbcc26284998a865f05b674167a6f854d2844dba997706e93013d43f0ad6839107ee41dd34f9588d43379ecdc06ba7c3020126777  n2b-0.7.1.tar.gz
+"

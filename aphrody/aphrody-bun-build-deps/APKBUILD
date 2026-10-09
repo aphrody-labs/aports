@@ -1,0 +1,26 @@
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+#
+# Everything needed to build and test aphrody-labs/bun natively on Aphrody Alpine (the list of
+# scripts/aphrody/alpine.Dockerfile, with LLVM 23 and the pinned Rust nightly from this repository
+# instead of edge and rustup). PATH needs /usr/lib/rust-nightly/bin and /usr/lib/llvm23/bin.
+pkgname=aphrody-bun-build-deps
+pkgver=1
+pkgrel=0
+pkgdesc="Build and test dependencies of the Aphrody Bun fork"
+url="https://github.com/aphrody-labs/bun"
+arch="noarch"
+license="MIT"
+depends="
+	bash coreutils findutils grep sed gawk diffutils patch tar xz zstd unzip rsync file
+	git curl ca-certificates jq ripgrep fd procps tmux gdb strace
+	build-base linux-headers musl-dev libgcc libstdc++ libstdc++-dev libatomic
+	cmake samurai mold ccache pkgconf autoconf automake libtool make
+	perl python3 go nasm ruby nodejs
+	llvm23 clang23 lld23 compiler-rt llvm23-linker-tools
+	rust-nightly bun
+	"
+options="!check"
+
+package() {
+	mkdir -p "$pkgdir"
+}

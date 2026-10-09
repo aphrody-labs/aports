@@ -1,0 +1,61 @@
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+#
+# Bun from the aphrody-labs/bun fork: the musl release binary (built natively on Alpine by the
+# fork's release workflow), repackaged. Subpackages:
+#   bun-shell  bunsh (Bun Shell as a login/system shell) + /etc/shells
+#   bun-apk    apk <-> bun: npm packages shipped as apks live in /usr/lib/bun/node_modules and an apk
+#              trigger (run by bun) links their bins into /usr/lib/bun/bin; `bun add -g` installs to
+#              /usr/local/lib/bun (excluded from `apk audit`); one install cache, /var/cache/bun.
+#              apk already execve()s scripts and triggers (shebang honoured), so this needs no
+#              apk-tools patch.
+pkgname=bun
+# bunsh (bun-shell) needs a release newer than 1.4.3-aphrody.2: bump _tag/pkgver, then `abuild checksum`.
+_tag=1.4.3-aphrody.2
+pkgver=1.4.3_p2
+pkgrel=0
+pkgdesc="Fast all-in-one JavaScript runtime, bundler, test runner and package manager (Aphrody fork)"
+url="https://github.com/aphrody-labs/bun"
+arch="x86_64 aarch64"
+license="MIT"
+depends="libgcc libstdc++"
+subpackages="$pkgname-shell:shell:noarch $pkgname-apk:apk:noarch"
+install="$pkgname-shell.post-install $pkgname-shell.pre-deinstall"
+triggers="$pkgname-apk.trigger=/usr/lib/bun/node_modules/*"
+options="!strip !check"
+
+case "$CARCH" in
+x86_64) _arch=x64 ;;
+aarch64) _arch=aarch64 ;;
+esac
+source="bun-$_tag-$CARCH.zip::https://github.com/aphrody-labs/bun/releases/download/aphrody-v$_tag/bun-linux-$_arch-musl.zip
+	bun.profile
+	bun-global.list
+	"
+builddir="$srcdir/bun-linux-$_arch-musl"
+
+package() {
+	install -Dm755 "$builddir"/bun "$pkgdir"/usr/bin/bun
+	ln -s bun "$pkgdir"/usr/bin/bunx
+}
+
+shell() {
+	pkgdesc="Bun Shell as a login and system shell (bunsh)"
+	depends="$pkgname=$pkgver-r$pkgrel"
+	mkdir -p "$subpkgdir"/bin
+	ln -s /usr/bin/bun "$subpkgdir"/bin/bunsh
+}
+
+apk() {
+	pkgdesc="apk integration for bun: shared install cache, global packages, apk trigger"
+	depends="$pkgname=$pkgver-r$pkgrel"
+	install -Dm644 "$srcdir"/bun.profile "$subpkgdir"/etc/profile.d/bun.sh
+	install -Dm644 "$srcdir"/bun-global.list "$subpkgdir"/etc/apk/protected_paths.d/bun-global.list
+	install -dm755 "$subpkgdir"/usr/lib/bun/node_modules "$subpkgdir"/usr/lib/bun/bin 		"$subpkgdir"/usr/local/lib/bun/global "$subpkgdir"/var/cache/bun/install
+}
+
+sha512sums="
+1abfaa52d1b14e51941f3a0d76b1c583523b9d7f71cbebac54a99cb33c1f3e1444ad9d302e2b9139c85a57169ee14dd99634c30e3d01345c726781a62770c441  bun-1.4.3-aphrody.2-x86_64.zip
+3c12a5626dc8b6129d0fb23c5df7cac68f411ac3f594d46f2f7a534cdf74d48f4514ea97194edf68bd56a581d9a69afcd4c6c42da5fd44492af38b9216b70c3f  bun-1.4.3-aphrody.2-aarch64.zip
+6264fbc2f26fd7617ff9c3cc3a51bee9ce8dbb054d4df4fefb09741c7464c1c3745e733a3430cc1feebcb0111fa7f1d17e7f676a725113b0ffb796c8f118fe8f  bun.profile
+934bf4c9b11b015389ddbd7af98d5ebd397bab5bb6481f8be8ae0ca3c6370dd5245eac1a106ba2e2edf501544a6e3e6b39725251c59048299f5984b77bdc59cd  bun-global.list
+"

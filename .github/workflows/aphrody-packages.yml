@@ -1,0 +1,46 @@
+name: Aphrody packages
+
+# Builds aphrody/* with abuild in alpine:3.24 and publishes the signed apk
+# repository as the release aphrody-3.24-<arch> (aphrody/scripts/publish.ts).
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches: [3.24-stable]
+    paths: ["aphrody/**", ".github/workflows/aphrody-packages.yml"]
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: "Space-separated aphrody/* packages to build (empty: all missing)"
+        required: false
+        default: ""
+
+concurrency:
+  group: aphrody-packages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.repository == 'aphrody-labs/aports'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-latest
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Build and publish
+        env:
+          APK_ARCH: ${{ matrix.arch }}
+          GH_TOKEN: ${{ github.token }}
+          APHRODY_ABUILD_KEY: ${{ secrets.APHRODY_ABUILD_KEY }}
+          APHRODY_SOURCE_TOKEN: ${{ secrets.APHRODY_SYNC_TOKEN }}
+        run: bun aphrody/scripts/publish.ts ${{ inputs.packages }}

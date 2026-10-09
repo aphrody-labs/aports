@@ -1,0 +1,35 @@
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+#
+# The aphrody CLI (crates/infra/aphrody of aphrody-labs/aphrody). The repository is private: the
+# aports workflow puts the tarball in $SRCDEST with its token before abuild runs
+# (gh api repos/aphrody-labs/aphrody/tarball/$_commit > $SRCDEST/aphrody-$pkgver.tar.gz).
+pkgname=aphrody
+pkgver=1.0.0_git20261009
+_commit=b70bfdf44468ae744a9e5580f5171e647e7fedb3
+pkgrel=0
+pkgdesc="Aphrody cross-platform CLI (A2A, docs, scan, web, infra, n2b)"
+url="https://github.com/aphrody-labs/aphrody"
+arch="x86_64 aarch64"
+license="Apache-2.0"
+makedepends="rust-stable openssl-dev perl pkgconf protoc"
+source="aphrody-$pkgver.tar.gz::https://api.github.com/repos/aphrody-labs/aphrody/tarball/$_commit"
+builddir="$srcdir/aphrody-labs-aphrody-${_commit:0:7}"
+options="net !check"
+
+export PATH="/usr/lib/rust-stable/bin:$PATH"
+
+prepare() {
+	default_prepare
+	cargo fetch --locked --target="$CTARGET"
+}
+
+build() {
+	cargo build --frozen --release -p aphrody --bin aphrody
+}
+
+package() {
+	install -Dm755 target/release/aphrody "$pkgdir"/usr/bin/aphrody
+}
+
+# abuild checksum (the private tarball is fetched by the workflow).
+sha512sums=""
