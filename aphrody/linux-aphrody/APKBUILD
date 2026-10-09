@@ -38,7 +38,8 @@ url="https://www.kernel.org"
 depends="initramfs-generator"
 _kernel_source=kernel.org
 _fork_commit=""
-_llvm_depends="clang lld llvm"
+# clang22-libclang: libclang.so for bindgen (make rustavailable aborts without it)
+_llvm_depends="clang clang22-libclang lld llvm"
 _rust_depends="rust rust-src rust-bindgen rustfmt"
 _depends_dev="perl gmp-dev mpc1-dev mpfr-dev elfutils-dev bash flex bison zstd $_llvm_depends $_rust_depends"
 makedepends="$_depends_dev sed installkernel bc linux-headers linux-firmware-any openssl-dev>3 mawk
@@ -80,7 +81,7 @@ $_flavor)
 $_flavor-v3)
 	_flavors="$_flavor-v3"
 	pkgname=linux-$_flavor-v3
-	pkgdesc="$pkgdesc, x86-64-v3 / armv8.2-a build"
+	pkgdesc="$pkgdesc, x86-64-v3/armv8.2-a"
 	subpackages="$pkgname-dev:_dev:$CBUILD_ARCH"
 	;;
 *)
@@ -321,7 +322,7 @@ package() {
 }
 
 _v3() {
-	pkgdesc="$pkgdesc, x86-64-v3 / armv8.2-a build"
+	pkgdesc="$pkgdesc, x86-64-v3/armv8.2-a"
 	depends="$depends linux-firmware-any"
 	_package "$_flavor-v3" "$subpkgdir"
 }

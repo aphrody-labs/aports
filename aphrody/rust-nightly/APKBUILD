@@ -13,6 +13,8 @@ url="https://www.rust-lang.org/"
 arch="x86_64 aarch64"
 license="Apache-2.0 OR MIT"
 depends="gcc musl-dev"
+# xz: busybox unxz rejects the dist tarballs ("corrupted data")
+makedepends="xz"
 options="!strip !check !tracedeps"
 _triple="$CARCH-unknown-linux-musl"
 source="rust-nightly-$_date-$CARCH.tar.xz::https://static.rust-lang.org/dist/$_date/rust-nightly-$_triple.tar.xz

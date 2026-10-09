@@ -1,0 +1,27 @@
+--- a/daemon/src/priority.rs
++++ b/daemon/src/priority.rs
+@@ -44,15 +44,15 @@
+ }
+ 
+ pub fn set_policy(pid: u32, policy: SchedPolicy, sched_priority: SchedPriority) {
+-    let param = libc::sched_param {
+-        sched_priority: libc::c_int::from({
+-            if policy.is_realtime() {
+-                sched_priority.get()
+-            } else {
+-                0
+-            }
+-        }),
+-    };
++    // musl's sched_param also carries the SCHED_SPORADIC fields: start from zero.
++    let mut param: libc::sched_param = unsafe { std::mem::zeroed() };
++    param.sched_priority = libc::c_int::from({
++        if policy.is_realtime() {
++            sched_priority.get()
++        } else {
++            0
++        }
++    });
+ 
+     unsafe {
+         #[allow(clippy::cast_possible_wrap)]

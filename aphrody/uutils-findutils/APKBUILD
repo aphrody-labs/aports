@@ -39,7 +39,12 @@ build() {
 }
 
 check() {
-	cargo test --frozen
+	# abuild -F runs as root in the build containers: no permission denial, and the
+	# overlay filesystem reports no birth time
+	cargo test --frozen -- \
+		--skip find::tests::test_no_permission_file_error \
+		--skip find::matchers::tests::get_or_create_file_test \
+		--skip find::matchers::time::tests::newer_time_matcher
 }
 
 package() {

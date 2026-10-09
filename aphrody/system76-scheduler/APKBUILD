@@ -27,6 +27,7 @@ subpackages="$pkgname-openrc"
 source="
 	$pkgname-$pkgver.tar.gz::https://github.com/pop-os/system76-scheduler/archive/refs/tags/$pkgver.tar.gz
 	system76-scheduler.initd
+	musl-sched-param.patch
 	"
 options="net !check" # fetch dependencies, no tests upstream
 
@@ -53,4 +54,5 @@ package() {
 sha512sums="
 81ad13ff883ab879b84f35ae5b35fda47b74062c1eae5047fc0a9d05840b9b3abfeeec02ae76a41eeaec40b63b34ea07f4324f6401da38fdd981ce18c0607796  system76-scheduler-2.0.2.tar.gz
 a4379fa440abf7089897959045ab45ebb94401570866c817449c8be5b9f3d53e0e5cdc707b876186347e9a567a6ada0e06ae70a77bd3d7dc010b018d8807a95a  system76-scheduler.initd
+68710aafb362a4da22dcbb6cf497d615f3d5bda6e25e79bfd8ae95213301f9a33ea5d78ce216eb7cc135a96d477afe367fc557264bfa1371c3f20954d4f52d0a  musl-sched-param.patch
 "
