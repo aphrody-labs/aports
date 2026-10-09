@@ -1,0 +1,54 @@
+# Backport of aports master testing/tre (0.8.0-r2, absent from 3.24), bumped to 0.9.0: the
+# version MSYS2 ships as mingw-w64-libtre/libsystre (msys2-mirror, aphrody-labs/bun
+# docs/aphrody/merge/M-msys2-mirror.md). Approximate regex library + agrep. The patch keeps
+# retest off the ISO-8859-1/EUC-JP sections on musl, where every locale is UTF-8.
+# Contributor: Al-Hassan Abdel-Raouf <alhassanaraouf@disroot.org>
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=tre
+pkgver=0.9.0
+pkgrel=0
+pkgdesc="POSIX compliant regexp matching library with approximate matching"
+url="https://laurikari.net/tre"
+arch="all"
+license="BSD-2-Clause"
+subpackages="$pkgname-static $pkgname-dev agrep agrep-doc"
+source="https://github.com/laurikari/tre/releases/download/v$pkgver/tre-$pkgver.tar.gz
+	musl-legacy-locales.patch
+	"
+
+prepare() {
+	default_prepare
+	update_config_sub
+}
+
+build() {
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--mandir=/usr/share/man \
+		--enable-static
+	make
+}
+
+check() {
+	# wretest needs an 8-bit en_US.ISO-8859-1 locale for 4 of its ~53k cases (upstream prints
+	# "Expect some Invalid or incomplete multi-byte sequence errors"); musl has none. retest runs
+	# the same cases on narrow strings and must pass.
+	make check XFAIL_TESTS=wretest
+}
+
+package() {
+	make DESTDIR="$pkgdir" install
+}
+
+agrep() {
+	pkgdesc="approximate grepping"
+	amove usr/bin/agrep
+}
+
+sha512sums="
+228421bcd912c990137478ccddecaa2e21836a32de73d2d9ca56a0e8dd8aab7e785c29e552d2755e7b96e3bcf5338be532f0ef4b096617505bee0d2b639f573a  tre-0.9.0.tar.gz
+718d97fb7b8e6eef5e77fdd55484c57b5b3cb3e1f7673517f046bfe1c979347a2ff6b7a84e614fa512d50e8141da09de81bcb4eb7bf6636eeb9dda0726875b7c  musl-legacy-locales.patch
+"

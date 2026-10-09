@@ -1,0 +1,43 @@
+# New package: DirectX-Headers is in neither aports 3.24-stable nor edge (mesa only vendors it
+# as a meson wrap).
+#
+# Aphrody: Linux counterpart of the MSYS2 mingw-w64-directx-headers package (msys2-mirror,
+# aphrody-labs/bun docs/aphrody/merge/M-msys2-mirror.md). On Linux meson also installs the
+# wsl/stubs and wsl/winadapter.h headers that the WSL d3d12/dzn code
+# paths of mesa build against.
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=directx-headers
+pkgver=1.619.5
+pkgrel=0
+pkgdesc="Official Direct3D 12 headers (with WSL stubs) and DirectX-Guids"
+url="https://github.com/microsoft/DirectX-Headers"
+arch="all"
+license="MIT"
+makedepends="meson"
+source="$pkgname-$pkgver.tar.gz::https://github.com/microsoft/DirectX-Headers/archive/refs/tags/v$pkgver.tar.gz"
+builddir="$srcdir/DirectX-Headers-$pkgver"
+
+build() {
+	# the upstream tests link against libd3d12/libdxcore, which exist only inside WSL
+	abuild-meson \
+		-Dbuild-test=false \
+		. output
+	meson compile -C output
+}
+
+check() {
+	local t
+	for t in test/test.cpp test/feature_check_test.cpp; do
+		${CXX:-g++} -std=c++14 -Wno-unused-variable -Iinclude -Iinclude/wsl/stubs \
+			-c "$t" -o "$srcdir"/check.o
+	done
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install --no-rebuild -C output
+}
+
+sha512sums="
+7f7705ddcf95ce1e81fcacfa1dc60288dcaeabbea6538bdd10acdab2a4a944724bb285b4549b4ae5c8f01a8940e2a4e725eb0efb5ccaa9f48483a57c7a0ee239  directx-headers-1.619.5.tar.gz
+"

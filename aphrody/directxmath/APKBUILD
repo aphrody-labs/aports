@@ -1,0 +1,61 @@
+# New package: DirectXMath is in neither aports 3.24-stable nor edge.
+#
+# Aphrody: Linux counterpart of the MSYS2 mingw-w64-directxmath package (msys2-mirror,
+# aphrody-labs/bun docs/aphrody/merge/M-msys2-mirror.md). Header-only SIMD math library.
+# On Linux DirectXMath.h includes "sal.h", which neither upstream nor DirectX-Headers ships:
+# like the vcpkg port, /usr/include/sal.h is the MIT one of dotnet/runtime (coreclr PAL).
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=directxmath
+pkgver=3.21b
+_tag=jun2026
+_salver=8.0.1
+pkgrel=0
+pkgdesc="DirectXMath SIMD C++ linear algebra library (headers, CMake and pkg-config files)"
+url="https://github.com/microsoft/DirectXMath"
+arch="noarch"
+license="MIT"
+makedepends="cmake samurai"
+checkdepends="g++"
+source="$pkgname-$_tag.tar.gz::https://github.com/microsoft/DirectXMath/archive/refs/tags/$_tag.tar.gz
+	sal-dotnet-runtime-$_salver.h::https://raw.githubusercontent.com/dotnet/runtime/v$_salver/src/coreclr/pal/inc/rt/sal.h
+	"
+builddir="$srcdir/DirectXMath-$_tag"
+
+build() {
+	cmake -B build -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_BUILD_TYPE=None \
+		-DBUILD_TESTING=OFF \
+		-DBUILD_XDSP=OFF \
+		-DBUILD_SHMATH=OFF
+	cmake --build build
+}
+
+check() {
+	# header-only: compile and run a translation unit against the headers about to be installed
+	mkdir -p "$srcdir"/check
+	cp "$srcdir"/sal-dotnet-runtime-$_salver.h "$srcdir"/check/sal.h
+	cat > "$srcdir"/check/xm-check.cpp <<-'EOF'
+	#include <DirectXMath.h>
+	int main() {
+		using namespace DirectX;
+		XMVECTOR v = XMVectorSet(1.0f, 2.0f, 3.0f, 0.0f);
+		return XMVectorGetX(XMVector3Dot(v, v)) == 14.0f ? 0 : 1;
+	}
+	EOF
+	${CXX:-g++} -std=c++17 -I"$builddir"/Inc -I"$srcdir"/check \
+		-o "$srcdir"/check/xm-check "$srcdir"/check/xm-check.cpp
+	"$srcdir"/check/xm-check
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+	install -Dm644 "$srcdir"/sal-dotnet-runtime-$_salver.h "$pkgdir"/usr/include/sal.h
+	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+sha512sums="
+47003d3c223e0b99f99346f0f6f971df1cab319dc975479b12a8b353022de603293761e1da78e811b824e649ec935de07b54c0abff308d4b0fcea05b7732e494  directxmath-jun2026.tar.gz
+0f5a80b97564217db2ba3e4624cc9eb308e19cc9911dae21d983c4ab37003f4756473297ba81b386c498514cedc1ef5a3553d7002edc09aeb6a1335df973095f  sal-dotnet-runtime-8.0.1.h
+"

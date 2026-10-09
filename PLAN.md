@@ -45,6 +45,10 @@ packages below; mold, sccache cached in `aphrody/.work/sccache`, `aphrody/script
 | `uutils-diffutils` | 0.5.0 | C2. New. `diff`, `cmp` (multi-call, argv[0]); `replaces=diffutils`, priority 100; GNU `diff3`/`sdiff` can stay installed |
 | `ntpd-rs` | 1.9.0 | C2. From edge testing 104f7fb8a887 (3.24 has no testing repository): NTS, OpenRC `ntpd-rs`, `ntpd-rs-metrics-exporter` |
 | `zlib-rs` | 0.6.8 | C2. New. Opt-in `/usr/lib/zlib-rs/libz.so.1` (`LD_LIBRARY_PATH=/usr/lib/zlib-rs`), `somask`: never provides `so:libz.so.1`; opt-level 3 |
+| `directx-headers` | 1.619.5 | MX. New. Linux side of MSYS2 `mingw-w64-directx-headers`: D3D12 headers, `wsl/winadapter.h` + `wsl/stubs`, `libDirectX-Guids.a`, `libd3dx12-format-properties.a`; check compiles the upstream tests (they link to libd3d12, WSL only) |
+| `directxmath` | 3.21b (`jun2026`) | MX. New, noarch. Headers + CMake/pkg-config, `/usr/include/sal.h` from dotnet/runtime v8.0.1 (MIT, as the vcpkg port); check compiles and runs a vector dot product |
+| `jbigkit` | 2.1 | MX. New. JBIG1 codec: `-static` (`libjbig.a`, `libjbig85.a`), `-dev` headers, `pbmtojbg`/`jbgtopbm`(`85`); upstream `make test` |
+| `tre` | 0.9.0 | MX. Backport of aports master `testing/tre` 0.8.0-r2 bumped to 0.9.0 (MSYS2 `libtre`/`libsystre`); `-static`, `-dev`, `agrep`, `agrep-doc`; `make check` (patch: retest skips ISO-8859-1/EUC-JP on musl; `wretest` XFAIL, needs an 8-bit locale) |
 | `aphrody-rust-base` | 1.0.0 | C2. Meta: the only list of the Rust userland (uutils coreutils/findutils/diffutils, sudo-rs + su, ntpd-rs, sq/sqv, Nushell, fish, Ion, eza, ripgrep, fd, bottom, helix, yazi, zellij, starship); `aphrody-rust-tools`: cargo-auditable/deny/nextest, sccache, mold, wild, uv. Used by aphrody-os target `cli` and the `USERLAND=rust` variant of ghcr.io/aphrody-labs/alpine |
 
 ## To do

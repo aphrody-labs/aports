@@ -1,0 +1,44 @@
+# New package: JBIG-KIT is in neither aports 3.24-stable nor edge.
+#
+# Aphrody: Linux counterpart of the MSYS2 mingw-w64-jbigkit package (msys2-mirror,
+# aphrody-labs/bun docs/aphrody/merge/M-msys2-mirror.md): JBIG1 (ITU-T T.82/T.85)
+# bi-level image codec. Upstream ships no install target and only static libraries.
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=jbigkit
+pkgver=2.1
+pkgrel=0
+pkgdesc="JBIG1 lossless bi-level image compression library and PBM tools"
+url="https://www.cl.cam.ac.uk/~mgk25/jbigkit/"
+arch="all"
+license="GPL-2.0-or-later"
+subpackages="$pkgname-static $pkgname-dev $pkgname-doc"
+source="https://www.cl.cam.ac.uk/~mgk25/jbigkit/download/jbigkit-$pkgver.tar.gz"
+
+build() {
+	make -C libjbig CC="${CC:-gcc}" CFLAGS="$CFLAGS -fPIC" \
+		libjbig.a libjbig85.a tstcodec tstcodec85
+	make -C pbmtools CC="${CC:-gcc}" CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" \
+		pbmtojbg jbgtopbm pbmtojbg85 jbgtopbm85
+}
+
+check() {
+	make -j1 -C libjbig CC="${CC:-gcc}" CFLAGS="$CFLAGS -fPIC" test
+	# -j1: test82 and test85 share (and rm) test-*.pbm
+	make -j1 -C pbmtools CC="${CC:-gcc}" CFLAGS="$CFLAGS" test
+}
+
+package() {
+	install -Dm755 -t "$pkgdir"/usr/bin \
+		pbmtools/pbmtojbg pbmtools/jbgtopbm pbmtools/pbmtojbg85 pbmtools/jbgtopbm85
+	install -Dm644 -t "$pkgdir"/usr/lib libjbig/libjbig.a libjbig/libjbig85.a
+	install -Dm644 -t "$pkgdir"/usr/include \
+		libjbig/jbig.h libjbig/jbig85.h libjbig/jbig_ar.h
+	install -Dm644 -t "$pkgdir"/usr/share/man/man1 pbmtools/pbmtojbg.1 pbmtools/jbgtopbm.1
+	install -Dm644 -t "$pkgdir"/usr/share/doc/$pkgname \
+		libjbig/jbig.txt libjbig/jbig85.txt ANNOUNCE CHANGES
+}
+
+sha512sums="
+c4127480470ef90db1ef3bd2caa444df10b50ed8df0bc9997db7612cb48b49278baf44965028f1807a21028eb965d677e015466306b44683c4ec75a23e1922cf  jbigkit-2.1.tar.gz
+"

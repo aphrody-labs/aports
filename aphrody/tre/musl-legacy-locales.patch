@@ -1,0 +1,37 @@
+--- a/tests/retest.c
++++ b/tests/retest.c
+@@ -34,6 +34,12 @@
+ #include <string.h>
+ #include <sys/types.h>
+ #include <locale.h>
++#include <langinfo.h>
++
++/* musl: setlocale() accepts any name but every locale is UTF-8, so the legacy
++   single-byte and EUC sections must check the codeset they really got. */
++#define LEGACY_LOCALE(name) \
++  (setlocale(LC_CTYPE, name) != NULL && strcmp(nl_langinfo(CODESET), "UTF-8") != 0)
+ /* look for getopt in order to use a -o option for output. */
+ #if defined(HAVE_UNISTD_H)
+ #include <unistd.h>
+@@ -1776,8 +1782,8 @@
+ #endif
+ 
+ #if !defined(WIN32) && !defined(__OpenBSD__)
+-  if (setlocale(LC_CTYPE, "en_US.ISO-8859-1") != NULL ||
+-      setlocale(LC_CTYPE, "en_US.ISO8859-1") != NULL)
++  if (LEGACY_LOCALE("en_US.ISO-8859-1") ||
++      LEGACY_LOCALE("en_US.ISO8859-1"))
+     {
+       fprintf(outf, "\nTesting LC_CTYPE en_US.ISO-8859-1\n");
+ #ifdef SRC_IN_ISO_8859_1
+@@ -1804,8 +1810,8 @@
+     }
+ 
+ #ifdef TRE_MULTIBYTE
+-  if (setlocale(LC_CTYPE, "ja_JP.eucjp") != NULL ||
+-      setlocale(LC_CTYPE, "ja_JP.eucJP") != NULL)
++  if (LEGACY_LOCALE("ja_JP.eucjp") ||
++      LEGACY_LOCALE("ja_JP.eucJP"))
+     {
+       fprintf(outf, "\nTesting LC_CTYPE ja_JP.eucjp\n");
+       /* I tried to make a test where implementations not aware of multibyte

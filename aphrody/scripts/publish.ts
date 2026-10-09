@@ -27,6 +27,11 @@ const ORDER = [
   "n2b",
   "aphrody",
   "aphrody-bun-build-deps",
+  // Linux counterparts of MSYS2 packages with no 3.24 aport (msys2-mirror, aphrody-labs/bun)
+  "directx-headers",
+  "directxmath",
+  "jbigkit",
+  "tre",
 ];
 
 // COSMIC desktop (chantier C1), its own job: `publish.ts build @desktop`. The rest of COSMIC
