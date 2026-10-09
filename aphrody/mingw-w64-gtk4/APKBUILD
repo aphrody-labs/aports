@@ -1,0 +1,93 @@
+# New package: Windows build of GTK 4, for the aphrody Windows apk repository.
+#
+# Aphrody: replaces MSYS2's mingw-w64-ucrt-x86_64-gtk4 and its ~60 dependencies
+# (C:\bun\docs\aphrody\merge\M-msys2.md, lot MS6). Cross-built by llvm-mingw (UCRT,
+# libc++); GLib, Cairo, Pango, HarfBuzz, FriBidi, pixman, libpng, libjpeg-turbo,
+# libtiff, libepoxy, graphene and zlib come from GTK's own meson subprojects, so the
+# package is self-contained. Built with CARCH=windows-x86_64 (arch of the PE packages
+# read by scripts/aphrody/win/apk in the Bun fork); files land in <root>\usr.
+# wine runs the configure-time checks of the cross build (meson exe_wrapper).
+# Maintainer: aphrody-dev <yohanpierre15@gmail.com>
+maintainer="aphrody-dev <yohanpierre15@gmail.com>"
+pkgname=mingw-w64-gtk4
+pkgver=4.24.1
+pkgrel=0
+_triple=x86_64-w64-mingw32
+pkgdesc="GTK 4 for Windows x86_64 (UCRT), with its GLib/Cairo/Pango stack"
+url="https://www.gtk.org/"
+arch="windows-x86_64"
+license="LGPL-2.1-or-later"
+makedepends="
+	gettext
+	git
+	glib-dev
+	llvm-mingw
+	meson
+	py3-packaging
+	python3
+	samurai
+	wine
+	"
+subpackages="$pkgname-dev"
+source="https://download.gnome.org/sources/gtk/${pkgver%.*}/gtk-$pkgver.tar.xz
+	cairo-dw-extra-mingw.patch
+	"
+builddir="$srcdir/gtk-$pkgver"
+# net: meson downloads the subprojects; check: Windows binaries; strip/tracedeps: PE files
+options="net !check !strip !tracedeps"
+
+prepare() {
+	default_prepare
+	meson subprojects download cairo
+	patch -d subprojects/cairo -p1 < "$srcdir"/cairo-dw-extra-mingw.patch
+}
+
+build() {
+	local lm=/usr/lib/llvm-mingw
+	cat > "$srcdir"/cross.ini <<-EOF
+	[binaries]
+	c = '$lm/bin/$_triple-clang'
+	cpp = '$lm/bin/$_triple-clang++'
+	ar = '$lm/bin/$_triple-ar'
+	strip = '$lm/bin/$_triple-strip'
+	windres = '$lm/bin/$_triple-windres'
+	dlltool = '$lm/bin/$_triple-dlltool'
+	pkg-config = 'pkg-config'
+	exe_wrapper = 'wine'
+
+	[properties]
+	pkg_config_libdir = ['$srcdir/no-pkgconfig']
+	sys_root = '$lm/$_triple'
+
+	[host_machine]
+	system = 'windows'
+	cpu_family = 'x86_64'
+	cpu = 'x86_64'
+	endian = 'little'
+	EOF
+	export WINEPREFIX="$srcdir/wine" WINEDEBUG=-all
+	meson setup build --cross-file "$srcdir"/cross.ini --prefix /usr \
+		--buildtype release -Ddefault_library=shared -Dwrap_mode=default \
+		-Dx11-backend=false -Dwayland-backend=false -Dwin32-backend=true \
+		-Dmedia-gstreamer=disabled -Dintrospection=disabled -Dvulkan=disabled \
+		-Dbuild-tests=false -Dbuild-testsuite=false -Dbuild-examples=false -Dbuild-demos=false \
+		-Ddocumentation=false -Dman-pages=false -Dprint-cpdb=disabled -Dcloudproviders=disabled \
+		-Dsysprof=disabled -Dtracker=disabled -Dcolord=disabled -Df16c=enabled \
+		-Dglib:tests=false -Dglib:introspection=disabled -Dcairo:tests=disabled \
+		-Dpango:introspection=disabled -Dharfbuzz:tests=disabled -Dharfbuzz:docs=disabled
+	meson compile -C build
+}
+
+package() {
+	DESTDIR="$pkgdir" meson install -C build --no-rebuild --quiet
+	# C++ runtime of llvm-mingw, imported by HarfBuzz and others
+	cp /usr/lib/llvm-mingw/$_triple/bin/libc++.dll /usr/lib/llvm-mingw/$_triple/bin/libunwind.dll \
+		"$pkgdir"/usr/bin/
+	# No Windows import of anything outside the package and the OS.
+	local dll
+	for dll in "$pkgdir"/usr/bin/*.dll; do
+		/usr/lib/llvm-mingw/bin/llvm-readobj --coff-imports "$dll" \
+			| grep -iE 'Name: (msys-|cygwin|libgcc_s|libstdc\+\+|libwinpthread)' && return 1
+	done
+	return 0
+}
