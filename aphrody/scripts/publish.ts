@@ -49,17 +49,29 @@ const DESKTOP = [
 
 // Rust userland (chantier C2), its own job: `publish.ts build @rust-base`. The container gets
 // mold + sccache and aphrody/scripts/abuild-rust.conf; the rest comes from 3.24 main/community.
-const RUST_BASE = ["uutils-findutils", "uutils-diffutils", "ntpd-rs", "zlib-rs", "aphrody-rust-base"];
+const RUST_BASE = [
+  "uutils-findutils",
+  "uutils-diffutils",
+  "ntpd-rs",
+  "zlib-rs",
+  "aphrody-rust-base",
+];
 
 const [mode = "build", ...args] = process.argv.slice(2);
 const groups: Record<string, string[]> = { "@desktop": DESKTOP, "@rust-base": RUST_BASE };
-const only = args.flatMap(a => groups[a] ?? [a]);
+const only = args.flatMap((a) => groups[a] ?? [a]);
 if (mode !== "build" && mode !== "index") throw new Error(`unknown mode ${mode}: build | index`);
-const rustTuned = only.some(p => RUST_BASE.includes(p));
+const rustTuned = only.some((p) => RUST_BASE.includes(p));
 if (process.env.APHRODY_RUST_CPU)
-  throw new Error("APHRODY_RUST_CPU is for local abuild runs: published packages must run on every CPU of the arch");
+  throw new Error(
+    "APHRODY_RUST_CPU is for local abuild runs: published packages must run on every CPU of the arch",
+  );
 const arch = process.env.APK_ARCH ?? (process.arch === "arm64" ? "aarch64" : "x86_64");
 const flavor = process.env.APHRODY_KERNEL_FLAVOR ?? "";
+if ((process.env.APHRODY_KERNEL_PROFILE ?? "generic") !== "generic")
+  throw new Error(
+    "published kernel packages use generic; qualify nvidia with local abuild separately",
+  );
 const repo = process.env.GITHUB_REPOSITORY ?? "aphrody-labs/aports";
 const tag = `aphrody-3.24-${arch}`;
 const keyName = "aphrody-labs.rsa";
@@ -89,7 +101,8 @@ await $`mkdir -p ${work}/src ${built}`;
 await $`docker rm -f ${container}`.nothrow().quiet();
 await $`docker run -d --name ${container} -v ${root}:/work -w /work alpine:3.24 sleep infinity`;
 // SCCACHE_DIR (a /work/... path) is forwarded only when the caller sets it.
-const sccache = rustTuned && process.env.SCCACHE_DIR ? ["-e", `SCCACHE_DIR=${process.env.SCCACHE_DIR}`] : [];
+const sccache =
+  rustTuned && process.env.SCCACHE_DIR ? ["-e", `SCCACHE_DIR=${process.env.SCCACHE_DIR}`] : [];
 const sh = (cmd: string) =>
   $`docker exec -e PACKAGER_PRIVKEY=/work/aphrody/.work/keys/${keyName} -e REPODEST=/work/aphrody/.work/repo -e SRCDEST=/work/aphrody/.work/src -e APHRODY_KERNEL_FLAVOR=${flavor} ${sccache} ${container} sh -euc ${cmd}`;
 
@@ -112,23 +125,43 @@ cat /work/aphrody/scripts/abuild-rust.conf >> /etc/abuild.conf`);
 }
 
 async function build(packages: string[]) {
+  if (packages.includes("linux-aphrody")) {
+    const commit = (
+      await sh(`set +u; . aphrody/linux-aphrody/APKBUILD; echo $_fork_commit`).text()
+    ).trim();
+    if (!/^[a-f0-9]{40}$/.test(commit))
+      throw new Error("linux-aphrody requires a pinned fork commit");
+    await $`gh api repos/aphrody-labs/linux/tarball/${commit} > ${work}/src/linux-aphrody-${commit}.tar.gz`.env(
+      {
+        ...process.env,
+        GH_TOKEN: process.env.APHRODY_SOURCE_TOKEN ?? process.env.GH_TOKEN,
+      },
+    );
+  }
   // aphrody-labs/aphrody is private: abuild cannot fetch its tarball anonymously.
   if (packages.includes("aphrody") && process.env.APHRODY_SOURCE_TOKEN) {
-    const [ver, commit] = (await sh(`set +u; . aphrody/aphrody/APKBUILD; echo $pkgver $_commit`).text())
+    const [ver, commit] = (
+      await sh(`set +u; . aphrody/aphrody/APKBUILD; echo $pkgver $_commit`).text()
+    )
       .trim()
       .split(" ");
-    await $`gh api repos/aphrody-labs/aphrody/tarball/${commit} > ${work}/src/aphrody-${ver}.tar.gz`.env({
-      ...process.env,
-      GH_TOKEN: process.env.APHRODY_SOURCE_TOKEN,
-    });
+    await $`gh api repos/aphrody-labs/aphrody/tarball/${commit} > ${work}/src/aphrody-${ver}.tar.gz`.env(
+      {
+        ...process.env,
+        GH_TOKEN: process.env.APHRODY_SOURCE_TOKEN,
+      },
+    );
   }
   for (const pkg of packages) {
     if (pkg === "linux-aphrody" && !flavor)
       throw new Error("linux-aphrody needs APHRODY_KERNEL_FLAVOR=aphrody|aphrody-v3");
     const dir = `aphrody/${pkg}`;
-    const files = (await sh(`cd ${dir} && CARCH=${arch} abuild -F listpkg`).text()).trim().split("\n").filter(Boolean);
+    const files = (await sh(`cd ${dir} && CARCH=${arch} abuild -F listpkg`).text())
+      .trim()
+      .split("\n")
+      .filter(Boolean);
     const have = await assets();
-    if (files.every(f => have.has(f))) {
+    if (files.every((f) => have.has(f))) {
       console.log(`skip ${pkg}: ${files.join(" ")} already published`);
       continue;
     }
@@ -137,14 +170,14 @@ async function build(packages: string[]) {
       await sh(`cd ${dir} && abuild -F checksum`);
     }
     await sh(`cd ${dir} && abuild -F -r`);
-    const upload = files.filter(f => !have.has(f)).map(f => `${built}/${f}`);
+    const upload = files.filter((f) => !have.has(f)).map((f) => `${built}/${f}`);
     await $`gh release upload ${tag} -R ${repo} --clobber ${upload}`;
   }
 }
 
 async function index() {
   const have = await assets();
-  for (const name of [...have].filter(n => n.endsWith(".apk"))) {
+  for (const name of [...have].filter((n) => n.endsWith(".apk"))) {
     if (!(await Bun.file(`${built}/${name}`).exists())) {
       await $`gh release download ${tag} -R ${repo} -p ${name} -D ${built} --clobber`;
     }

@@ -1,10 +1,10 @@
 #!/usr/bin/env bun
 // Checks the running kernel against the linux-aphrody config fragments.
 //
-//   bun aphrody/kernel/check-config.ts [--config <file>] [--arch x86_64|aarch64] [--sysctl] [--json]
+//   bun aphrody/kernel/check-config.ts [--config <file>] [--arch x86_64|aarch64] [--profile generic|nvidia] [--sysctl] [--json]
 //
 // Reads /proc/config.gz (CONFIG_IKCONFIG_PROC, set in bun.config), else /boot/config-<release>.
-// Expected values: config-aphrody.fragment then bun.config (then lto.config when the kernel has
+// Expected values: aphrody-bun.config, optional aphrody-nvidia.config (then lto.config when the kernel has
 // CONFIG_LTO_CLANG_THIN=y), "# @arch" markers honoured, the last fragment setting a symbol wins.
 // "# CONFIG_X is not set" is satisfied by an absent symbol. --sysctl also compares
 // /etc/sysctl.d/90-aphrody-bun.conf (aphrody-sysctl) with /proc/sys.
@@ -22,7 +22,8 @@ const option = (name: string) => {
 
 const here = import.meta.dir;
 const fragmentsDir = join(here, "..", "linux-aphrody");
-const carch = option("--arch") ?? ({ x64: "x86_64", arm64: "aarch64" } as Record<string, string>)[process.arch];
+const carch =
+  option("--arch") ?? ({ x64: "x86_64", arm64: "aarch64" } as Record<string, string>)[process.arch];
 if (!carch) {
   console.error(`check-config: unsupported architecture ${process.arch}`);
   process.exit(2);
@@ -37,7 +38,10 @@ async function readKernelConfig(): Promise<{ source: string; text: string } | un
   }
   const proc = Bun.file("/proc/config.gz");
   if (await proc.exists()) {
-    return { source: "/proc/config.gz", text: new TextDecoder().decode(gunzipSync(await proc.bytes())) };
+    return {
+      source: "/proc/config.gz",
+      text: new TextDecoder().decode(gunzipSync(await proc.bytes())),
+    };
   }
   const release = (
     await Bun.file("/proc/sys/kernel/osrelease")
@@ -45,7 +49,8 @@ async function readKernelConfig(): Promise<{ source: string; text: string } | un
       .catch(() => "")
   ).trim();
   const boot = Bun.file(`/boot/config-${release}`);
-  if (release && (await boot.exists())) return { source: `/boot/config-${release}`, text: await boot.text() };
+  if (release && (await boot.exists()))
+    return { source: `/boot/config-${release}`, text: await boot.text() };
   return undefined;
 }
 
@@ -60,7 +65,11 @@ function parseConfig(text: string): Map<string, string> {
 }
 
 /** Symbol -> expected value ("n" for "is not set"), in fragment order, last setting wins. */
-function parseFragment(text: string, file: string, expected: Map<string, { value: string; file: string }>) {
+function parseFragment(
+  text: string,
+  file: string,
+  expected: Map<string, { value: string; file: string }>,
+) {
   let arches: string[] | undefined;
   for (const raw of text.split("\n")) {
     const line = raw.trimEnd();
@@ -87,17 +96,31 @@ if (!kernel) {
   process.exit(2);
 }
 const actual = parseConfig(kernel.text);
-const files = ["config-aphrody.fragment", "bun.config"];
+const profile = option("--profile") ?? "generic";
+if (profile !== "generic" && profile !== "nvidia") {
+  console.error(`check-config: unsupported profile ${profile}`);
+  process.exit(2);
+}
+const files = ["alpine.config", "aphrody-bun.config"];
+if (profile === "nvidia") files.push("aphrody-nvidia.config", "alpine-nvidia.config");
 if (actual.get("LTO_CLANG_THIN") === "y") files.push("lto.config");
 
 const expected = new Map<string, { value: string; file: string }>();
-for (const file of files) parseFragment(await Bun.file(join(fragmentsDir, file)).text(), file, expected);
+for (const file of files)
+  parseFragment(await Bun.file(join(fragmentsDir, file)).text(), file, expected);
 
-type Mismatch = { kind: "config" | "sysctl"; key: string; expected: string; actual: string; file: string };
+type Mismatch = {
+  kind: "config" | "sysctl";
+  key: string;
+  expected: string;
+  actual: string;
+  file: string;
+};
 const mismatches: Mismatch[] = [];
 for (const [sym, { value, file }] of expected) {
   const got = actual.get(sym) ?? "n";
-  if (got !== value) mismatches.push({ kind: "config", key: `CONFIG_${sym}`, expected: value, actual: got, file });
+  if (got !== value)
+    mismatches.push({ kind: "config", key: `CONFIG_${sym}`, expected: value, actual: got, file });
 }
 
 let sysctlChecked = 0;
@@ -123,14 +146,27 @@ if (flag("--sysctl")) {
     sysctlChecked++;
     const got = (await file.text()).trim().split(/\s+/).join(" ");
     if (got !== want)
-      mismatches.push({ kind: "sysctl", key, expected: want, actual: got, file: "90-aphrody-bun.conf" });
+      mismatches.push({
+        kind: "sysctl",
+        key,
+        expected: want,
+        actual: got,
+        file: "90-aphrody-bun.conf",
+      });
   }
 }
 
 if (flag("--json")) {
   console.log(
     JSON.stringify(
-      { source: kernel.source, arch: carch, fragments: files, checked: expected.size, sysctlChecked, mismatches },
+      {
+        source: kernel.source,
+        arch: carch,
+        fragments: files,
+        checked: expected.size,
+        sysctlChecked,
+        mismatches,
+      },
       null,
       2,
     ),
@@ -140,7 +176,8 @@ if (flag("--json")) {
     `${kernel.source} (${carch}): ${expected.size} options from ${files.join(", ")}` +
       (flag("--sysctl") ? `, ${sysctlChecked} sysctls` : ""),
   );
-  for (const m of mismatches) console.log(`  ${m.kind} ${m.key}: expected ${m.expected}, got ${m.actual} (${m.file})`);
+  for (const m of mismatches)
+    console.log(`  ${m.kind} ${m.key}: expected ${m.expected}, got ${m.actual} (${m.file})`);
   console.log(mismatches.length ? `${mismatches.length} mismatch(es)` : "all match");
 }
 process.exit(mismatches.length ? 1 : 0);

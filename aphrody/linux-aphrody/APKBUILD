@@ -10,34 +10,39 @@
 #                 aarch64, package linux-aphrody-v3. X86_64_VERSION is not a 6.18 Kconfig symbol;
 #                 this uses the same KCFLAGS/KRUSTFLAGS route as upstream X86_NATIVE_CPU.
 # - Built with LLVM=1 (clang, lld, llvm binutils) and CONFIG_RUST=y (Documentation/rust).
-# - Config: lts.<arch>.config + config-aphrody.fragment (system, Rust) + bun.config (options
-#   serving Bun/JSC) [+ lto.config when APHRODY_KERNEL_LTO=1], merged by
+# - Config: lts.<arch>.config + aphrody-bun.config [+ aphrody-nvidia.config when
+#   APHRODY_KERNEL_PROFILE=nvidia] [+ lto.config when APHRODY_KERNEL_LTO=1], merged by
 #   scripts/kconfig/merge_config.sh, then `make LLVM=1 olddefconfig` (see _prepareconfig).
 #   aphrody/kernel/check-config.ts checks a running kernel against the same fragments.
 #
 # Kernel source (_kernel_source):
 #   kernel.org  linux-$_kernver tarball + stable patch + the Alpine linux-lts patches (default).
-#   fork        aphrody-labs/linux branch aphrody-bun (workstream V: Rust modules, Bun
+#   fork        aphrody-labs/linux branch claude/aphrody-linux-7.2 (Rust modules, Bun
 #               integration), pinned to _fork_commit; the fork carries the Alpine patches.
 #               Set _kernel_source=fork, _fork_commit=<sha>, pkgver to the fork's kernel
 #               version, then `abuild checksum`.
 #
 # Environment: APHRODY_KERNEL_FLAVOR=aphrody|aphrody-v3 builds one flavor (package linux-aphrody, or
 # linux-aphrody-v3 alone): one kernel per CI job, under the 6 h cap (aphrody/scripts/publish.ts).
-# Unset, both flavors are built. APHRODY_STRICT_CONFIG=1 makes a fragment option refused by Kconfig fatal;
+# Unset, both flavors are built. APHRODY_STRICT_CONFIG=1 (default) makes refused fragment options fatal;
 # APHRODY_KERNEL_LTO=1 adds Clang ThinLTO (drops BTF, sched_ext and MODVERSIONS, see lto.config).
 # The kernel is for the host (VM/metal), not for the container image.
 maintainer="aphrody-dev <yohanpierre15@gmail.com>"
 _flavor=aphrody
 pkgname=linux-$_flavor
-pkgver=6.18.55
+pkgver=7.2.9
 _kernver=${pkgver%.*}
 pkgrel=0
-pkgdesc="Linux kernel for Aphrody Alpine (lts + Rust, LLVM, io_uring, BPF/BTF, sched_ext, cgroup v2, Landlock, BBR)"
+pkgdesc="Linux 7.2 kernel for Aphrody Alpine (Rust, LLVM, io_uring, BPF/BTF, sched_ext, cgroup v2, Landlock, BBR)"
 url="https://www.kernel.org"
 depends="initramfs-generator"
-_kernel_source=kernel.org
-_fork_commit=""
+_kernel_source=fork
+_fork_commit="dc79e99b05799bcf8216edf7ae28d714ada9f90c"
+_kernel_profile=${APHRODY_KERNEL_PROFILE:-generic}
+case "$_kernel_profile" in
+generic|nvidia) ;;
+*) echo "unsupported APHRODY_KERNEL_PROFILE: $_kernel_profile" >&2; return 1 ;;
+esac
 # clang22-libclang: libclang.so for bindgen (make rustavailable aborts without it)
 _llvm_depends="clang clang22-libclang lld llvm"
 _rust_depends="rust rust-src rust-bindgen rustfmt"
@@ -49,15 +54,17 @@ _aports="https://raw.githubusercontent.com/alpinelinux/aports/52fae6d7d56f3958f3
 _configs="
 	lts.x86_64.config::$_aports/lts.x86_64.config
 	lts.aarch64.config::$_aports/lts.aarch64.config
-	config-aphrody.fragment
-	bun.config
+	alpine.config
+	alpine-nvidia.config
+	aphrody-bun.config
+	aphrody-nvidia.config
 	lto.config
 	"
 case "$_kernel_source" in
 fork)
-	source="linux-aphrody-$_fork_commit.tar.gz::https://github.com/aphrody-labs/linux/archive/$_fork_commit.tar.gz
+	source="linux-aphrody-$_fork_commit.tar.gz::https://api.github.com/repos/aphrody-labs/linux/tarball/$_fork_commit
 		$_configs"
-	builddir="$srcdir"/linux-$_fork_commit
+	builddir="$srcdir"/aphrody-labs-linux-${_fork_commit%${_fork_commit#???????}}
 	;;
 *)
 	source="https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/linux-$_kernver.tar.xz
@@ -152,7 +159,9 @@ _filter_fragment() {
 }
 
 _fragments() {
-	echo config-aphrody.fragment bun.config
+	echo alpine.config
+	echo aphrody-bun.config
+	if [ "$_kernel_profile" = nvidia ]; then echo aphrody-nvidia.config alpine-nvidia.config; fi
 	if [ "${APHRODY_KERNEL_LTO:-0}" = 1 ]; then echo lto.config; fi
 }
 
@@ -199,7 +208,7 @@ _prepareconfig() {
 		warning "config not applied by Kconfig: $_line"
 		_missing=1
 	done < "$_builddir"/aphrody.expected
-	if [ "$_missing" = 1 ] && [ "${APHRODY_STRICT_CONFIG:-0}" = 1 ]; then
+	if [ "$_missing" = 1 ] && [ "${APHRODY_STRICT_CONFIG:-1}" = 1 ]; then
 		error "fragment options refused by Kconfig"
 		return 1
 	fi
@@ -385,15 +394,12 @@ _dev() {
 }
 
 sha512sums="
-274d804a47fc28a8260907ac27f2efc95a4668f67d31a036e88c82cdaf16e8a2ba33dce18f7b344595d2cbd60d310e7b6b0ccae6d1f4dab2eb65badb61e8ef66  patch-6.18.55.patch.xz
-88599ffdec96d150c1feb9b261ba93bb0301a9d0e1ad6bef7aeab1f5372cbfc57d8b43c7e902bd8f76921d1dbd8189663c142ea869e51d0e2b483b150ee00fe0  linux-6.18.tar.xz
-055e10e7b3e00bb3621389315d5206a8feb5022a1f0dc51c3aa107facfe83d191da05a502a0c62488be7299677a63c1da84f87c42cbf3125788c56db67e810ee  0002-x86-Compress-vmlinux-with-zstd-19-instead-of-22.patch
-e1d2d5358f5b8189236108973395f00eafce8db6d5baaf55025b1360f08ab7cffc930d3818719f220b98e7e8541cc8a7f056611b6e290f224a102c1addbe34ac  0003-kexec-add-kexec_load_disabled-boot-option.patch
-28c83be4c97152001381cd5e3a8acb8552a42d9dac9aaec8f096e3762b7944035aa5a4363fb4602f9bb427c4f72cfd2f996a0a725f7f9e07ab250317985aff9e  0004-objtool-respect-AWK-setting.patch
-4e72af8e77a555d2a850837b64a525a51d5d118048584dc3ea0d0e8620bb56bf56b69a94aa67dac879b841c9ba033e33d94610da0028fde7b6602ad2fe63f02f  0001-x86-CPU-AMD-avoid-printing-reset-reasons-on-Xen-domU.patch
+351ff916061971db9acc172ca37a7312be27af824778c790762d3e08ab661816098b6bbb47f99b3a93b4834f8bccf350de201b51553d874207a6ebb107d68077  alpine-nvidia.config
+200989151f3f533b0818f624c60ed352b5ff21a5004c4e5042962699c38051e94e190bb33a5bed06525431f9ddc6cc730f195af8b4414f0dc61be283f69994af  alpine.config
+885d8a15e48973d2a956c51e221023df1edf6f30edc7832900509cb0e7aa892062d12c03c9df592aa71b64f4e2366e9eec50b0857580db8fdbb6f25145d80142  linux-aphrody-dc79e99b05799bcf8216edf7ae28d714ada9f90c.tar.gz
 85ff8229b3ba540defe93406b472d5d34c158727e6c01dbd964c0bafe413dacbd807b0c030beac0addcd19d0575607c391a95b10826ec909d033ef62f0289825  lts.x86_64.config
 2a80c98aeac63bab061b799440a575524d128679d56fa819659952e703d4693c0a7f82b79e5d6edf4dd0f7b6c0c5b8465e3a05aa73b99bfcb07d75b466f44a8f  lts.aarch64.config
-3137aabd172e8eac754d372b144199773aebb34b37e3cc9231236922c569381d4c95b386980a296147381fba442b8e13c716d4c60c2336674f3d79ba72dd1f45  config-aphrody.fragment
-c9f802a605f61ea5db3d1db576c526101cb79af415e1f5896adecfffd15bb3955b5d2b7afbb95d14a1399ac906c547d93408481da6e0e96d8d73551215f57eb1  bun.config
-bb0926c62a6d10eaba79379eb8aa4af170657c3aba1b01da7510cfae6d525994d550539ea6849902ae7387091485f5168a606fe5915dad2f206e7a395efa215a  lto.config
+3b54c2ee9d6a957d6f7a7c3aa9d2a69edb2463269ab56bc828c4bd890469aace052ac674cc5b38fe9b0668980d446c56b0f3ace8675a26525f61fd5e97c3fe8b  aphrody-bun.config
+a5edf8ff94a21ad7397fdd2b804dbfe4a562ac44e23c271fa3f9ed281441b3b13ea0eabf692f2b4b10e016aadc83407156096fdf56d8b18f3285b33aac78308f  aphrody-nvidia.config
+007540626cc9893e87c828d085df4e005cb7ea39b4fe143c01f517ae888933b67c914d537fcbf9a9d5f56743a314d3de3474045545543ff853c93a40be934528  lto.config
 "
